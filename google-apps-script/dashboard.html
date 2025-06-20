@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradebook System Dashboard | 成績簿系統控制台</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .system-status .card-icon { background: #4CAF50; }
+        .quick-stats .card-icon { background: #2196F3; }
+        .system-controls .card-icon { background: #FF9800; }
+        .progress-overview .card-icon { background: #9C27B0; }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #333;
+            padding: 5px 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-excellent { background: #4CAF50; }
+        .status-good { background: #FFC107; }
+        .status-warning { background: #FF9800; }
+        .status-error { background: #f44336; }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .bilingual {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Gradebook System Dashboard</h1>
+            <p>成績簿管理系統控制台</p>
+            <div class="bilingual">Complete Google-based gradebook solution with bilingual support<br>完全基於 Google 的成績管理解決方案，含雙語支援</div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alert-success" class="alert alert-success"></div>
+        <div id="alert-error" class="alert alert-error"></div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing... | 處理中...</p>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- System Status Card -->
+            <div class="card system-status">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">System Status | 系統狀態</div>
+                        <div class="bilingual">Real-time system health monitoring</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">System Health | 系統健康度</span>
+                    <span class="stat-value">
+                        <span class="status-indicator status-excellent"></span>
+                        Excellent | 優秀
+                    </span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Updated | 最後更新</span>
+                    <span class="stat-value" id="last-updated">Loading...</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Semester | 學期</span>
+                    <span class="stat-value">2425S2</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Version | 版本</span>
+                    <span class="stat-value">Dashboard v3.0</span>
+                </div>
+            </div>
+
+            <!-- Quick Statistics Card -->
+            <div class="card quick-stats">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Quick Statistics | 快速統計</div>
+                        <div class="bilingual">Real-time system metrics</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Teachers | 老師總數</span>
+                    <span class="stat-value" id="total-teachers">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Students | 學生總數</span>
+                    <span class="stat-value" id="total-students">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Active Gradebooks | 活躍成績簿</span>
+                    <span class="stat-value" id="active-gradebooks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">System Files | 系統檔案</span>
+                    <span class="stat-value" id="system-files">0</span>
+                </div>
+            </div>
+
+            <!-- System Controls Card -->
+            <div class="card system-controls">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">System Controls | 系統控制</div>
+                        <div class="bilingual">One-click system management</div>
+                    </div>
+                </div>
+                <div class="control-grid">
+                    <button class="btn btn-primary" onclick="initializeSystem()">
+                        <i class="fas fa-rocket"></i> Initialize | 初始化
+                    </button>
+                    <button class="btn btn-secondary" onclick="checkSystemStatus()">
+                        <i class="fas fa-stethoscope"></i> Check Status | 檢查狀態
+                    </button>
+                    <button class="btn btn-warning" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt"></i> Refresh | 重新整理
+                    </button>
+                    <button class="btn btn-secondary" onclick="openSystemFolder()">
+                        <i class="fas fa-folder-open"></i> System Folder | 系統資料夾
+                    </button>
+                    <button class="btn btn-secondary" onclick="openMasterData()">
+                        <i class="fas fa-database"></i> Master Data | 主控資料
+                    </button>
+                    <button class="btn btn-warning" onclick="updateTeachers()">
+                        <i class="fas fa-sync-alt"></i> Update Teachers | 更新老師資料
+                    </button>
+                    <button class="btn btn-secondary" onclick="updateStudentStatus()">
+                        <i class="fas fa-user-check"></i> Update Status | 更新學生狀態
+                    </button>
+                    <button class="btn btn-warning" onclick="debugSystem()">
+                        <i class="fas fa-bug"></i> Debug | 調試
+                    </button>
+                    <button class="btn btn-info" onclick="checkHeaders()">
+                        <i class="fas fa-list"></i> Check Headers | 檢查標題
+                    </button>
+                    <button class="btn btn-success" onclick="testCreation()">
+                        <i class="fas fa-flask"></i> Test Creation | 測試建立
+                    </button>
+                    <button class="btn btn-danger" onclick="systemBackup()">
+                        <i class="fas fa-download"></i> Backup | 備份
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Overview Card -->
+            <div class="card progress-overview">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Progress Overview | 進度總覽</div>
+                        <div class="bilingual">Teacher progress tracking</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🟢 Excellent (≥90%) | 優秀</span>
+                    <span class="stat-value" id="progress-excellent">0 (0%)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🟡 Good (80-89%) | 良好</span>
+                    <span class="stat-value" id="progress-good">0 (0%)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🟠 Normal (60-79%) | 普通</span>
+                    <span class="stat-value" id="progress-normal">0 (0%)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🔴 Behind (<60%) | 落後</span>
+                    <span class="stat-value" id="progress-behind">0 (0%)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overall-progress" style="width: 75%;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <small>Overall System Progress: <span id="overall-percentage">75%</span> | 整體系統進度</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: #607D8B;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div>
+                    <div class="card-title">Quick Actions | 快速操作</div>
+                    <div class="bilingual">Frequently used system functions</div>
+                </div>
+            </div>
+            <div class="control-grid">
+                <button class="btn btn-primary" onclick="batchCreateGradebooks()">
+                    <i class="fas fa-plus-circle"></i> Batch Create Gradebooks<br>
+                    <small>批量建立成績簿</small>
+                </button>
+                <button class="btn btn-secondary" onclick="checkAllProgress()">
+                    <i class="fas fa-chart-line"></i> Check All Progress<br>
+                    <small>檢查全體進度</small>
+                </button>
+                <button class="btn btn-warning" onclick="generateReport()">
+                    <i class="fas fa-file-alt"></i> Generate Report<br>
+                    <small>生成詳細報告</small>
+                </button>
+                <button class="btn btn-secondary" onclick="importStudentData()">
+                    <i class="fas fa-upload"></i> Import Student Data<br>
+                    <small>匯入學生資料</small>
+                </button>
+                <button class="btn btn-secondary" onclick="exportStudentData()">
+                    <i class="fas fa-download"></i> Export Student Data<br>
+                    <small>匯出學生資料</small>
+                </button>
+                <button class="btn btn-warning" onclick="systemMaintenance()">
+                    <i class="fas fa-tools"></i> System Maintenance<br>
+                    <small>系統維護</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let isLoading = false;
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            loadSystemStatistics();
+            setInterval(updateTimestamp, 60000); // Update every minute
+        });
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('last-updated').textContent = now.toLocaleString();
+        }
+
+        // Show loading indicator
+        function showLoading() {
+            if (isLoading) return;
+            isLoading = true;
+            document.getElementById('loading').style.display = 'block';
+            hideAlerts();
+        }
+
+        // Hide loading indicator
+        function hideLoading() {
+            isLoading = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const alert = document.getElementById('alert-success');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 5000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const alert = document.getElementById('alert-error');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => alert.style.display = 'none', 5000);
+        }
+
+        // Hide all alerts
+        function hideAlerts() {
+            document.getElementById('alert-success').style.display = 'none';
+            document.getElementById('alert-error').style.display = 'none';
+        }
+
+        // System Functions
+        function initializeSystem() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    showSuccess('✅ System initialized successfully! | 系統初始化成功！');
+                    loadSystemStatistics();
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Initialization failed: ' + error.message + ' | 初始化失敗');
+                })
+                .initializeSystem();
+        }
+
+        function checkSystemStatus() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    showSuccess('🟢 System Status: Healthy | 系統狀態健康');
+                    loadSystemStatistics();
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Status check failed: ' + error.message + ' | 狀態檢查失敗');
+                })
+                .getSystemStatistics();
+        }
+
+        function refreshDashboard() {
+            showLoading();
+            loadSystemStatistics();
+            setTimeout(() => {
+                hideLoading();
+                showSuccess('✅ Dashboard refreshed successfully! | 控制台重新整理成功！');
+            }, 1000);
+        }
+
+        function loadSystemStatistics() {
+            google.script.run
+                .withSuccessHandler(function(stats) {
+                    document.getElementById('total-teachers').textContent = stats.totalTeachers || 0;
+                    document.getElementById('total-students').textContent = stats.totalStudents || 0;
+                    document.getElementById('active-gradebooks').textContent = stats.activeGradebooks || 0;
+                    document.getElementById('system-files').textContent = stats.systemFiles || 0;
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Failed to load statistics:', error);
+                })
+                .getSystemStatistics();
+        }
+
+        function openSystemFolder() {
+            google.script.run
+                .withSuccessHandler(function(url) {
+                    window.open(url, '_blank');
+                    showSuccess('📁 Opening system folder | 正在開啟系統資料夾');
+                })
+                .withFailureHandler(function(error) {
+                    showError('❌ Cannot open system folder: ' + error.message + ' | 無法開啟系統資料夾');
+                })
+                .getSystemFolderUrl();
+        }
+
+        function openMasterData() {
+            google.script.run
+                .withSuccessHandler(function(url) {
+                    window.open(url, '_blank');
+                    showSuccess('📋 Opening master data sheet | 正在開啟主控資料表');
+                })
+                .withFailureHandler(function(error) {
+                    showError('❌ Cannot open master data: ' + error.message + ' | 無法開啟主控資料表');
+                })
+                .getMasterDataUrl();
+        }
+
+        // Batch create gradebooks functionality
+        function batchCreateGradebooks() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    showSuccess('🎉 Gradebook creation completed! | 成績簿建立完成！');
+                    loadSystemStatistics();
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Failed to create gradebooks: ' + error.message + ' | 建立成績簿失敗');
+                })
+                .batchCreateGradebooks();
+        }
+
+        function checkAllProgress() {
+            showSuccess('📈 Progress check feature coming soon! | 進度檢查功能即將推出！');
+        }
+
+        function generateReport() {
+            showSuccess('📋 Report generation feature coming soon! | 報告生成功能即將推出！');
+        }
+
+        function importStudentData() {
+            showSuccess('📥 Import feature coming soon! | 匯入功能即將推出！');
+        }
+
+        function exportStudentData() {
+            showSuccess('📤 Export feature coming soon! | 匯出功能即將推出！');
+        }
+
+        function systemBackup() {
+            showSuccess('🔄 Backup feature coming soon! | 備份功能即將推出！');
+        }
+
+        function updateTeachers() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    showSuccess('✅ Teachers updated successfully! Found ' + result.length + ' teachers | 老師資料更新成功！找到 ' + result.length + ' 位老師');
+                    loadSystemStatistics();
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Failed to update teachers: ' + error.message + ' | 更新老師資料失敗');
+                })
+                .updateAutoGeneratedTeachers();
+        }
+
+        function updateStudentStatus() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    showSuccess('✅ Student status updated successfully! | 學生狀態更新成功！');
+                    loadSystemStatistics();
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Failed to update student status: ' + error.message + ' | 更新學生狀態失敗');
+                })
+                .updateStudentStatus();
+        }
+
+        function debugSystem() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    let studentSamplesText = '';
+                    if (result.studentSamples && result.studentSamples.length > 0) {
+                        studentSamplesText = result.studentSamples.map(s => 
+                            `• ${s.name || 'empty'} (Status: ${s.status || 'empty'}, Class: ${s.englishClass || 'empty'}, LT: ${s.ltTeacher || 'empty'}, IT: ${s.itTeacher || 'empty'})`
+                        ).join('\n');
+                    }
+                    
+                    let teacherSamplesText = '';
+                    if (result.teacherSamples && result.teacherSamples.length > 0) {
+                        teacherSamplesText = result.teacherSamples.map(t => 
+                            `• ${t.name} (${t.subject}) - Classes: ${t.classes}`
+                        ).join('\n');
+                    }
+                    
+                    const debugInfo = `
+🔍 System Debug Results | 系統調試結果:
+
+📁 System Folder: ${result.systemFolder}
+📋 Master Data Sheet: ${result.masterDataSheet}  
+👥 Students Data: ${result.studentsData} total records
+📝 Students with "在學" status: ${result.studentsWithStatus}
+👨‍🏫 Teachers Found: ${result.teachersFound}
+📊 Gradebooks Folder: ${result.teacherGradebooksFolder}
+
+📄 Student Samples (first 5):
+${studentSamplesText || 'No student data found'}
+
+👩‍🏫 Teacher Samples:
+${teacherSamplesText || 'No teacher data found'}
+
+${result.error ? '❌ Error: ' + result.error : '✅ No errors detected'}
+                    `;
+                    showSuccess(debugInfo);
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Debug failed: ' + error.message + ' | 調試失敗');
+                })
+                .debugSystemStatus();
+        }
+
+        function checkHeaders() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    let headersText = '';
+                    if (result.headers) {
+                        headersText = result.headers.map((header, index) => 
+                            `${index + 1}. "${header}"`
+                        ).join('\n');
+                    }
+                    
+                    let indicesText = '';
+                    if (result.columnIndices) {
+                        indicesText = Object.entries(result.columnIndices).map(([col, index]) => 
+                            `"${col}": ${index === -1 ? 'NOT FOUND' : 'Column ' + (index + 1)}`
+                        ).join('\n');
+                    }
+                    
+                    let sampleRowText = '';
+                    if (result.sampleRow) {
+                        sampleRowText = result.sampleRow.map((value, index) => 
+                            `${index + 1}. ${value || 'empty'}`
+                        ).join('\n');
+                    }
+                    
+                    const headerInfo = `
+📋 Column Headers Check | 欄位標題檢查:
+
+📊 Total Columns: ${result.columnCount}
+📄 Data Rows: ${result.dataRows}
+
+🔍 All Headers:
+${headersText}
+
+🎯 Key Column Indices:
+${indicesText}
+
+📝 Sample Row Data:
+${sampleRowText}
+
+${result.error ? '❌ Error: ' + result.error : '✅ Headers checked successfully'}
+                    `;
+                    showSuccess(headerInfo);
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Header check failed: ' + error.message + ' | 標題檢查失敗');
+                })
+                .checkColumnHeaders();
+        }
+
+        function testCreation() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.error) {
+                        showError('❌ Test failed: ' + result.error);
+                        return;
+                    }
+                    
+                    let assignmentText = '';
+                    if (result && result.length > 0) {
+                        assignmentText = result.map(assignment => 
+                            `🏫 ${assignment.teacher} (${assignment.subject})
+   📚 Class: ${assignment.class}
+   👥 Students (${assignment.studentCount}): ${assignment.studentNames.join(', ')}`
+                        ).join('\n\n');
+                    }
+                    
+                    const testInfo = `
+🧪 Gradebook Creation Test | 成績簿建立測試:
+
+${assignmentText || 'No valid assignments found | 找不到有效的分配'}
+
+${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '✅ Student assignments look correct!'}
+                    `;
+                    showSuccess(testInfo);
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Test failed: ' + error.message + ' | 測試失敗');
+                })
+                .testGradebookCreation();
+        }
+
+        function systemMaintenance() {
+            showSuccess('🔧 Maintenance feature coming soon! | 維護功能即將推出！');
+        }
+    </script>
+</body>
+</html>
