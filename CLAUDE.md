@@ -24,10 +24,17 @@ This is a Google Apps Script-based gradebook management system that provides a c
 
 ## Development Commands
 
+### Auto Deployment (一鍵部署)
+```bash
+# 自動推送到 GitHub 和 Google Apps Script
+./deploy.sh
+```
+
 ### Google Apps Script Development
 - No traditional build/test commands - development happens in the Google Apps Script editor
 - Deploy as web app: Deploy → New deployment → Web app
 - Test functions: Use Apps Script editor's built-in function runner
+- Manual clasp push: `cd gradebook-system/google-apps-script && clasp push`
 
 ### System Initialization
 ```javascript
