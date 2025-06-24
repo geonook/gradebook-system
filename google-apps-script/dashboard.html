@@ -165,10 +165,191 @@
             transform: translateY(-2px);
         }
 
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
+        }
+
+        /* Assessment Title Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 3% auto;
+            padding: 0;
+            border: none;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 1000px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .class-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .class-info h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+        }
+
+        .class-info p {
+            margin: 5px 0 0 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .assessment-section {
+            margin-bottom: 20px;
+        }
+
+        .assessment-section h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .assessment-input {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .assessment-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .btn-update {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn-update:hover {
+            background: #0056b3;
+        }
+
+        .btn-reset {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-reset:hover {
+            background: #c82333;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 0.7;
         }
 
         .loading {
@@ -270,8 +451,8 @@
         <!-- Header -->
         <div class="header">
             <h1>📊 Gradebook System Dashboard</h1>
-            <p>成績簿管理系統控制台</p>
-            <div class="bilingual">Complete Google-based gradebook solution with bilingual support<br>完全基於 Google 的成績管理解決方案，含雙語支援</div>
+            <p>Educational grade management system</p>
+            <div class="bilingual">Complete Google-based gradebook solution</div>
         </div>
 
         <!-- Alert Messages -->
@@ -281,7 +462,7 @@
         <!-- Loading Indicator -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p>Processing... | 處理中...</p>
+            <p>Processing...</p>
         </div>
 
         <!-- Dashboard Grid -->
@@ -293,27 +474,27 @@
                         <i class="fas fa-heartbeat"></i>
                     </div>
                     <div>
-                        <div class="card-title">System Status | 系統狀態</div>
+                        <div class="card-title">System Status</div>
                         <div class="bilingual">Real-time system health monitoring</div>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">System Health | 系統健康度</span>
+                    <span class="stat-label">System Health</span>
                     <span class="stat-value">
                         <span class="status-indicator status-excellent"></span>
-                        Excellent | 優秀
+                        Excellent
                     </span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Last Updated | 最後更新</span>
+                    <span class="stat-label">Last Updated</span>
                     <span class="stat-value" id="last-updated">Loading...</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Semester | 學期</span>
+                    <span class="stat-label">Semester</span>
                     <span class="stat-value">2425S2</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Version | 版本</span>
+                    <span class="stat-label">Version</span>
                     <span class="stat-value">Dashboard v3.0</span>
                 </div>
             </div>
@@ -325,24 +506,24 @@
                         <i class="fas fa-chart-bar"></i>
                     </div>
                     <div>
-                        <div class="card-title">Quick Statistics | 快速統計</div>
+                        <div class="card-title">Quick Statistics</div>
                         <div class="bilingual">Real-time system metrics</div>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Total Teachers | 老師總數</span>
+                    <span class="stat-label">Total Teachers</span>
                     <span class="stat-value" id="total-teachers">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Total Students | 學生總數</span>
+                    <span class="stat-label">Total Students</span>
                     <span class="stat-value" id="total-students">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Active Gradebooks | 活躍成績簿</span>
+                    <span class="stat-label">Active Gradebooks</span>
                     <span class="stat-value" id="active-gradebooks">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">System Files | 系統檔案</span>
+                    <span class="stat-label">System Files</span>
                     <span class="stat-value" id="system-files">0</span>
                 </div>
             </div>
@@ -354,43 +535,49 @@
                         <i class="fas fa-cogs"></i>
                     </div>
                     <div>
-                        <div class="card-title">System Controls | 系統控制</div>
+                        <div class="card-title">System Controls</div>
                         <div class="bilingual">One-click system management</div>
                     </div>
                 </div>
                 <div class="control-grid">
                     <button class="btn btn-primary" onclick="initializeSystem()">
-                        <i class="fas fa-rocket"></i> Initialize | 初始化
+                        <i class="fas fa-rocket"></i> Initialize
                     </button>
                     <button class="btn btn-secondary" onclick="checkSystemStatus()">
-                        <i class="fas fa-stethoscope"></i> Check Status | 檢查狀態
+                        <i class="fas fa-stethoscope"></i> Check Status
                     </button>
                     <button class="btn btn-warning" onclick="refreshDashboard()">
-                        <i class="fas fa-sync-alt"></i> Refresh | 重新整理
+                        <i class="fas fa-sync-alt"></i> Refresh
                     </button>
                     <button class="btn btn-secondary" onclick="openSystemFolder()">
-                        <i class="fas fa-folder-open"></i> System Folder | 系統資料夾
+                        <i class="fas fa-folder-open"></i> System Folder
                     </button>
                     <button class="btn btn-secondary" onclick="openMasterData()">
-                        <i class="fas fa-database"></i> Master Data | 主控資料
+                        <i class="fas fa-database"></i> Master Data
                     </button>
                     <button class="btn btn-warning" onclick="updateTeachers()">
-                        <i class="fas fa-sync-alt"></i> Update Teachers | 更新老師資料
+                        <i class="fas fa-sync-alt"></i> Update Teachers
                     </button>
                     <button class="btn btn-secondary" onclick="updateStudentStatus()">
-                        <i class="fas fa-user-check"></i> Update Status | 更新學生狀態
+                        <i class="fas fa-user-check"></i> Update Status
+                    </button>
+                    <button class="btn btn-info" onclick="validateClassAssignments()">
+                        <i class="fas fa-check-circle"></i> Validate Classes
+                    </button>
+                    <button class="btn btn-success" onclick="manageAssessmentTitles()">
+                        <i class="fas fa-tags"></i> Assessment Titles
                     </button>
                     <button class="btn btn-warning" onclick="debugSystem()">
-                        <i class="fas fa-bug"></i> Debug | 調試
+                        <i class="fas fa-bug"></i> Debug
                     </button>
                     <button class="btn btn-info" onclick="checkHeaders()">
-                        <i class="fas fa-list"></i> Check Headers | 檢查標題
+                        <i class="fas fa-list"></i> Check Headers
                     </button>
                     <button class="btn btn-success" onclick="testCreation()">
-                        <i class="fas fa-flask"></i> Test Creation | 測試建立
+                        <i class="fas fa-flask"></i> Test Creation
                     </button>
                     <button class="btn btn-danger" onclick="systemBackup()">
-                        <i class="fas fa-download"></i> Backup | 備份
+                        <i class="fas fa-download"></i> Backup
                     </button>
                 </div>
             </div>
@@ -402,31 +589,31 @@
                         <i class="fas fa-tasks"></i>
                     </div>
                     <div>
-                        <div class="card-title">Progress Overview | 進度總覽</div>
+                        <div class="card-title">Progress Overview</div>
                         <div class="bilingual">Teacher progress tracking</div>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">🟢 Excellent (≥90%) | 優秀</span>
+                    <span class="stat-label">🟢 Excellent (≥90%)</span>
                     <span class="stat-value" id="progress-excellent">0 (0%)</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">🟡 Good (80-89%) | 良好</span>
+                    <span class="stat-label">🟡 Good (80-89%)</span>
                     <span class="stat-value" id="progress-good">0 (0%)</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">🟠 Normal (60-79%) | 普通</span>
+                    <span class="stat-label">🟠 Normal (60-79%)</span>
                     <span class="stat-value" id="progress-normal">0 (0%)</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">🔴 Behind (<60%) | 落後</span>
+                    <span class="stat-label">🔴 Behind (<60%)</span>
                     <span class="stat-value" id="progress-behind">0 (0%)</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="overall-progress" style="width: 75%;"></div>
                 </div>
                 <div style="text-align: center; margin-top: 10px;">
-                    <small>Overall System Progress: <span id="overall-percentage">75%</span> | 整體系統進度</small>
+                    <small>Overall System Progress: <span id="overall-percentage">75%</span></small>
                 </div>
             </div>
         </div>
@@ -438,35 +625,47 @@
                     <i class="fas fa-bolt"></i>
                 </div>
                 <div>
-                    <div class="card-title">Quick Actions | 快速操作</div>
+                    <div class="card-title">Quick Actions</div>
                     <div class="bilingual">Frequently used system functions</div>
                 </div>
             </div>
             <div class="control-grid">
                 <button class="btn btn-primary" onclick="batchCreateGradebooks()">
-                    <i class="fas fa-plus-circle"></i> Batch Create Gradebooks<br>
-                    <small>批量建立成績簿</small>
+                    <i class="fas fa-plus-circle"></i> Batch Create Gradebooks
                 </button>
                 <button class="btn btn-secondary" onclick="checkAllProgress()">
-                    <i class="fas fa-chart-line"></i> Check All Progress<br>
-                    <small>檢查全體進度</small>
+                    <i class="fas fa-chart-line"></i> Check All Progress
                 </button>
                 <button class="btn btn-warning" onclick="generateReport()">
-                    <i class="fas fa-file-alt"></i> Generate Report<br>
-                    <small>生成詳細報告</small>
+                    <i class="fas fa-file-alt"></i> Generate Report
                 </button>
                 <button class="btn btn-secondary" onclick="importStudentData()">
-                    <i class="fas fa-upload"></i> Import Student Data<br>
-                    <small>匯入學生資料</small>
+                    <i class="fas fa-upload"></i> Import Student Data
                 </button>
                 <button class="btn btn-secondary" onclick="exportStudentData()">
-                    <i class="fas fa-download"></i> Export Student Data<br>
-                    <small>匯出學生資料</small>
+                    <i class="fas fa-download"></i> Export Student Data
                 </button>
                 <button class="btn btn-warning" onclick="systemMaintenance()">
-                    <i class="fas fa-tools"></i> System Maintenance<br>
-                    <small>系統維護</small>
+                    <i class="fas fa-tools"></i> System Maintenance
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assessment Title Management Modal -->
+    <div id="assessmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tags"></i> Assessment Title Management</h2>
+                <span class="close" onclick="closeAssessmentModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="assessment-content">
+                    <div style="text-align: center; padding: 40px;">
+                        <div class="spinner"></div>
+                        <p>Loading assessment configurations...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -560,7 +759,7 @@
             loadSystemStatistics();
             setTimeout(() => {
                 hideLoading();
-                showSuccess('✅ Dashboard refreshed successfully! | 控制台重新整理成功！');
+                showSuccess('✅ Dashboard refreshed successfully!');
             }, 1000);
         }
 
@@ -582,10 +781,10 @@
             google.script.run
                 .withSuccessHandler(function(url) {
                     window.open(url, '_blank');
-                    showSuccess('📁 Opening system folder | 正在開啟系統資料夾');
+                    showSuccess('📁 Opening system folder');
                 })
                 .withFailureHandler(function(error) {
-                    showError('❌ Cannot open system folder: ' + error.message + ' | 無法開啟系統資料夾');
+                    showError('❌ Cannot open system folder: ' + error.message);
                 })
                 .getSystemFolderUrl();
         }
@@ -594,10 +793,10 @@
             google.script.run
                 .withSuccessHandler(function(url) {
                     window.open(url, '_blank');
-                    showSuccess('📋 Opening master data sheet | 正在開啟主控資料表');
+                    showSuccess('📋 Opening master data sheet');
                 })
                 .withFailureHandler(function(error) {
-                    showError('❌ Cannot open master data: ' + error.message + ' | 無法開啟主控資料表');
+                    showError('❌ Cannot open master data: ' + error.message);
                 })
                 .getMasterDataUrl();
         }
@@ -608,34 +807,34 @@
             google.script.run
                 .withSuccessHandler(function(result) {
                     hideLoading();
-                    showSuccess('🎉 Gradebook creation completed! | 成績簿建立完成！');
+                    showSuccess('🎉 Gradebook creation completed!');
                     loadSystemStatistics();
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Failed to create gradebooks: ' + error.message + ' | 建立成績簿失敗');
+                    showError('❌ Failed to create gradebooks: ' + error.message);
                 })
                 .batchCreateGradebooks();
         }
 
         function checkAllProgress() {
-            showSuccess('📈 Progress check feature coming soon! | 進度檢查功能即將推出！');
+            showSuccess('📈 Progress check feature coming soon!');
         }
 
         function generateReport() {
-            showSuccess('📋 Report generation feature coming soon! | 報告生成功能即將推出！');
+            showSuccess('📋 Report generation feature coming soon!');
         }
 
         function importStudentData() {
-            showSuccess('📥 Import feature coming soon! | 匯入功能即將推出！');
+            showSuccess('📥 Import feature coming soon!');
         }
 
         function exportStudentData() {
-            showSuccess('📤 Export feature coming soon! | 匯出功能即將推出！');
+            showSuccess('📤 Export feature coming soon!');
         }
 
         function systemBackup() {
-            showSuccess('🔄 Backup feature coming soon! | 備份功能即將推出！');
+            showSuccess('🔄 Backup feature coming soon!');
         }
 
         function updateTeachers() {
@@ -643,12 +842,12 @@
             google.script.run
                 .withSuccessHandler(function(result) {
                     hideLoading();
-                    showSuccess('✅ Teachers updated successfully! Found ' + result.length + ' teachers | 老師資料更新成功！找到 ' + result.length + ' 位老師');
+                    showSuccess('✅ Teachers updated successfully! Found ' + result.length + ' teachers');
                     loadSystemStatistics();
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Failed to update teachers: ' + error.message + ' | 更新老師資料失敗');
+                    showError('❌ Failed to update teachers: ' + error.message);
                 })
                 .updateAutoGeneratedTeachers();
         }
@@ -658,12 +857,12 @@
             google.script.run
                 .withSuccessHandler(function(result) {
                     hideLoading();
-                    showSuccess('✅ Student status updated successfully! | 學生狀態更新成功！');
+                    showSuccess('✅ Student status updated successfully!');
                     loadSystemStatistics();
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Failed to update student status: ' + error.message + ' | 更新學生狀態失敗');
+                    showError('❌ Failed to update student status: ' + error.message);
                 })
                 .updateStudentStatus();
         }
@@ -688,7 +887,7 @@
                     }
                     
                     const debugInfo = `
-🔍 System Debug Results | 系統調試結果:
+🔍 System Debug Results:
 
 📁 System Folder: ${result.systemFolder}
 📋 Master Data Sheet: ${result.masterDataSheet}  
@@ -709,7 +908,7 @@ ${result.error ? '❌ Error: ' + result.error : '✅ No errors detected'}
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Debug failed: ' + error.message + ' | 調試失敗');
+                    showError('❌ Debug failed: ' + error.message);
                 })
                 .debugSystemStatus();
         }
@@ -741,7 +940,7 @@ ${result.error ? '❌ Error: ' + result.error : '✅ No errors detected'}
                     }
                     
                     const headerInfo = `
-📋 Column Headers Check | 欄位標題檢查:
+📋 Column Headers Check:
 
 📊 Total Columns: ${result.columnCount}
 📄 Data Rows: ${result.dataRows}
@@ -761,7 +960,7 @@ ${result.error ? '❌ Error: ' + result.error : '✅ Headers checked successfull
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Header check failed: ' + error.message + ' | 標題檢查失敗');
+                    showError('❌ Header check failed: ' + error.message);
                 })
                 .checkColumnHeaders();
         }
@@ -786,9 +985,9 @@ ${result.error ? '❌ Error: ' + result.error : '✅ Headers checked successfull
                     }
                     
                     const testInfo = `
-🧪 Gradebook Creation Test | 成績簿建立測試:
+🧪 Gradebook Creation Test:
 
-${assignmentText || 'No valid assignments found | 找不到有效的分配'}
+${assignmentText || 'No valid assignments found'}
 
 ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '✅ Student assignments look correct!'}
                     `;
@@ -796,13 +995,252 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
-                    showError('❌ Test failed: ' + error.message + ' | 測試失敗');
+                    showError('❌ Test failed: ' + error.message);
                 })
                 .testGradebookCreation();
         }
 
+        function validateClassAssignments() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.isValid) {
+                        showSuccess(`✅ Class assignments validation passed!\n\nDefined classes: ${result.definedClasses.length}\nNo assignment conflicts found.`);
+                    } else {
+                        let message = `⚠️ Class assignment validation issues found:\n\n`;
+                        message += `Issues (${result.issues.length}):\n`;
+                        result.issues.slice(0, 10).forEach(issue => {
+                            message += `• ${issue}\n`;
+                        });
+                        if (result.issues.length > 10) {
+                            message += `• ... and ${result.issues.length - 10} more issues\n`;
+                        }
+                        message += `\nUndefined classes: ${result.undefinedClasses.join(', ')}\n`;
+                        message += `\nPlease update Students sheet to match Classes sheet definitions.`;
+                        showError(message);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Validation failed: ' + error.message);
+                })
+                .validateStudentClassAssignments();
+        }
+
         function systemMaintenance() {
-            showSuccess('🔧 Maintenance feature coming soon! | 維護功能即將推出！');
+            showSuccess('🔧 Maintenance feature coming soon!');
+        }
+
+        // Assessment Title Management Functions
+        function manageAssessmentTitles() {
+            document.getElementById('assessmentModal').style.display = 'block';
+            loadAssessmentTitles();
+        }
+
+        function closeAssessmentModal() {
+            document.getElementById('assessmentModal').style.display = 'none';
+        }
+
+        function loadAssessmentTitles() {
+            const content = document.getElementById('assessment-content');
+            content.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div class="spinner"></div>
+                    <p>Loading assessment configurations...</p>
+                </div>
+            `;
+
+            google.script.run
+                .withSuccessHandler(function(data) {
+                    renderAssessmentTitles(data);
+                })
+                .withFailureHandler(function(error) {
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: red;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                            <h3>❌ Failed to load assessment titles</h3>
+                            <p>Failed to load assessment titles: ${error.message}</p>
+                        </div>
+                    `;
+                })
+                .getAllAssessmentTitlesForDashboard();
+        }
+
+        function renderAssessmentTitles(data) {
+            const content = document.getElementById('assessment-content');
+            
+            if (!data || data.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-info-circle" style="font-size: 3rem; color: #ffc107; margin-bottom: 20px;"></i>
+                        <h3>No class configurations found</h3>
+                        <p>Please configure class data in the master sheet first</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div style="margin-bottom: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px;">
+                    <h3 style="margin: 0 0 10px 0; color: #1976d2;">
+                        <i class="fas fa-info-circle"></i> How to Use
+                    </h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #555;">
+                        <li>Each grade has 3 levels: E1 (Basic), E2 (Intermediate), E3 (Advanced)</li>
+                        <li>Modify assessment titles below and click "Update" to save changes</li>
+                        <li>Click "Reset" to restore default titles for a class</li>
+                        <li>Changes take effect immediately for new gradebooks</li>
+                    </ul>
+                </div>
+            `;
+
+            // Group by grade
+            const groupedData = {};
+            data.forEach(classConfig => {
+                if (!groupedData[classConfig.grade]) {
+                    groupedData[classConfig.grade] = [];
+                }
+                groupedData[classConfig.grade].push(classConfig);
+            });
+
+            // Render each grade
+            Object.keys(groupedData).sort().forEach(grade => {
+                html += `<h3 style="margin: 30px 0 20px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                    <i class="fas fa-graduation-cap"></i> ${grade} Classes
+                </h3>`;
+
+                groupedData[grade].forEach(classConfig => {
+                    html += createClassCard(classConfig);
+                });
+            });
+
+            content.innerHTML = html;
+        }
+
+        function createClassCard(classConfig) {
+            const formativeTitles = classConfig.formativeTitles || [];
+            const summativeTitles = classConfig.summativeTitles || [];
+            
+            return `
+                <div class="class-card">
+                    <div class="class-header">
+                        <div class="class-info">
+                            <h3>${classConfig.className}</h3>
+                            <p><strong>Level:</strong> ${classConfig.level} | <strong>LT:</strong> ${classConfig.ltTeacher || 'N/A'} | <strong>IT:</strong> ${classConfig.itTeacher || 'N/A'} | <strong>Students:</strong> ${classConfig.studentCount || '0'}</p>
+                        </div>
+                        <div>
+                            <button class="btn-update" onclick="updateClassAssessmentTitles('${classConfig.classCode}')">
+                                <i class="fas fa-save"></i> Update
+                            </button>
+                            <button class="btn-reset" onclick="resetClassAssessmentTitles('${classConfig.classCode}')">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-section">
+                        <h4><i class="fas fa-pencil-alt" style="color: #2196f3;"></i> Formative Assessments (8 items)</h4>
+                        <div class="assessment-grid">
+                            ${formativeTitles.map((title, index) => 
+                                `<input type="text" class="assessment-input" 
+                                        id="formative-${classConfig.classCode}-${index}" 
+                                        value="${title}" 
+                                        placeholder="F.A.${index + 1}">`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-section">
+                        <h4><i class="fas fa-chart-bar" style="color: #4caf50;"></i> Summative Assessments (4 items)</h4>
+                        <div class="assessment-grid">
+                            ${summativeTitles.map((title, index) => 
+                                `<input type="text" class="assessment-input" 
+                                        id="summative-${classConfig.classCode}-${index}" 
+                                        value="${title}" 
+                                        placeholder="S.A.${index + 1}">`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateClassAssessmentTitles(classCode) {
+            // Collect formative titles
+            const formativeTitles = [];
+            for (let i = 0; i < 8; i++) {
+                const input = document.getElementById(`formative-${classCode}-${i}`);
+                formativeTitles.push(input ? input.value.trim() : `F.A.${i + 1}`);
+            }
+
+            // Collect summative titles
+            const summativeTitles = [];
+            for (let i = 0; i < 4; i++) {
+                const input = document.getElementById(`summative-${classCode}-${i}`);
+                summativeTitles.push(input ? input.value.trim() : `S.A.${i + 1}`);
+            }
+
+            // Validate inputs
+            if (formativeTitles.some(title => !title) || summativeTitles.some(title => !title)) {
+                showError('❌ All fields must be filled');
+                return;
+            }
+
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        let message = `✅ ${result.message}`;
+                        if (result.warnings && result.warnings.length > 0) {
+                            message += `\n⚠️ Some issues occurred during synchronization:\n${result.warnings.join('\n')}`;
+                        }
+                        showSuccess(message);
+                    } else {
+                        showError(`❌ Failed to update ${classCode}: ${result.message}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Update failed: ' + error.message);
+                })
+                .updateAssessmentTitlesByClassCode(classCode, formativeTitles, summativeTitles);
+        }
+
+        function resetClassAssessmentTitles(classCode) {
+            if (!confirm(`Are you sure you want to reset assessment titles for ${classCode}? This will restore default titles.`)) {
+                return;
+            }
+
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        let message = `✅ ${result.message}`;
+                        if (result.warnings && result.warnings.length > 0) {
+                            message += `\n⚠️ Some issues occurred during synchronization:\n${result.warnings.join('\n')}`;
+                        }
+                        showSuccess(message);
+                        loadAssessmentTitles(); // Reload to show default titles
+                    } else {
+                        showError(`❌ Failed to reset ${classCode}: ${result.message}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Reset failed: ' + error.message);
+                })
+                .resetAssessmentTitles(classCode);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('assessmentModal');
+            if (event.target === modal) {
+                closeAssessmentModal();
+            }
         }
     </script>
 </body>

@@ -24,14 +24,13 @@
 
 ```
 gradebook-system/
-├── README.md                    # This documentation | 本說明文件
-├── DEPLOYMENT_GUIDE.md          # Deployment instructions | 部署說明
+├── README.md                    # Complete documentation | 完整說明文件
 └── google-apps-script/
     ├── Code.gs                  # Complete system logic | 完整系統邏輯
     └── dashboard.html           # Modern HTML dashboard | 現代化 HTML 控制台
 ```
 
-**That's it! Only 4 files needed. | 就這樣！只需要 4 個檔案。**
+**That's it! Only 3 files needed. | 就這樣！只需要 3 個檔案。**
 
 ## 🚀 Quick Start | 快速開始
 
@@ -40,9 +39,36 @@ gradebook-system/
 #### 🔥 Option A: Deploy as Web App (Recommended) | 方式A：部署為網頁應用程式（推薦）
 **Get a dedicated URL for your HTML Dashboard! | 為您的 HTML 控制台取得專用網址！**
 
-📋 **Follow the detailed guide:** `DEPLOYMENT_GUIDE.md` | **遵循詳細指南：** `DEPLOYMENT_GUIDE.md`
+**📋 Deployment Steps | 部署步驟：**
 
-Benefits | 優勢:
+1. **Create Project | 建立專案**
+   - Go to https://script.google.com/
+   - Click "New Project" | 點擊「新增專案」
+   - Rename to: `Gradebook System Dashboard`
+
+2. **Add Files | 新增檔案**
+   - **Code.gs**: Copy all content from `google-apps-script/Code.gs`
+   - **dashboard.html**: Click "+" → "HTML" → Name it `dashboard` → Copy content
+   - **Configure Folder ID | 設定資料夾ID**: Line 21 in Code.gs
+     ```javascript
+     MAIN_FOLDER_ID: 'YOUR_GOOGLE_DRIVE_FOLDER_ID'
+     ```
+
+3. **Deploy as Web App | 部署為網頁應用程式**
+   - Click "Deploy" → "New deployment" | 點擊「部署」→「新增部署」
+   - Select "Web app" | 選擇「網頁應用程式」
+   - Settings | 設定:
+     - Execute as: Me | 執行身分：我
+     - Who has access: Anyone | 存取權限：任何人
+   - Click "Deploy" | 點擊「部署」
+   - **Copy the Web app URL** | **複製網頁應用程式URL**
+
+4. **Authorize | 授權**
+   - Open your Dashboard URL | 開啟控制台URL
+   - Click "Review permissions" → "Allow" | 點擊「檢閱權限」→「允許」
+   - Done! | 完成！
+
+**Benefits | 優勢:**
 - ✅ **Standalone web application** | **獨立網頁應用程式**
 - ✅ **Professional URL** | **專業網址**
 - ✅ **Easy to bookmark and share** | **容易加入書籤和分享**
