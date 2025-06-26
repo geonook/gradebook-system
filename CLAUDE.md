@@ -133,6 +133,49 @@ Semester Grade = (Formative×0.15 + Summative×0.2 + Final×0.1) ÷ 0.45
 
 ## 🚨 CRITICAL DEVELOPMENT WORKFLOW
 
+### ⚠️ MANDATORY VERSION CONTROL BEFORE ANY CHANGES
+
+**NEVER modify code without creating backups first. This is CRITICAL.**
+
+**BEFORE making ANY modifications to the codebase:**
+
+1. **Create Tagged Backup**
+   ```bash
+   # Tag current working version with timestamp
+   git tag -a v$(date +%Y%m%d_%H%M%S) -m "Backup before changes: $(date)"
+   git push origin --tags
+   
+   # Create timestamped backup files
+   cp gradebook-system/google-apps-script/Code.gs gradebook-system/google-apps-script/Code_backup_$(date +%Y%m%d_%H%M%S).gs
+   cp gradebook-system/google-apps-script/CodeExtensions.gs gradebook-system/google-apps-script/CodeExtensions_backup_$(date +%Y%m%d_%H%M%S).gs
+   ```
+
+2. **Document Current State**
+   ```bash
+   # Create or update version log
+   echo "=== BACKUP LOG $(date) ===" >> VERSION_LOG.md
+   echo "Lines of code before changes:" >> VERSION_LOG.md
+   wc -l gradebook-system/google-apps-script/*.gs >> VERSION_LOG.md
+   echo "Recent git commits:" >> VERSION_LOG.md
+   git log --oneline -5 >> VERSION_LOG.md
+   echo "Google Apps Script version: [Record from GAS platform]" >> VERSION_LOG.md
+   echo "" >> VERSION_LOG.md
+   ```
+
+3. **Test Current Functionality** 
+   - Verify all dashboard buttons work
+   - Test batch gradebook creation
+   - Confirm formulas and calculations are correct
+   - Document any known issues
+   - Take screenshots if UI changes are planned
+
+4. **Commit Current State**
+   ```bash
+   git add -A
+   git commit -m "BACKUP: Working state before modifications $(date)"
+   git push origin main
+   ```
+
 ### Mandatory Steps for Every Code Update
 
 1. **Always Deploy After Changes**
