@@ -130,3 +130,72 @@ Semester Grade = (Formative×0.15 + Summative×0.2 + Final×0.1) ÷ 0.45
 - Use dashboard or menu system to check progress
 - Color-coded indicators: 🟢 Excellent (≥90%), 🟡 Good (80-89%), 🟠 Normal (60-79%), 🔴 Behind (<60%)
 - Automated weekly progress checks available
+
+## 🚨 CRITICAL DEVELOPMENT WORKFLOW
+
+### Mandatory Steps for Every Code Update
+
+1. **Always Deploy After Changes**
+   ```bash
+   # Execute deployment script after every modification
+   ./deploy.sh
+   ```
+   - This pushes changes to Google Apps Script immediately
+   - Without deployment, changes only exist locally and won't work in the dashboard
+   - Google Apps Script runs the server-side code, so local changes must be pushed
+
+2. **Clean Up Test Code**
+   - After testing functionality, ALWAYS remove temporary test functions
+   - Remove debug buttons and test UI elements
+   - Keep code clean and production-ready
+   - Example cleanup items:
+     - Test functions like `testConnection()`, `debugFunction()`
+     - Temporary buttons for debugging
+     - Console.log statements used for testing
+     - Experimental code blocks
+
+3. **Code Optimization Priority**
+   - Remove unused functions and variables
+   - Consolidate duplicate code
+   - Maintain consistent naming conventions
+   - Keep comments bilingual (English | Chinese)
+
+### Error Handling Best Practices
+
+1. **Dashboard Function Returns**
+   - Always return structured objects: `{success: true/false, data/error: ...}`
+   - Include meaningful error messages in both languages
+   - Provide debugging information when errors occur
+
+2. **File Name Flexibility**
+   - Support multiple possible file naming patterns
+   - Include file listing in error messages for debugging
+   - Use try-catch blocks with fallback options
+
+### Testing Workflow
+
+1. **Add temporary test functions for debugging**
+2. **Test functionality thoroughly**
+3. **Remove all test code once confirmed working**
+4. **Execute `./deploy.sh` to push clean code**
+5. **Verify functionality in live environment**
+
+### Common Issues Prevention
+
+- **Error 400**: Usually caused by outdated code in Google Apps Script
+  - Solution: Always run `./deploy.sh` after changes
+- **File Not Found**: Master Data or system files missing
+  - Solution: Check file names and folder structure
+  - Use enhanced error messages to identify actual file names
+- **Permission Issues**: Google Apps Script lacks Drive access
+  - Solution: Re-authorize permissions in Apps Script
+
+### Deployment Verification
+
+After each `./deploy.sh`:
+1. Check that all 6 files are pushed successfully
+2. Test key functions in the dashboard
+3. Verify error handling works correctly
+4. Confirm all temporary code is removed
+
+**Remember: Local changes are invisible to Google Apps Script until deployed!**
