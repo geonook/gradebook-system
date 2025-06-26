@@ -30,6 +30,40 @@ This is a Google Apps Script-based gradebook management system that provides a c
 ./deploy.sh
 ```
 
+### Claude Code Slash Commands (Claude Code 專用指令)
+
+#### System Commands | 系統指令
+```
+/check          - Perform comprehensive code quality and security analysis
+/test           - Run system integrity tests and generate test reports
+/deploy         - Execute deployment sequence with proper validation
+/status         - Check current system status and health metrics
+```
+
+#### Development Commands | 開發指令
+```
+/implement      - Break down and implement new features systematically
+/refactor       - Analyze and improve code structure and performance
+/debug          - Investigate and resolve system issues
+/optimize       - Identify and apply performance optimizations
+```
+
+#### Documentation Commands | 文件指令
+```
+/docs           - Generate comprehensive project documentation
+/api-docs       - Create API documentation for system functions
+/guide          - Create user guides and tutorials
+/changelog      - Generate release notes and change logs
+```
+
+#### Quality Assurance | 品質保證
+```
+/review         - Conduct thorough code review with best practices
+/security       - Perform security audit and vulnerability assessment
+/performance    - Analyze system performance and bottlenecks
+/backup         - Create system backup and recovery procedures
+```
+
 ### Google Apps Script Development
 - No traditional build/test commands - development happens in the Google Apps Script editor
 - Deploy as web app: Deploy → New deployment → Web app
@@ -240,5 +274,83 @@ After each `./deploy.sh`:
 2. Test key functions in the dashboard
 3. Verify error handling works correctly
 4. Confirm all temporary code is removed
+
+**Remember: Local changes are invisible to Google Apps Script until deployed!**
+
+## 🧪 Testing Strategy (測試策略)
+
+### Test-Driven Development | 測試驅動開發
+```javascript
+// 1. Write test first | 先寫測試
+function testCreateTeacherGradebook() {
+  const mockTeacher = { name: 'Test Teacher', classes: ['G1A'] };
+  const result = createTeacherGradebook(mockTeacher);
+  assert(result.success === true, 'Teacher gradebook creation failed');
+}
+
+// 2. Implement function | 實施功能
+function createTeacherGradebook(teacher) {
+  // Implementation here
+}
+
+// 3. Refactor and optimize | 重構和優化
+```
+
+### Testing Levels | 測試層級
+- **Unit Tests**: Individual function testing | 單元測試：個別函數測試
+- **Integration Tests**: Component interaction testing | 整合測試：組件互動測試  
+- **System Tests**: End-to-end workflow testing | 系統測試：端到端流程測試
+- **Performance Tests**: Load and stress testing | 性能測試：負載和壓力測試
+
+### Quality Gates | 品質門檻
+Before any deployment, ensure:
+1. ✅ All unit tests pass | 所有單元測試通過
+2. ✅ Code coverage > 80% | 代碼覆蓋率 > 80%
+3. ✅ No security vulnerabilities | 無安全漏洞
+4. ✅ Performance benchmarks met | 達到性能基準
+5. ✅ Documentation updated | 文件已更新
+
+## 🏗️ Code Organization (代碼組織)
+
+### Modular Structure | 模組化結構
+```
+gradebook-system/
+├── core/                   # Core business logic | 核心業務邏輯
+│   ├── teacher-manager.gs  # Teacher operations | 教師操作
+│   ├── grade-calculator.gs # Grade calculations | 成績計算
+│   └── progress-tracker.gs # Progress monitoring | 進度監控
+├── utils/                  # Utility functions | 工具函數
+│   ├── data-validator.gs   # Data validation | 資料驗證
+│   ├── error-handler.gs    # Error handling | 錯誤處理
+│   └── logger.gs          # Logging system | 日誌系統
+├── tests/                  # Test suite | 測試套件
+│   ├── unit/              # Unit tests | 單元測試
+│   ├── integration/       # Integration tests | 整合測試
+│   └── performance/       # Performance tests | 性能測試
+└── docs/                  # Documentation | 文件
+    ├── api/               # API documentation | API 文件
+    ├── guides/            # User guides | 使用指南
+    └── troubleshooting/   # Problem solving | 問題解決
+```
+
+### Coding Standards | 編碼標準
+- **Function Naming**: camelCase with descriptive names | 函數命名：駝峰式，描述性名稱
+- **Constants**: UPPER_SNAKE_CASE | 常數：大寫蛇形命名
+- **Comments**: Bilingual (English | Chinese) | 註釋：雙語（英文｜中文）
+- **Error Handling**: Always use try-catch with meaningful messages | 錯誤處理：總是使用 try-catch 與有意義的訊息
+
+## 🔒 Security Best Practices (安全最佳實踐)
+
+### Data Protection | 資料保護
+- Never log sensitive student information | 絕不記錄敏感學生資訊
+- Validate all input data | 驗證所有輸入資料
+- Use Google Apps Script's built-in authorization | 使用 Google Apps Script 內建授權
+- Implement proper access controls | 實施適當的存取控制
+
+### Code Security | 代碼安全
+- No hardcoded secrets or API keys | 無硬編碼密鑰或 API 金鑰
+- Input sanitization for all user data | 對所有用戶資料進行輸入清理
+- Regular security audits | 定期安全審計
+- Follow OWASP guidelines | 遵循 OWASP 指導原則
 
 **Remember: Local changes are invisible to Google Apps Script until deployed!**
