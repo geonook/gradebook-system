@@ -179,9 +179,10 @@ Semester Grade = (Formative×0.15 + Summative×0.2 + Final×0.1) ÷ 0.45
    git tag -a v$(date +%Y%m%d_%H%M%S) -m "Backup before changes: $(date)"
    git push origin --tags
    
-   # Create timestamped backup files
-   cp gradebook-system/google-apps-script/Code.gs gradebook-system/google-apps-script/Code_backup_$(date +%Y%m%d_%H%M%S).gs
-   cp gradebook-system/google-apps-script/CodeExtensions.gs gradebook-system/google-apps-script/CodeExtensions_backup_$(date +%Y%m%d_%H%M%S).gs
+   # Create timestamped backup files in dedicated folder (avoids SYSTEM_CONFIG conflicts)
+   mkdir -p backups
+   cp gradebook-system/google-apps-script/Code.gs backups/Code_backup_$(date +%Y%m%d_%H%M%S).gs
+   cp gradebook-system/google-apps-script/CodeExtensions.gs backups/CodeExtensions_backup_$(date +%Y%m%d_%H%M%S).gs
    ```
 
 2. **Document Current State**
