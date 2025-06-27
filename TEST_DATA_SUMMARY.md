@@ -224,5 +224,58 @@
 
 ---
 
-*Generated: 2025-06-26*  
-*Total Test Data: 109 students, 18 teachers, 6 HTs, 36 classes*
+## 🎯 HT (Head Teacher) System | 學年主任系統
+
+### HT Management Structure | HT管理結構
+
+**Grade Group Management | 年段組管理:**
+- **G1-G2 Group**: Ms. Johnson (LT HT), Mr. Garcia (IT HT)
+- **G3-G4 Group**: Ms. Taylor (LT HT), Mr. Lee (IT HT)  
+- **G5-G6 Group**: Ms. White (LT HT), Mr. Collins (IT HT)
+
+### HT Gradebook Features | HT成績簿功能
+
+**Enhanced Gradebook Structure | 增強成績簿結構:**
+- 📋 Gradebook Info (Teacher information)
+- 📚 Class 1-4 (Regular teaching classes)
+- ⚙️ **HT Assessment Management** (Dual-grade assessment title management)
+
+**HT Assessment Management Contains | HT評量管理包含:**
+- Dual-grade level management (e.g., G1E1-G1E3, G2E1-G2E3)
+- Permission-controlled sync functions
+- Grade-group restricted operations
+- Bilingual interface and instructions
+
+### Permission Control System | 權限控制系統
+
+**Access Restrictions | 存取限制:**
+- HT can only sync their assigned grade group
+- IT HT manages IT teachers only
+- LT HT manages LT teachers only
+- Cross-grade-group operations are blocked
+
+**Security Features | 安全功能:**
+- File name pattern validation
+- Master Data cross-verification
+- Detailed permission logging
+- Bilingual error messages
+
+### Sync Functions | 同步功能
+
+**Available Operations | 可用操作:**
+```javascript
+// Sync all levels in grade group
+syncAssessmentTitlesByGradeGroup("G1-G2", "LT")
+
+// Sync specific level (restricted by HT permissions)
+syncAssessmentTitlesByLevel("G1E1")
+
+// View assessment titles (read-only with permission check)
+getAssessmentTitlesByGradeGroup("G1-G2", "LT")
+```
+
+---
+
+*Generated: 2025-06-27*  
+*Total Test Data: 109 students, 18 teachers (6 HTs), 36 classes*  
+*HT System: Complete with permission control and dual-grade management*

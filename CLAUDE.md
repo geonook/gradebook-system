@@ -355,3 +355,51 @@ gradebook-system/
 - Follow OWASP guidelines | 遵循 OWASP 指導原則
 
 **Remember: Local changes are invisible to Google Apps Script until deployed!**
+
+## 🎯 HT (Head Teacher) System Status | HT學年主任系統狀態
+
+### Current Implementation Status | 當前實作狀態
+
+#### ✅ **COMPLETED (Ready for Production) | 已完成（可用於生產）**
+- **HT Gradebook Creation**: Integrated with `batchCreateGradebooks()` 
+- **Permission Control**: Complete access validation and restriction system
+- **Dual-Grade Management**: G1-G2, G3-G4, G5-G6 grade group support
+- **HT Assessment Management Interface**: Full UI with bilingual support
+- **File Naming Convention**: `[Name] - HT [GradeGroup] [Type] - Gradebook`
+
+#### ⚠️ **PENDING IMPLEMENTATION (Critical) | 待實作（關鍵）**
+- **Sync Function Core Operations**: Physical read/write to Google Sheets
+- **Assessment Title Persistence**: Actual data storage and retrieval
+- **HT Dashboard Integration**: Connect UI with real gradebook data
+
+#### 📋 **Key Functions Status | 關鍵函數狀態**
+```javascript
+// ✅ WORKING - Permission control and validation
+getCurrentHTContextEnhanced()     // HT identity detection
+verifyHTPermissions()            // Access control validation  
+syncAssessmentTitlesByGradeGroup() // Framework with permission checks
+
+// ❌ PLACEHOLDER - Need implementation
+getAssessmentTitlesFromHTGradebook()    // Read from HT sheets
+findTeacherGradebooksByGradeGroup()     // Locate target gradebooks  
+applyAssessmentTitlesToGradebook()      // Write to teacher gradebooks
+```
+
+### Usage Instructions | 使用說明
+
+#### **For Production Use | 生產環境使用**
+1. Run `batchCreateGradebooks()` to create all gradebooks including HT versions
+2. HT teachers will receive enhanced gradebooks with Assessment Management sheets
+3. Permission system automatically restricts HT access to their grade groups only
+
+#### **For Development | 開發環境**
+1. See `HT_DEVELOPMENT_STATUS.md` for detailed implementation status
+2. Test permission system with actual HT gradebook files
+3. Sync functions currently return placeholder responses
+
+### Next Development Priority | 下一步開發優先級
+1. **CRITICAL**: Implement sync function core operations (Google Sheets I/O)
+2. **HIGH**: HT dashboard integration with real data
+3. **MEDIUM**: Assessment title change auditing and rollback
+
+**Note**: HT system architecture is complete but sync operations need implementation to be fully functional.
