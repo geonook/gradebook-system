@@ -24,7 +24,21 @@ This is a Google Apps Script-based gradebook management system that provides a c
 
 ## Development Commands
 
-### Auto Deployment (一鍵部署)
+### Deployment Scripts (部署腳本)
+
+#### Test Deployment (測試部署)
+```bash
+# 🧪 用於開發和測試，不影響生產環境
+./deploy-test.sh
+```
+
+#### Production Deployment (生產部署)
+```bash
+# 🚀 部署到生產環境（需要確認）
+./deploy-production.sh
+```
+
+#### Legacy Auto Deployment (舊版自動部署)
 ```bash
 # 自動推送到 GitHub 和 Google Apps Script
 ./deploy.sh
