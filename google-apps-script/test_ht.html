@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HT Dashboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        h1 { text-align: center; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { background: rgba(76, 175, 80, 0.3); }
+        .info { background: rgba(33, 150, 243, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 HT Dashboard 測試頁面</h1>
+        
+        <div class="status success">
+            ✅ HT Dashboard 路由正常工作！
+        </div>
+        
+        <div class="status info">
+            📊 系統狀態：正在載入 HT 功能...
+        </div>
+        
+        <div id="systemInfo">
+            <h3>系統資訊：</h3>
+            <p>時間戳：<?= new Date().toLocaleString() ?></p>
+            <p>WebApp 模式：<?= typeof isWebApp !== 'undefined' && isWebApp ? '是' : '否' ?></p>
+            <p>系統配置：<?= typeof config !== 'undefined' ? '已載入' : '未載入' ?></p>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <button onclick="testHTFunctions()" style="padding: 10px 20px; font-size: 16px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                測試 HT 函數
+            </button>
+            
+            <button onclick="location.href = location.href.replace('?page=ht', '')" style="padding: 10px 20px; font-size: 16px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+                返回主控制台
+            </button>
+        </div>
+        
+        <div id="testResults" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        function testHTFunctions() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<p>🔄 正在測試 HT 函數...</p>';
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    resultsDiv.innerHTML = `
+                        <div class="status success">
+                            <h4>✅ HT 函數測試結果：</h4>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </div>
+                    `;
+                })
+                .withFailureHandler(function(error) {
+                    resultsDiv.innerHTML = `
+                        <div class="status" style="background: rgba(244, 67, 54, 0.3);">
+                            <h4>❌ 測試失敗：</h4>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                })
+                .testHTDashboardFiles();
+        }
+        
+        // 自動執行測試
+        document.addEventListener('DOMContentLoaded', function() {
+            testHTFunctions();
+        });
+    </script>
+</body>
+</html>

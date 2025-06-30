@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HT Dashboard | 學年主任控制台</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .ht-identity {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .main-sections {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sync-panel, .teacher-overview {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .sync-panel h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .assessment-editor {
+            margin-bottom: 25px;
+        }
+
+        .assessment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            table-layout: fixed;
+        }
+
+        .assessment-table th {
+            background: #f5f5f5;
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-weight: 600;
+            width: 7%;
+        }
+
+        .assessment-table th:first-child {
+            width: 9%;
+        }
+
+        .assessment-table td {
+            padding: 12px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .level-label {
+            background: #e3f2fd !important;
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .assessment-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-width: 80px;
+            min-height: 40px;
+        }
+
+        .assessment-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .sync-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary, .btn-secondary {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled, .btn-secondary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sync-status {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-fill.success {
+            background: #4CAF50;
+        }
+
+        .progress-fill.error {
+            background: #f44336;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #cce7ff;
+            color: #0056b3;
+            border: 1px solid #b3d9ff;
+        }
+
+        .teacher-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .teacher-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .teacher-item:last-child {
+            border-bottom: none;
+        }
+
+        .teacher-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .teacher-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Modern Assessment Editor Styles */
+        .assessment-editor-modern {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .editor-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .tab-btn:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #4CAF50;
+            font-weight: 600;
+            border-bottom: 3px solid #4CAF50;
+        }
+
+        .view-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .level-header {
+            background: #4CAF50 !important;
+            color: white !important;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+        }
+
+        .level-row:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .level-row:hover {
+            background: #e3f2fd;
+        }
+
+        /* Card View Styles */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .level-card {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .level-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .btn-mini {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn-mini:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .assessment-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .assessment-group h5 {
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-wrapper label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .assessment-input-card {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .assessment-input-card:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        /* Bulk Edit Styles */
+        .bulk-editor {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .bulk-controls {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .bulk-controls h4 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .template-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-template {
+            padding: 12px 20px;
+            border: 2px solid #4CAF50;
+            background: white;
+            color: #4CAF50;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-template:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .bulk-group {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .bulk-group h5 {
+            margin: 0 0 20px 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bulk-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .bulk-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bulk-input-wrapper label {
+            min-width: 50px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .bulk-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .bulk-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn-apply {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn-apply:hover {
+            background: #45a049;
+        }
+
+        @media (max-width: 1200px) {
+            .main-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .assessment-table {
+                font-size: 0.9rem;
+            }
+            
+            .assessment-input {
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sync-buttons {
+                flex-direction: column;
+            }
+            
+            .assessment-table {
+                font-size: 0.8rem;
+                overflow-x: auto;
+                display: block;
+                white-space: nowrap;
+            }
+            
+            .assessment-input {
+                font-size: 0.7rem;
+                padding: 6px 8px;
+                min-width: 60px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i> 返回
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
+            <p>學年主任控制台 | Head Teacher Control Panel</p>
+        </div>
+
+        <!-- HT Identity Section -->
+        <div class="ht-identity">
+            <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> 正在檢測 HT 身份... | Detecting HT identity...</span>
+        </div>
+
+        <!-- Main Sections -->
+        <div class="main-sections">
+            <!-- Assessment Title Sync Panel -->
+            <div class="sync-panel">
+                <h3>
+                    <i class="fas fa-sync-alt"></i>
+                    評量標題同步管理 | Assessment Title Sync Management
+                </h3>
+                
+                <!-- Assessment Editor -->
+                <div class="assessment-editor">
+                    <h4>✏️ 編輯評量標題 | Edit Assessment Titles</h4>
+                    <div id="assessmentForm">
+                        <div class="alert alert-info">
+                            正在載入評量標題編輯器... | Loading assessment title editor...
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sync Control Buttons -->
+                <div class="sync-buttons">
+                    <button id="syncAllBtn" class="btn-primary" onclick="syncAllGrades()" disabled>
+                        <i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades
+                    </button>
+                    <button id="previewBtn" class="btn-secondary" onclick="previewChanges()" disabled>
+                        <i class="fas fa-eye"></i> 預覽變更 | Preview Changes
+                    </button>
+                </div>
+                
+                <!-- Sync Status -->
+                <div class="sync-status">
+                    <div id="syncProgress"></div>
+                    <div id="syncResults"></div>
+                </div>
+            </div>
+
+            <!-- Teacher Overview Panel -->
+            <div class="teacher-overview">
+                <h3>
+                    <i class="fas fa-users"></i>
+                    教師總覽 | Teacher Overview
+                </h3>
+                
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalTeachers">-</div>
+                        <div class="stat-label">總教師數</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="gradeGroup">-</div>
+                        <div class="stat-label">年段組</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="teacherType">-</div>
+                        <div class="stat-label">教師類型</div>
+                    </div>
+                </div>
+                
+                <!-- Teacher List -->
+                <div class="teacher-list" id="teacherList">
+                    <div class="alert alert-info">
+                        正在載入教師資料... | Loading teacher data...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>處理中... | Processing...</p>
+        </div>
+    </div>
+
+    <script>
+        let htContext = null;
+        let currentTitles = null;
+        let targetTeachers = [];
+
+        // Global variables for Web App mode
+        let isWebApp = true; // Always true in Web App mode
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isWebApp) {
+                showHTLoginScreen();
+            } else {
+                loadHTDashboardData();
+            }
+        });
+        
+        /**
+         * Show HT login screen for Web App
+         */
+        function showHTLoginScreen() {
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div class="header">
+                    <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
+                    <p>學年主任控制台 | Head Teacher Control Panel</p>
+                </div>
+                
+                <div class="sync-panel" style="max-width: 600px; margin: 0 auto;">
+                    <h3>
+                        <i class="fas fa-sign-in-alt"></i>
+                        HT 身份驗證 | HT Identity Verification
+                    </h3>
+                    
+                    <div id="loginForm">
+                        <div class="alert alert-info">
+                            請選擇您的 HT 身份以存取評量標題管理功能<br>
+                            Please select your HT identity to access assessment title management
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <label for="htSelect" style="display: block; margin-bottom: 10px; font-weight: 600;">
+                                選擇 HT 身份 | Select HT Identity:
+                            </label>
+                            <select id="htSelect" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+                                <option value="">正在載入 HT 選項... | Loading HT options...</option>
+                            </select>
+                        </div>
+                        
+                        <button id="loginBtn" class="btn-primary" onclick="performHTLogin()" disabled style="width: 100%; margin-top: 20px;">
+                            <i class="fas fa-sign-in-alt"></i> 登入 HT Dashboard | Login to HT Dashboard
+                        </button>
+                    </div>
+                    
+                    <div id="loginProgress" style="display: none; text-align: center; padding: 20px;">
+                        <div class="spinner"></div>
+                        <p>正在驗證身份... | Verifying identity...</p>
+                    </div>
+                </div>
+            `;
+            
+            // Load available HT options
+            loadHTOptions();
+        }
+        
+        /**
+         * Load available HT options
+         */
+        function loadHTOptions() {
+            google.script.run
+                .withSuccessHandler(onHTOptionsLoaded)
+                .withFailureHandler(onHTOptionsError)
+                .getAvailableHTOptions();
+        }
+        
+        /**
+         * Handle HT options loaded
+         */
+        function onHTOptionsLoaded(data) {
+            const select = document.getElementById('htSelect');
+            
+            if (data.success && data.htOptions.length > 0) {
+                select.innerHTML = '<option value="">請選擇您的身份 | Please select your identity</option>';
+                
+                data.htOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = JSON.stringify({
+                        name: option.name,
+                        gradeGroup: option.gradeGroup,
+                        type: option.type
+                    });
+                    optionElement.textContent = option.displayName;
+                    select.appendChild(optionElement);
+                });
+                
+                // Enable login button when selection changes
+                select.addEventListener('change', function() {
+                    document.getElementById('loginBtn').disabled = !this.value;
+                });
+                
+            } else {
+                select.innerHTML = '<option value="">無可用的 HT 選項 | No available HT options</option>';
+                showAlert('無法載入 HT 選項 | Cannot load HT options', 'error');
+            }
+        }
+        
+        /**
+         * Handle HT options error
+         */
+        function onHTOptionsError(error) {
+            console.error('Failed to load HT options:', error);
+            document.getElementById('htSelect').innerHTML = 
+                '<option value="">載入失敗 | Loading failed</option>';
+            showAlert('載入 HT 選項失敗 | Failed to load HT options', 'error');
+        }
+        
+        /**
+         * Perform HT login
+         */
+        function performHTLogin() {
+            const select = document.getElementById('htSelect');
+            const selectedValue = select.value;
+            
+            if (!selectedValue) {
+                showAlert('請選擇您的 HT 身份 | Please select your HT identity', 'error');
+                return;
+            }
+            
+            try {
+                const htData = JSON.parse(selectedValue);
+                
+                // Show progress
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('loginProgress').style.display = 'block';
+                
+                // Load HT dashboard with selected identity
+                google.script.run
+                    .withSuccessHandler(onHTLoginSuccess)
+                    .withFailureHandler(onHTLoginError)
+                    .getHTDashboardDataForWebApp(htData.name, htData.gradeGroup, htData.type);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('登入失敗 | Login failed', 'error');
+            }
+        }
+        
+        /**
+         * Handle successful HT login
+         */
+        function onHTLoginSuccess(data) {
+            if (data.success) {
+                // Store HT context globally
+                htContext = data.htContext;
+                currentTitles = data.currentTitles;
+                targetTeachers = data.targetTeachers;
+                
+                // Switch to main dashboard interface
+                showMainDashboard();
+                
+            } else {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('loginProgress').style.display = 'none';
+                showAlert(data.error, 'error');
+            }
+        }
+        
+        /**
+         * Handle HT login error
+         */
+        function onHTLoginError(error) {
+            console.error('HT login error:', error);
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('loginProgress').style.display = 'none';
+            showAlert('登入失敗 | Login failed: ' + error.message, 'error');
+        }
+        
+        /**
+         * Show main dashboard after successful login
+         */
+        function showMainDashboard() {
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div class="header">
+                    <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
+                    <p>學年主任控制台 | Head Teacher Control Panel</p>
+                </div>
+
+                <!-- HT Identity Section -->
+                <div class="ht-identity">
+                    <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> 正在載入... | Loading...</span>
+                </div>
+
+                <!-- Main Sections -->
+                <div class="main-sections">
+                    <!-- Assessment Title Sync Panel -->
+                    <div class="sync-panel">
+                        <h3>
+                            <i class="fas fa-sync-alt"></i>
+                            評量標題同步管理 | Assessment Title Sync Management
+                        </h3>
+                        
+                        <!-- Assessment Editor -->
+                        <div class="assessment-editor">
+                            <h4>✏️ 編輯評量標題 | Edit Assessment Titles</h4>
+                            <div id="assessmentForm">
+                                <div class="alert alert-info">
+                                    正在載入評量標題編輯器... | Loading assessment title editor...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sync Control Buttons -->
+                        <div class="sync-buttons">
+                            <button id="syncAllBtn" class="btn-primary" onclick="syncAllGrades()" disabled>
+                                <i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades
+                            </button>
+                            <button id="previewBtn" class="btn-secondary" onclick="previewChanges()" disabled>
+                                <i class="fas fa-eye"></i> 預覽變更 | Preview Changes
+                            </button>
+                        </div>
+                        
+                        <!-- Sync Status -->
+                        <div class="sync-status">
+                            <div id="syncProgress"></div>
+                            <div id="syncResults"></div>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Overview Panel -->
+                    <div class="teacher-overview">
+                        <h3>
+                            <i class="fas fa-users"></i>
+                            教師總覽 | Teacher Overview
+                        </h3>
+                        
+                        <!-- Statistics -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTeachers">-</div>
+                                <div class="stat-label">總教師數</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="gradeGroup">-</div>
+                                <div class="stat-label">年段組</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="teacherType">-</div>
+                                <div class="stat-label">教師類型</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Teacher List -->
+                        <div class="teacher-list" id="teacherList">
+                            <div class="alert alert-info">
+                                正在載入教師資料... | Loading teacher data...
+                            </div>
+                        </div>
+                        
+                        <!-- Logout Button -->
+                        <div style="margin-top: 20px; text-align: center;">
+                            <button class="btn-secondary" onclick="logout()" style="width: 100%;">
+                                <i class="fas fa-sign-out-alt"></i> 登出 | Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Overlay -->
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>處理中... | Processing...</p>
+                </div>
+            `;
+            
+            // Initialize the main dashboard
+            onHTDataLoaded({
+                success: true,
+                htContext: htContext,
+                currentTitles: currentTitles,
+                targetTeachers: targetTeachers
+            });
+        }
+        
+        /**
+         * Logout function
+         */
+        function logout() {
+            if (confirm('確定要登出嗎？ | Are you sure you want to logout?')) {
+                location.reload();
+            }
+        }
+
+        /**
+         * Load HT dashboard data
+         */
+        function loadHTDashboardData() {
+            showLoading(true);
+            
+            google.script.run
+                .withSuccessHandler(onHTDataLoaded)
+                .withFailureHandler(onError)
+                .getHTDashboardDataFromDashboard();
+        }
+
+        /**
+         * Handle HT data loaded
+         */
+        function onHTDataLoaded(data) {
+            showLoading(false);
+            
+            if (!data.success) {
+                document.getElementById('htInfo').innerHTML = 
+                    `<i class="fas fa-exclamation-triangle"></i> ${data.error}`;
+                document.getElementById('assessmentForm').innerHTML = 
+                    `<div class="alert alert-error">${data.error}</div>`;
+                return;
+            }
+            
+            htContext = data.htContext;
+            currentTitles = data.currentTitles;
+            targetTeachers = data.targetTeachers;
+            
+            // Update HT identity display
+            document.getElementById('htInfo').innerHTML = 
+                `<i class="fas fa-check-circle"></i> HT 身份確認：${htContext.htName} (${htContext.htGradeGroup} ${htContext.htType})`;
+            
+            // Generate assessment editor
+            generateAssessmentEditor();
+            
+            // Update teacher overview
+            updateTeacherOverview();
+            
+            // Enable buttons
+            document.getElementById('syncAllBtn').disabled = false;
+            document.getElementById('previewBtn').disabled = false;
+        }
+
+        /**
+         * Generate assessment title editor (Card View Only)
+         */
+        function generateAssessmentEditor() {
+            const grades = htContext.htGrades;
+            const levels = ['E1', 'E2', 'E3'];
+            const assessmentTypes = [
+                { group: 'formative', types: ['FA1', 'FA2', 'FA3', 'FA4', 'FA5', 'FA6', 'FA7', 'FA8'], label: '平時評量 | Formative Assessments', color: '#2196F3' },
+                { group: 'summative', types: ['SA1', 'SA2', 'SA3', 'SA4'], label: '總結評量 | Summative Assessments', color: '#4CAF50' },
+                { group: 'final', types: ['Final'], label: '期末考 | Final Exam', color: '#FF9800' }
+            ];
+            
+            let html = `
+                <div class="assessment-editor-modern">
+                    <!-- Card View Only -->
+                    <div class="cards-container">
+            `;
+            
+            // Generate card view
+            grades.forEach(grade => {
+                levels.forEach(level => {
+                    html += `
+                        <div class="level-card">
+                            <div class="card-header">
+                                <h4>${grade}${level}</h4>
+                                <button class="btn-mini" onclick="resetLevel('${grade}${level}')">
+                                    <i class="fas fa-undo"></i> 重置
+                                </button>
+                            </div>
+                            <div class="card-content">
+                    `;
+                    
+                    assessmentTypes.forEach(group => {
+                        html += `
+                            <div class="assessment-group" style="border-left: 4px solid ${group.color};">
+                                <h5 style="color: ${group.color};">
+                                    <i class="fas fa-${group.group === 'formative' ? 'pencil-alt' : group.group === 'summative' ? 'chart-bar' : 'graduation-cap'}"></i>
+                                    ${group.label}
+                                </h5>
+                                <div class="input-grid">
+                        `;
+                        
+                        group.types.forEach(type => {
+                            const inputId = `${grade}${level}_${type}`;
+                            const currentValue = getCurrentTitleValue(grade, level, type);
+                            
+                            html += `
+                                <div class="input-wrapper">
+                                    <label for="${inputId}">${type}</label>
+                                    <input type="text" 
+                                           id="${inputId}" 
+                                           class="assessment-input-card"
+                                           value="${currentValue}"
+                                           onchange="onAssessmentTitleChanged()"
+                                           style="border-color: ${group.color};">
+                                </div>
+                            `;
+                        });
+                        
+                        html += `
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('assessmentForm').innerHTML = html;
+        }
+
+        /**
+         * Get current title value for input
+         */
+        function getCurrentTitleValue(grade, level, type) {
+            if (!currentTitles || !currentTitles.success) return '';
+            
+            const titles = currentTitles.assessmentTitles;
+            if (titles && titles[grade] && titles[grade][level] && titles[grade][level][type]) {
+                return titles[grade][level][type];
+            }
+            
+            return '';
+        }
+
+        /**
+         * Handle assessment title changes
+         */
+        function onAssessmentTitleChanged() {
+            // Enable preview button to show changes
+            document.getElementById('previewBtn').style.background = '#FF9800';
+            document.getElementById('previewBtn').innerHTML = 
+                '<i class="fas fa-eye"></i> 有變更 | Changes Made';
+        }
+
+        /**
+         * Update teacher overview
+         */
+        function updateTeacherOverview() {
+            // Update statistics
+            document.getElementById('totalTeachers').textContent = targetTeachers.length;
+            document.getElementById('gradeGroup').textContent = htContext.htGradeGroup;
+            document.getElementById('teacherType').textContent = htContext.htType;
+            
+            // Update teacher list
+            let html = '';
+            if (targetTeachers.length === 0) {
+                html = '<div class="alert alert-info">目前沒有發現相關教師成績簿</div>';
+            } else {
+                targetTeachers.forEach(teacher => {
+                    html += `
+                        <div class="teacher-item">
+                            <div class="teacher-name">${extractTeacherName(teacher)}</div>
+                            <div class="teacher-status status-active">就緒</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('teacherList').innerHTML = html;
+        }
+
+        /**
+         * Extract teacher name from filename
+         */
+        function extractTeacherName(filename) {
+            const match = filename.match(/\d+S\d_(.+?)_(?:LT|IT)_/);
+            return match ? match[1] : filename;
+        }
+
+        /**
+         * Preview changes before sync
+         */
+        function previewChanges() {
+            const formData = collectAssessmentFormData();
+            const changedTitles = [];
+            
+            Object.keys(formData).forEach(key => {
+                const value = formData[key];
+                if (value && value.trim()) {
+                    const [levelCode, type] = key.split('_');
+                    changedTitles.push(`${levelCode} ${type}: ${value}`);
+                }
+            });
+            
+            if (changedTitles.length === 0) {
+                showAlert('沒有發現變更的評量標題', 'info');
+                return;
+            }
+            
+            const previewHTML = `
+                <div class="alert alert-info">
+                    <h4>📋 變更預覽 | Change Preview</h4>
+                    <p><strong>將要更新 ${targetTeachers.length} 個教師成績簿</strong></p>
+                    <p><strong>變更的評量標題：</strong></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        ${changedTitles.map(title => `<li>${title}</li>`).join('')}
+                    </ul>
+                    <p><em>點擊「同步所有級別」按鈕執行變更</em></p>
+                </div>
+            `;
+            
+            document.getElementById('syncResults').innerHTML = previewHTML;
+            
+            // Reset preview button
+            document.getElementById('previewBtn').style.background = '#2196F3';
+            document.getElementById('previewBtn').innerHTML = 
+                '<i class="fas fa-eye"></i> 預覽變更 | Preview Changes';
+        }
+
+        /**
+         * Sync all grades
+         */
+        async function syncAllGrades() {
+            const syncButton = document.getElementById('syncAllBtn');
+            const previewButton = document.getElementById('previewBtn');
+            
+            // Disable buttons
+            syncButton.disabled = true;
+            previewButton.disabled = true;
+            syncButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 同步中... | Syncing...';
+            
+            // Show progress
+            showProgress(20, '正在收集評量標題資料... | Collecting assessment title data...');
+            
+            try {
+                // Collect form data
+                const formData = collectAssessmentFormData();
+                
+                showProgress(50, '正在儲存到 HT 成績簿... | Saving to HT gradebook...');
+                
+                // Execute sync
+                google.script.run
+                    .withSuccessHandler(handleSyncSuccess)
+                    .withFailureHandler(handleSyncError)
+                    .syncAssessmentTitlesFromDashboard(formData);
+                
+            } catch (error) {
+                handleSyncError(error);
+            }
+        }
+
+        /**
+         * Collect assessment form data
+         */
+        function collectAssessmentFormData() {
+            const formData = {};
+            const inputs = document.querySelectorAll('.assessment-input');
+            
+            inputs.forEach(input => {
+                formData[input.id] = input.value || '';
+            });
+            
+            return formData;
+        }
+
+        /**
+         * Handle sync success
+         */
+        function handleSyncSuccess(result) {
+            const syncButton = document.getElementById('syncAllBtn');
+            const previewButton = document.getElementById('previewBtn');
+            
+            // Restore buttons
+            syncButton.disabled = false;
+            previewButton.disabled = false;
+            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades';
+            
+            if (result.success) {
+                showProgress(100, '同步完成！ | Sync Complete!');
+                
+                const successHTML = `
+                    <div class="alert alert-success">
+                        <h4>✅ 同步完成 | Sync Complete</h4>
+                        <p>${result.message}</p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>同步成功：${result.syncResult.syncedCount} 個教師成績簿</li>
+                            <li>目標總數：${result.syncResult.targetCount} 個教師成績簿</li>
+                            ${result.syncResult.errors.length > 0 ? 
+                                `<li class="error">錯誤：${result.syncResult.errors.join(', ')}</li>` : ''
+                            }
+                        </ul>
+                        <p><em>所有教師成績簿的評量標題已更新</em></p>
+                    </div>
+                `;
+                
+                document.getElementById('syncResults').innerHTML = successHTML;
+                
+                // Update current titles
+                currentTitles = result.assessmentTitles;
+                
+            } else {
+                handleSyncError({ message: result.error });
+            }
+        }
+
+        /**
+         * Handle sync error
+         */
+        function handleSyncError(error) {
+            const syncButton = document.getElementById('syncAllBtn');
+            const previewButton = document.getElementById('previewBtn');
+            
+            // Restore buttons
+            syncButton.disabled = false;
+            previewButton.disabled = false;
+            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades';
+            
+            showProgress(0, '');
+            
+            const errorHTML = `
+                <div class="alert alert-error">
+                    <h4>❌ 同步失敗 | Sync Failed</h4>
+                    <p>${error.message}</p>
+                    <p><em>請檢查錯誤訊息並重試</em></p>
+                </div>
+            `;
+            
+            document.getElementById('syncResults').innerHTML = errorHTML;
+            
+            console.error('Sync error:', error);
+        }
+
+        /**
+         * Show progress bar
+         */
+        function showProgress(percent, message) {
+            const progressDiv = document.getElementById('syncProgress');
+            
+            if (percent === 0) {
+                progressDiv.innerHTML = '';
+                return;
+            }
+            
+            progressDiv.innerHTML = `
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percent}%"></div>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 5px;">${message}</p>
+            `;
+        }
+
+        /**
+         * Show alert message
+         */
+        function showAlert(message, type) {
+            const alertClass = type === 'error' ? 'alert-error' : 
+                              type === 'info' ? 'alert-info' : 'alert-success';
+            
+            document.getElementById('syncResults').innerHTML = 
+                `<div class="alert ${alertClass}">${message}</div>`;
+        }
+
+        /**
+         * Show/hide loading overlay
+         */
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        /**
+         * Handle general errors
+         */
+        function onError(error) {
+            showLoading(false);
+            console.error('Error:', error);
+            
+            document.getElementById('htInfo').innerHTML = 
+                `<i class="fas fa-exclamation-triangle"></i> 載入失敗：${error.message}`;
+            
+            document.getElementById('assessmentForm').innerHTML = 
+                `<div class="alert alert-error">載入失敗：${error.message}</div>`;
+        }
+
+        // Tab and sync functions removed - only card view now
+
+        /**
+         * Reset a specific level to default values
+         */
+        function resetLevel(levelCode) {
+            if (!confirm(`確定要重置 ${levelCode} 的所有評量標題為預設值嗎？`)) {
+                return;
+            }
+            
+            const defaultTitles = {
+                'FA1': 'F.A.1', 'FA2': 'F.A.2', 'FA3': 'F.A.3', 'FA4': 'F.A.4',
+                'FA5': 'F.A.5', 'FA6': 'F.A.6', 'FA7': 'F.A.7', 'FA8': 'F.A.8',
+                'SA1': 'S.A.1', 'SA2': 'S.A.2', 'SA3': 'S.A.3', 'SA4': 'S.A.4',
+                'Final': 'Final'
+            };
+            
+            Object.keys(defaultTitles).forEach(type => {
+                const inputId = `${levelCode}_${type}`;
+                const input = document.getElementById(inputId);
+                
+                if (input) {
+                    input.value = defaultTitles[type];
+                }
+            });
+            
+            onAssessmentTitleChanged();
+        }
+
+        // Bulk edit functions removed - only card view now
+    </script>
+</body>
+</html>

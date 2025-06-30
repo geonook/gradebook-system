@@ -541,43 +541,37 @@
                 </div>
                 <div class="control-grid">
                     <button class="btn btn-primary" onclick="initializeSystem()">
-                        <i class="fas fa-rocket"></i> Initialize
+                        <i class="fas fa-rocket"></i> Initialize System
                     </button>
                     <button class="btn btn-secondary" onclick="checkSystemStatus()">
                         <i class="fas fa-stethoscope"></i> Check Status
                     </button>
                     <button class="btn btn-warning" onclick="refreshDashboard()">
-                        <i class="fas fa-sync-alt"></i> Refresh
+                        <i class="fas fa-sync-alt"></i> Refresh Dashboard
                     </button>
                     <button class="btn btn-secondary" onclick="openSystemFolder()">
                         <i class="fas fa-folder-open"></i> System Folder
                     </button>
-                    <button class="btn btn-secondary" onclick="openMasterData()">
+                    <button class="btn btn-info" onclick="openMasterData()">
                         <i class="fas fa-database"></i> Master Data
-                    </button>
-                    <button class="btn btn-warning" onclick="updateTeachers()">
-                        <i class="fas fa-sync-alt"></i> Update Teachers
-                    </button>
-                    <button class="btn btn-secondary" onclick="updateStudentStatus()">
-                        <i class="fas fa-user-check"></i> Update Status
-                    </button>
-                    <button class="btn btn-info" onclick="validateClassAssignments()">
-                        <i class="fas fa-check-circle"></i> Validate Classes
                     </button>
                     <button class="btn btn-success" onclick="manageAssessmentTitles()">
                         <i class="fas fa-tags"></i> Assessment Titles
                     </button>
-                    <button class="btn btn-warning" onclick="debugSystem()">
-                        <i class="fas fa-bug"></i> Debug
-                    </button>
-                    <button class="btn btn-info" onclick="checkHeaders()">
-                        <i class="fas fa-list"></i> Check Headers
-                    </button>
-                    <button class="btn btn-success" onclick="testCreation()">
-                        <i class="fas fa-flask"></i> Test Creation
-                    </button>
                     <button class="btn btn-danger" onclick="systemBackup()">
-                        <i class="fas fa-download"></i> Backup
+                        <i class="fas fa-download"></i> System Backup
+                    </button>
+                    <button class="btn btn-info" onclick="testSystemIntegrity()">
+                        <i class="fas fa-check-circle"></i> Test System
+                    </button>
+                    <button class="btn btn-warning" onclick="performQualityCheck()">
+                        <i class="fas fa-search"></i> /check Quality
+                    </button>
+                    <button class="btn btn-success" onclick="openResourceManager()">
+                        <i class="fas fa-plus-circle"></i> Add Resource
+                    </button>
+                    <button class="btn btn-primary" onclick="openHTDashboard()">
+                        <i class="fas fa-user-tie"></i> HT Dashboard
                     </button>
                 </div>
             </div>
@@ -633,8 +627,11 @@
                 <button class="btn btn-primary" onclick="batchCreateGradebooks()">
                     <i class="fas fa-plus-circle"></i> Batch Create Gradebooks
                 </button>
-                <button class="btn btn-secondary" onclick="checkAllProgress()">
-                    <i class="fas fa-chart-line"></i> Check All Progress
+                <button class="btn btn-warning" onclick="quickProgressCheck()">
+                    <i class="fas fa-tachometer-alt"></i> Quick Progress Check
+                </button>
+                <button class="btn btn-info" onclick="openProgressStandardsDialog()">
+                    <i class="fas fa-cogs"></i> Custom Progress Check
                 </button>
                 <button class="btn btn-warning" onclick="generateReport()">
                     <i class="fas fa-file-alt"></i> Generate Report
@@ -763,6 +760,14 @@
             }, 1000);
         }
 
+        function openHTDashboard() {
+            // FIXED: Always use the correct deployment URL
+            const htUrl = 'https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec?page=ht';
+            
+            console.log('Opening HT Dashboard:', htUrl);
+            window.open(htUrl, '_blank');
+        }
+
         function loadSystemStatistics() {
             google.script.run
                 .withSuccessHandler(function(stats) {
@@ -779,9 +784,13 @@
 
         function openSystemFolder() {
             google.script.run
-                .withSuccessHandler(function(url) {
-                    window.open(url, '_blank');
-                    showSuccess('📁 Opening system folder');
+                .withSuccessHandler(function(result) {
+                    if (result.success) {
+                        window.open(result.url, '_blank');
+                        showSuccess('📁 Opening system folder');
+                    } else {
+                        showError('❌ Cannot open system folder: ' + result.error);
+                    }
                 })
                 .withFailureHandler(function(error) {
                     showError('❌ Cannot open system folder: ' + error.message);
@@ -791,9 +800,20 @@
 
         function openMasterData() {
             google.script.run
-                .withSuccessHandler(function(url) {
-                    window.open(url, '_blank');
-                    showSuccess('📋 Opening master data sheet');
+                .withSuccessHandler(function(result) {
+                    if (result.success) {
+                        window.open(result.url, '_blank');
+                        showSuccess('📋 Opening master data sheet: ' + result.name);
+                    } else {
+                        let errorMessage = '❌ Cannot open master data: ' + result.error;
+                        if (result.step) {
+                            errorMessage += '\n\nFailed at step: ' + result.step;
+                        }
+                        if (result.filesInFolder) {
+                            errorMessage += '\n\nFiles found: ' + result.filesInFolder.join(', ');
+                        }
+                        showError(errorMessage);
+                    }
                 })
                 .withFailureHandler(function(error) {
                     showError('❌ Cannot open master data: ' + error.message);
@@ -801,14 +821,38 @@
                 .getMasterDataUrl();
         }
 
+
         // Batch create gradebooks functionality
         function batchCreateGradebooks() {
+            if (!confirm('This will create gradebooks for all teachers. This process may take several minutes. Continue?')) {
+                return;
+            }
+            
             showLoading();
             google.script.run
                 .withSuccessHandler(function(result) {
                     hideLoading();
-                    showSuccess('🎉 Gradebook creation completed!');
-                    loadSystemStatistics();
+                    if (result && result.success) {
+                        let message = `🎉 Gradebook creation completed!\n\n`;
+                        message += `✅ Successfully created: ${result.successCount} gradebooks\n`;
+                        if (result.errorCount > 0) {
+                            message += `❌ Errors: ${result.errorCount} gradebooks\n`;
+                        }
+                        message += `⏱️ Total time: ${result.duration} seconds\n`;
+                        message += `👥 Total teachers: ${result.totalTeachers}`;
+                        
+                        if (result.errors && result.errors.length > 0) {
+                            message += `\n\n⚠️ Errors encountered:\n${result.errors.slice(0, 5).join('\n')}`;
+                            if (result.errors.length > 5) {
+                                message += `\n... and ${result.errors.length - 5} more errors`;
+                            }
+                        }
+                        
+                        showSuccess(message);
+                        loadSystemStatistics();
+                    } else {
+                        showError('❌ Gradebook creation failed: ' + (result.message || result.error || 'Unknown error'));
+                    }
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
@@ -817,8 +861,230 @@
                 .batchCreateGradebooks();
         }
 
-        function checkAllProgress() {
-            showSuccess('📈 Progress check feature coming soon!');
+        // Progress Check Functions | 進度檢查函數
+        function quickProgressCheck() {
+            if (!confirm('This will check progress for all teachers with default standards (3 F.A. + 1 S.A.). Continue?\n\n這將使用預設標準（3次平時評量 + 1次總結評量）檢查所有教師進度。繼續？')) {
+                return;
+            }
+            
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        displayProgressCheckResults(result.summary);
+                        showSuccess(`✅ Progress check completed in ${result.duration}s\n📊 Checked ${result.summary.totalClasses} classes from ${result.summary.totalTeachers} teachers`);
+                        if (result.reportUrl) {
+                            setTimeout(() => {
+                                if (confirm('View detailed progress report?\n查看詳細進度報告？')) {
+                                    window.open(result.reportUrl, '_blank');
+                                }
+                            }, 2000);
+                        }
+                    } else {
+                        showError('❌ Progress check failed: ' + result.error);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Progress check failed: ' + error.message);
+                })
+                .batchCheckAllProgress();
+        }
+
+        function openProgressStandardsDialog() {
+            const html = `
+                <div style="padding: 20px; font-family: Arial, sans-serif; max-width: 500px;">
+                    <h2 style="color: #4285F4; margin-bottom: 20px;">
+                        <i class="fas fa-cogs"></i> Set Progress Check Standards | 設定進度檢查標準
+                    </h2>
+                    
+                    <div style="margin: 15px 0;">
+                        <label style="font-weight: bold;">Check Description | 檢查描述:</label><br>
+                        <input type="text" id="checkDescription" value="Progress Check - Week 8" 
+                               style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <label style="font-weight: bold;">Required Formative Assessments | 需完成平時評量:</label><br>
+                        <select id="formativeRequired" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="0">0 - No F.A. required</option>
+                            <option value="1">1 - F.A.1</option>
+                            <option value="2">2 - F.A.1, F.A.2</option>
+                            <option value="3" selected>3 - F.A.1, F.A.2, F.A.3</option>
+                            <option value="4">4 - F.A.1 to F.A.4</option>
+                            <option value="5">5 - F.A.1 to F.A.5</option>
+                            <option value="6">6 - F.A.1 to F.A.6</option>
+                            <option value="7">7 - F.A.1 to F.A.7</option>
+                            <option value="8">8 - All F.A. (F.A.1 to F.A.8)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <label style="font-weight: bold;">Required Summative Assessments | 需完成總結評量:</label><br>
+                        <select id="summativeRequired" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="0">0 - No S.A. required</option>
+                            <option value="1" selected>1 - S.A.1</option>
+                            <option value="2">2 - S.A.1, S.A.2</option>
+                            <option value="3">3 - S.A.1, S.A.2, S.A.3</option>
+                            <option value="4">4 - All S.A. (S.A.1 to S.A.4)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <h4 style="margin: 0 0 10px 0; color: #1976d2;">Progress Standards | 進度標準:</h4>
+                        <ul style="margin: 5px 0; padding-left: 20px; color: #555;">
+                            <li>🟢 Excellent (≥90%): 進度優秀</li>
+                            <li>🟡 Good (80-89%): 進度良好</li>
+                            <li>🟠 Normal (60-79%): 進度正常</li>
+                            <li>🔴 Behind (<60%): 進度落後</li>
+                        </ul>
+                        <p style="font-size: 0.9em; color: #666; margin: 10px 0 0 0;">
+                            System will check: Empty cells and 0 scores = incomplete, "N" and scores >0 = complete
+                        </p>
+                    </div>
+                    
+                    <div style="margin: 20px 0; text-align: center;">
+                        <button onclick="executeCustomProgressCheck()" 
+                                style="background: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; font-size: 16px;">
+                            🚀 Start Custom Check | 開始自訂檢查
+                        </button>
+                        <button onclick="closeProgressDialog()" 
+                                style="background: #999; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                            Cancel | 取消
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'progressModal';
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+                justify-content: center; align-items: center;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: white; border-radius: 10px; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+                max-width: 90%; max-height: 90%; overflow-y: auto;
+            `;
+            modal.innerHTML = html;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Add global functions for modal
+            window.executeCustomProgressCheck = function() {
+                const description = document.getElementById('checkDescription').value;
+                const formativeRequired = parseInt(document.getElementById('formativeRequired').value);
+                const summativeRequired = parseInt(document.getElementById('summativeRequired').value);
+                
+                const standards = {
+                    formativeRequired: formativeRequired,
+                    summativeRequired: summativeRequired,
+                    finalRequired: 0,
+                    description: description,
+                    checkDate: new Date()
+                };
+                
+                closeProgressDialog();
+                
+                showLoading();
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        hideLoading();
+                        if (result.success) {
+                            displayProgressCheckResults(result.summary);
+                            showSuccess(`✅ Custom progress check completed in ${result.duration}s\n📊 Standard: ${formativeRequired} F.A. + ${summativeRequired} S.A.`);
+                            if (result.reportUrl) {
+                                setTimeout(() => {
+                                    if (confirm('View detailed progress report?\n查看詳細進度報告？')) {
+                                        window.open(result.reportUrl, '_blank');
+                                    }
+                                }, 2000);
+                            }
+                        } else {
+                            showError('❌ Custom progress check failed: ' + result.error);
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        hideLoading();
+                        showError('❌ Custom progress check failed: ' + error.message);
+                    })
+                    .batchCheckAllProgress(standards);
+            };
+            
+            window.closeProgressDialog = function() {
+                const modal = document.getElementById('progressModal');
+                if (modal) {
+                    document.body.removeChild(modal);
+                }
+            };
+        }
+
+        function displayProgressCheckResults(summary) {
+            const resultHtml = `
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 10px 0;">
+                    <h3 style="color: #4285F4; margin: 0 0 15px 0;">
+                        📊 Progress Check Results | 進度檢查結果
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #4285F4;">${summary.totalTeachers}</div>
+                            <div>Teachers Checked<br>已檢查教師</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #4285F4;">${summary.totalClasses}</div>
+                            <div>Total Classes<br>班級總數</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #4CAF50;">${summary.classesOnTrack}</div>
+                            <div>Classes On Track<br>進度正常</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #f44336;">${summary.classesBehind}</div>
+                            <div>Classes Behind<br>進度落後</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #FF9800;">${summary.systemProgress.toFixed(1)}%</div>
+                            <div>System Progress<br>系統進度</div>
+                        </div>
+                    </div>
+                    ${summary.classesBehind > 0 ? `
+                        <div style="background: #ffebee; padding: 15px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #f44336;">
+                            <strong style="color: #d32f2f;">⚠️ Alert: ${summary.classesBehind} classes are behind schedule</strong>
+                            <br><small>Check the detailed report for specific recommendations</small>
+                        </div>
+                    ` : `
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #4CAF50;">
+                            <strong style="color: #2e7d32;">✅ Excellent: All classes are on track!</strong>
+                        </div>
+                    `}
+                </div>
+            `;
+            
+            // Display in alert area or create temporary display
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = resultHtml;
+            alertDiv.style.cssText = 'position: fixed; top: 20%; left: 50%; transform: translateX(-50%); z-index: 999; background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 90%; max-height: 70%; overflow-y: auto;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '✕';
+            closeBtn.style.cssText = 'position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 18px; cursor: pointer; color: #999;';
+            closeBtn.onclick = () => document.body.removeChild(alertDiv);
+            
+            alertDiv.appendChild(closeBtn);
+            document.body.appendChild(alertDiv);
+            
+            // Auto remove after 10 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    document.body.removeChild(alertDiv);
+                }
+            }, 10000);
         }
 
         function generateReport() {
@@ -835,6 +1101,235 @@
 
         function systemBackup() {
             showSuccess('🔄 Backup feature coming soon!');
+        }
+
+        function testSystemIntegrity() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        showSuccess(`✅ System Test Passed!\n\n${result.summary}\n\nAll critical functions are working properly.`);
+                    } else {
+                        let message = `❌ System Test Issues Found:\n\n${result.summary}`;
+                        if (result.errors && result.errors.length > 0) {
+                            message += `\n\nErrors:\n${result.errors.join('\n')}`;
+                        }
+                        showError(message);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ System test failed: ' + error.message);
+                })
+                .testSystemIntegrity();
+        }
+
+        function performQualityCheck() {
+            if (!confirm('This will perform a comprehensive code quality and security analysis. This may take 1-2 minutes. Continue?\n\n這將執行全面的代碼品質和安全分析，可能需要1-2分鐘。繼續？')) {
+                return;
+            }
+            
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        let message = `📊 Code Quality Analysis Complete!\n\n${result.summary}\n\n${result.report}`;
+                        if (result.recommendations && result.recommendations.length > 0) {
+                            message += `\n\n🎯 Recommendations:\n${result.recommendations.map(r => `• ${r}`).join('\n')}`;
+                        }
+                        showSuccess(message);
+                    } else {
+                        showError('❌ Quality check failed: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Quality check failed: ' + error.message);
+                })
+                .performCodeQualityCheck();
+        }
+
+        function openResourceManager() {
+            const resourceTypes = ['template', 'function', 'integration', 'documentation', 'tool', 'component'];
+            const typeDescriptions = {
+                'template': 'Spreadsheet templates for reports, assessments, etc.',
+                'function': 'Utility functions and code libraries',
+                'integration': 'Third-party service integrations',
+                'documentation': 'User guides and technical documentation',
+                'tool': 'System utilities and helper tools',
+                'component': 'UI components and interface elements'
+            };
+            
+            let optionsHtml = resourceTypes.map(type => 
+                `<option value="${type}">${type.charAt(0).toUpperCase() + type.slice(1)} - ${typeDescriptions[type]}</option>`
+            ).join('');
+            
+            const html = `
+                <div style="padding: 20px; font-family: Arial, sans-serif; max-width: 500px;">
+                    <h2>🔧 Add New Project Resource | 添加新專案資源</h2>
+                    
+                    <div style="margin: 15px 0;">
+                        <label><strong>Resource Type | 資源類型:</strong></label><br>
+                        <select id="resourceType" style="width: 100%; padding: 8px; margin-top: 5px;">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <label><strong>Resource Name | 資源名稱:</strong></label><br>
+                        <input type="text" id="resourceName" placeholder="e.g., Grade Report Template" 
+                               style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </div>
+                    
+                    <div style="margin: 15px 0;">
+                        <label><strong>Description | 描述:</strong></label><br>
+                        <textarea id="resourceDescription" rows="3" 
+                                  placeholder="Brief description of what this resource does..."
+                                  style="width: 100%; padding: 8px; margin-top: 5px; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="margin: 20px 0; display: flex; gap: 10px;">
+                        <button onclick="createNewResource()" 
+                                style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; flex: 1;">
+                            🚀 Create Resource | 創建資源
+                        </button>
+                        <button onclick="listExistingResources()" 
+                                style="background: #2196F3; color: white; padding: 10px 20px; border: none; border-radius: 5px; flex: 1;">
+                            📋 List Resources | 列出資源
+                        </button>
+                    </div>
+                    
+                    <div id="resourceResult" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px; display: none;">
+                    </div>
+                </div>
+            `;
+            
+            showModal('Resource Manager | 資源管理器', html);
+        }
+
+        function createNewResource() {
+            const type = document.getElementById('resourceType').value;
+            const name = document.getElementById('resourceName').value;
+            const description = document.getElementById('resourceDescription').value;
+            
+            if (!name.trim()) {
+                alert('Please enter a resource name | 請輸入資源名稱');
+                return;
+            }
+            
+            if (!description.trim()) {
+                alert('Please enter a description | 請輸入描述');
+                return;
+            }
+            
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        const resultDiv = document.getElementById('resourceResult');
+                        resultDiv.style.display = 'block';
+                        resultDiv.innerHTML = `
+                            <h4>✅ Resource Created Successfully! | 資源創建成功！</h4>
+                            <p><strong>Resource ID:</strong> ${result.resourceId}</p>
+                            <p><strong>Type:</strong> ${result.details.type}</p>
+                            <p><strong>Message:</strong> ${result.message}</p>
+                            ${result.details.templateUrl ? `<p><a href="${result.details.templateUrl}" target="_blank">📄 Open Template</a></p>` : ''}
+                            ${result.details.docUrl ? `<p><a href="${result.details.docUrl}" target="_blank">📖 Open Documentation</a></p>` : ''}
+                            ${result.details.configUrl ? `<p><a href="${result.details.configUrl}" target="_blank">⚙️ Open Configuration</a></p>` : ''}
+                        `;
+                        
+                        // Clear form
+                        document.getElementById('resourceName').value = '';
+                        document.getElementById('resourceDescription').value = '';
+                        
+                        showSuccess(`🎉 Resource "${name}" created successfully!\n\nResource ID: ${result.resourceId}`);
+                    } else {
+                        showError('❌ Failed to create resource: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Failed to create resource: ' + error.message);
+                })
+                .addNewResource(type, name, description, {});
+        }
+
+        function listExistingResources() {
+            showLoading();
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        const resultDiv = document.getElementById('resourceResult');
+                        resultDiv.style.display = 'block';
+                        
+                        let html = `<h4>📋 Existing Resources (${result.total}) | 現有資源</h4>`;
+                        if (result.resources.length === 0) {
+                            html += '<p>No resources found | 未找到資源</p>';
+                        } else {
+                            html += '<div style="max-height: 200px; overflow-y: auto;">';
+                            result.resources.forEach(resource => {
+                                html += `
+                                    <div style="border: 1px solid #ddd; margin: 5px 0; padding: 10px; border-radius: 3px;">
+                                        <strong>${resource.name}</strong> (${resource.type})
+                                        <br><small>${resource.description}</small>
+                                        <br><small>Created: ${new Date(resource.created).toLocaleDateString()}</small>
+                                    </div>
+                                `;
+                            });
+                            html += '</div>';
+                        }
+                        
+                        resultDiv.innerHTML = html;
+                    } else {
+                        showError('❌ Failed to list resources: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError('❌ Failed to list resources: ' + error.message);
+                })
+                .listProjectResources();
+        }
+
+        function showModal(title, content) {
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+                align-items: center; justify-content: center;
+            `;
+            
+            // Create modal content
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: white; border-radius: 10px; max-width: 600px;
+                max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            `;
+            
+            modal.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eee;">
+                    <h3 style="margin: 0;">${title}</h3>
+                    <button onclick="this.closest('.modal-overlay').remove()" 
+                            style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+                </div>
+                <div>${content}</div>
+            `;
+            
+            overlay.className = 'modal-overlay';
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
         }
 
         function updateTeachers() {
@@ -1047,137 +1542,205 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             content.innerHTML = `
                 <div style="text-align: center; padding: 40px;">
                     <div class="spinner"></div>
-                    <p>Loading assessment configurations...</p>
+                    <p>Loading level configurations...</p>
                 </div>
             `;
 
-            google.script.run
-                .withSuccessHandler(function(data) {
-                    renderAssessmentTitles(data);
-                })
-                .withFailureHandler(function(error) {
-                    content.innerHTML = `
-                        <div style="text-align: center; padding: 40px; color: red;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                            <h3>❌ Failed to load assessment titles</h3>
-                            <p>Failed to load assessment titles: ${error.message}</p>
-                        </div>
-                    `;
-                })
-                .getAllAssessmentTitlesForDashboard();
+            // Load assessment titles by levels instead of classes
+            renderAssessmentLevels();
         }
 
-        function renderAssessmentTitles(data) {
+        function renderAssessmentLevels() {
             const content = document.getElementById('assessment-content');
             
-            if (!data || data.length === 0) {
-                content.innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <i class="fas fa-info-circle" style="font-size: 3rem; color: #ffc107; margin-bottom: 20px;"></i>
-                        <h3>No class configurations found</h3>
-                        <p>Please configure class data in the master sheet first</p>
-                    </div>
-                `;
-                return;
-            }
+            // Define all available levels based on system configuration
+            const levels = [
+                // Grade 1 Levels
+                { level: 'G1E1', grade: 'Grade 1' },
+                { level: 'G1E2', grade: 'Grade 1' },
+                { level: 'G1E3', grade: 'Grade 1' },
+                
+                // Grade 2 Levels
+                { level: 'G2E1', grade: 'Grade 2' },
+                { level: 'G2E2', grade: 'Grade 2' },
+                { level: 'G2E3', grade: 'Grade 2' },
+                
+                // Grade 3 Levels
+                { level: 'G3E1', grade: 'Grade 3' },
+                { level: 'G3E2', grade: 'Grade 3' },
+                { level: 'G3E3', grade: 'Grade 3' },
+                
+                // Grade 4 Levels
+                { level: 'G4E1', grade: 'Grade 4' },
+                { level: 'G4E2', grade: 'Grade 4' },
+                { level: 'G4E3', grade: 'Grade 4' },
+                
+                // Grade 5 Levels
+                { level: 'G5E1', grade: 'Grade 5' },
+                { level: 'G5E2', grade: 'Grade 5' },
+                { level: 'G5E3', grade: 'Grade 5' },
+                
+                // Grade 6 Levels
+                { level: 'G6E1', grade: 'Grade 6' },
+                { level: 'G6E2', grade: 'Grade 6' },
+                { level: 'G6E3', grade: 'Grade 6' },
+                { level: 'G6', grade: 'Grade 6' }
+            ];
 
             let html = `
                 <div style="margin-bottom: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px;">
                     <h3 style="margin: 0 0 10px 0; color: #1976d2;">
-                        <i class="fas fa-info-circle"></i> How to Use
+                        <i class="fas fa-info-circle"></i> Level-Based Assessment Title Management
                     </h3>
                     <ul style="margin: 0; padding-left: 20px; color: #555;">
-                        <li>Each grade has 3 levels: E1 (Basic), E2 (Intermediate), E3 (Advanced)</li>
+                        <li>Manage assessment titles by educational levels (G1E1, G1E2, etc.)</li>
+                        <li>Each level has separate sections for LT (Local Teacher) and IT (International Teacher)</li>
                         <li>Modify assessment titles below and click "Update" to save changes</li>
-                        <li>Click "Reset" to restore default titles for a class</li>
-                        <li>Changes take effect immediately for new gradebooks</li>
+                        <li>Click "Reset" to restore default titles (F.A.1-F.A.8, S.A.1-S.A.4)</li>
+                        <li>Changes will be synced to all existing gradebooks using this level</li>
                     </ul>
                 </div>
             `;
 
             // Group by grade
-            const groupedData = {};
-            data.forEach(classConfig => {
-                if (!groupedData[classConfig.grade]) {
-                    groupedData[classConfig.grade] = [];
+            const groupedLevels = {};
+            levels.forEach(levelConfig => {
+                if (!groupedLevels[levelConfig.grade]) {
+                    groupedLevels[levelConfig.grade] = [];
                 }
-                groupedData[classConfig.grade].push(classConfig);
+                groupedLevels[levelConfig.grade].push(levelConfig);
             });
 
             // Render each grade
-            Object.keys(groupedData).sort().forEach(grade => {
+            Object.keys(groupedLevels).sort().forEach(grade => {
                 html += `<h3 style="margin: 30px 0 20px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
-                    <i class="fas fa-graduation-cap"></i> ${grade} Classes
+                    <i class="fas fa-graduation-cap"></i> ${grade} Levels
                 </h3>`;
 
-                groupedData[grade].forEach(classConfig => {
-                    html += createClassCard(classConfig);
+                groupedLevels[grade].forEach(levelConfig => {
+                    html += createLevelCard(levelConfig);
                 });
             });
 
             content.innerHTML = html;
         }
 
-        function createClassCard(classConfig) {
-            const formativeTitles = classConfig.formativeTitles || [];
-            const summativeTitles = classConfig.summativeTitles || [];
+        function createLevelCard(levelConfig) {
+            // Get default titles for both LT and IT
+            const defaultTitles = {
+                formative: ['F.A.1', 'F.A.2', 'F.A.3', 'F.A.4', 'F.A.5', 'F.A.6', 'F.A.7', 'F.A.8'],
+                summative: ['S.A.1', 'S.A.2', 'S.A.3', 'S.A.4']
+            };
             
             return `
                 <div class="class-card">
                     <div class="class-header">
                         <div class="class-info">
-                            <h3>${classConfig.className}</h3>
-                            <p><strong>Level:</strong> ${classConfig.level} | <strong>LT:</strong> ${classConfig.ltTeacher || 'N/A'} | <strong>IT:</strong> ${classConfig.itTeacher || 'N/A'} | <strong>Students:</strong> ${classConfig.studentCount || '0'}</p>
-                        </div>
-                        <div>
-                            <button class="btn-update" onclick="updateClassAssessmentTitles('${classConfig.classCode}')">
-                                <i class="fas fa-save"></i> Update
-                            </button>
-                            <button class="btn-reset" onclick="resetClassAssessmentTitles('${classConfig.classCode}')">
-                                <i class="fas fa-undo"></i> Reset
-                            </button>
+                            <h3>${levelConfig.level}</h3>
+                            <p><strong>Grade:</strong> ${levelConfig.grade}</p>
                         </div>
                     </div>
                     
-                    <div class="assessment-section">
-                        <h4><i class="fas fa-pencil-alt" style="color: #2196f3;"></i> Formative Assessments (8 items)</h4>
-                        <div class="assessment-grid">
-                            ${formativeTitles.map((title, index) => 
-                                `<input type="text" class="assessment-input" 
-                                        id="formative-${classConfig.classCode}-${index}" 
-                                        value="${title}" 
-                                        placeholder="F.A.${index + 1}">`
-                            ).join('')}
+                    <!-- LT Section -->
+                    <div style="border: 2px solid #ff9800; border-radius: 10px; padding: 15px; margin-bottom: 20px; background: #fff3e0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; color: #f57c00;">
+                                <i class="fas fa-user-tie" style="margin-right: 8px;"></i>
+                                LT (Local Teacher)
+                            </h4>
+                            <div>
+                                <button class="btn-update" onclick="updateLevelAssessmentTitles('${levelConfig.level}', 'LT')" style="margin-right: 5px;">
+                                    <i class="fas fa-save"></i> Update LT
+                                </button>
+                                <button class="btn-reset" onclick="resetLevelAssessmentTitles('${levelConfig.level}', 'LT')">
+                                    <i class="fas fa-undo"></i> Reset LT
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-section">
+                            <h5><i class="fas fa-pencil-alt" style="color: #2196f3;"></i> Formative Assessments (8 items)</h5>
+                            <div class="assessment-grid">
+                                ${defaultTitles.formative.map((title, index) => 
+                                    `<input type="text" class="assessment-input" 
+                                            id="formative-${levelConfig.level}-LT-${index}" 
+                                            value="${title}" 
+                                            placeholder="F.A.${index + 1}">`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-section">
+                            <h5><i class="fas fa-chart-bar" style="color: #4caf50;"></i> Summative Assessments (4 items)</h5>
+                            <div class="assessment-grid">
+                                ${defaultTitles.summative.map((title, index) => 
+                                    `<input type="text" class="assessment-input" 
+                                            id="summative-${levelConfig.level}-LT-${index}" 
+                                            value="${title}" 
+                                            placeholder="S.A.${index + 1}">`
+                                ).join('')}
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="assessment-section">
-                        <h4><i class="fas fa-chart-bar" style="color: #4caf50;"></i> Summative Assessments (4 items)</h4>
-                        <div class="assessment-grid">
-                            ${summativeTitles.map((title, index) => 
-                                `<input type="text" class="assessment-input" 
-                                        id="summative-${classConfig.classCode}-${index}" 
-                                        value="${title}" 
-                                        placeholder="S.A.${index + 1}">`
-                            ).join('')}
+                    <!-- IT Section -->
+                    <div style="border: 2px solid #2196f3; border-radius: 10px; padding: 15px; background: #e3f2fd;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; color: #1976d2;">
+                                <i class="fas fa-globe" style="margin-right: 8px;"></i>
+                                IT (International Teacher)
+                            </h4>
+                            <div>
+                                <button class="btn-update" onclick="updateLevelAssessmentTitles('${levelConfig.level}', 'IT')" style="margin-right: 5px;">
+                                    <i class="fas fa-save"></i> Update IT
+                                </button>
+                                <button class="btn-reset" onclick="resetLevelAssessmentTitles('${levelConfig.level}', 'IT')">
+                                    <i class="fas fa-undo"></i> Reset IT
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-section">
+                            <h5><i class="fas fa-pencil-alt" style="color: #2196f3;"></i> Formative Assessments (8 items)</h5>
+                            <div class="assessment-grid">
+                                ${defaultTitles.formative.map((title, index) => 
+                                    `<input type="text" class="assessment-input" 
+                                            id="formative-${levelConfig.level}-IT-${index}" 
+                                            value="${title}" 
+                                            placeholder="F.A.${index + 1}">`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-section">
+                            <h5><i class="fas fa-chart-bar" style="color: #4caf50;"></i> Summative Assessments (4 items)</h5>
+                            <div class="assessment-grid">
+                                ${defaultTitles.summative.map((title, index) => 
+                                    `<input type="text" class="assessment-input" 
+                                            id="summative-${levelConfig.level}-IT-${index}" 
+                                            value="${title}" 
+                                            placeholder="S.A.${index + 1}">`
+                                ).join('')}
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function updateClassAssessmentTitles(classCode) {
+
+        function updateLevelAssessmentTitles(level, teacherType) {
             // Collect formative titles
             const formativeTitles = [];
             for (let i = 0; i < 8; i++) {
-                const input = document.getElementById(`formative-${classCode}-${i}`);
+                const input = document.getElementById(`formative-${level}-${teacherType}-${i}`);
                 formativeTitles.push(input ? input.value.trim() : `F.A.${i + 1}`);
             }
 
             // Collect summative titles
             const summativeTitles = [];
             for (let i = 0; i < 4; i++) {
-                const input = document.getElementById(`summative-${classCode}-${i}`);
+                const input = document.getElementById(`summative-${level}-${teacherType}-${i}`);
                 summativeTitles.push(input ? input.value.trim() : `S.A.${i + 1}`);
             }
 
@@ -1193,23 +1756,26 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                     hideLoading();
                     if (result.success) {
                         let message = `✅ ${result.message}`;
+                        if (result.sheetsUpdated) {
+                            message += `\n📊 Updated ${result.sheetsUpdated} gradebook sheets`;
+                        }
                         if (result.warnings && result.warnings.length > 0) {
                             message += `\n⚠️ Some issues occurred during synchronization:\n${result.warnings.join('\n')}`;
                         }
                         showSuccess(message);
                     } else {
-                        showError(`❌ Failed to update ${classCode}: ${result.message}`);
+                        showError(`❌ Failed to update ${level}: ${result.message}`);
                     }
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
                     showError('❌ Update failed: ' + error.message);
                 })
-                .updateAssessmentTitlesByClassCode(classCode, formativeTitles, summativeTitles);
+                .syncAssessmentTitlesByLevel(level, teacherType, formativeTitles, summativeTitles);
         }
 
-        function resetClassAssessmentTitles(classCode) {
-            if (!confirm(`Are you sure you want to reset assessment titles for ${classCode}? This will restore default titles.`)) {
+        function resetLevelAssessmentTitles(level, teacherType) {
+            if (!confirm(`Are you sure you want to reset assessment titles for ${level}? This will restore default titles and sync to all gradebooks using this level.`)) {
                 return;
             }
 
@@ -1219,20 +1785,23 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                     hideLoading();
                     if (result.success) {
                         let message = `✅ ${result.message}`;
+                        if (result.sheetsUpdated) {
+                            message += `\n📊 Updated ${result.sheetsUpdated} gradebook sheets`;
+                        }
                         if (result.warnings && result.warnings.length > 0) {
                             message += `\n⚠️ Some issues occurred during synchronization:\n${result.warnings.join('\n')}`;
                         }
                         showSuccess(message);
                         loadAssessmentTitles(); // Reload to show default titles
                     } else {
-                        showError(`❌ Failed to reset ${classCode}: ${result.message}`);
+                        showError(`❌ Failed to reset ${level}: ${result.message}`);
                     }
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
                     showError('❌ Reset failed: ' + error.message);
                 })
-                .resetAssessmentTitles(classCode);
+                .resetAssessmentTitlesByLevel(level, teacherType);
         }
 
         // Close modal when clicking outside
@@ -1242,6 +1811,7 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                 closeAssessmentModal();
             }
         }
+
     </script>
 </body>
 </html>

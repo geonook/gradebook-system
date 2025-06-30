@@ -38,154 +38,12 @@ const SYSTEM_CONFIG = {
   },
   
   // Assessment Title Configuration | 評量標題配置
-  // New structure supporting LT&Level and IT&Level management | 支援LT&Level和IT&Level管理的新結構
+  // Unified assessment titles for all teachers and levels | 統一所有教師和級別的評量標題
   ASSESSMENT_TITLES: {
     // Default titles for all grades | 所有年級的預設標題
     DEFAULT: {
       FORMATIVE: ['F.A.1', 'F.A.2', 'F.A.3', 'F.A.4', 'F.A.5', 'F.A.6', 'F.A.7', 'F.A.8'],
       SUMMATIVE: ['S.A.1', 'S.A.2', 'S.A.3', 'S.A.4']
-    },
-    
-    // LT (Local Teacher) Assessment Titles by Level | LT老師分級評量標題
-    LT: {
-      // Grade 1 Levels for LT | G1年級LT分級
-      G1E1: {
-        FORMATIVE: ['中文測驗1', '語音練習1', '故事分享1', '歌謠練習1', '中文測驗2', '語音練習2', '故事分享2', '歌謠練習2'],
-        SUMMATIVE: ['基礎測試1', '基礎測試2', '聽力測驗', '口語測驗']
-      },
-      G1E2: {
-        FORMATIVE: ['詞彙練習1', '閱讀理解1', '寫作練習1', '對話練習1', '詞彙練習2', '閱讀理解2', '寫作練習2', '對話練習2'],
-        SUMMATIVE: ['單元測驗1', '單元測驗2', '期中評量', '口頭報告']
-      },
-      G1E3: {
-        FORMATIVE: ['進階測驗1', '作文練習1', '辯論準備1', '專題研究1', '進階測驗2', '作文練習2', '辯論準備2', '專題研究2'],
-        SUMMATIVE: ['進階測試1', '進階測試2', '學習檔案', '期末專題']
-      },
-      
-      // Grade 2 Levels for LT | G2年級LT分級
-      G2E1: {
-        FORMATIVE: ['字詞測驗1', '短文閱讀1', '圖片描述1', '遊戲活動1', '字詞測驗2', '短文閱讀2', '圖片描述2', '遊戲活動2'],
-        SUMMATIVE: ['基礎測試1', '基礎測試2', '展示分享', '學期回顧']
-      },
-      G2E2: {
-        FORMATIVE: ['語法練習1', '對話演練1', '故事創作1', '角色扮演1', '語法練習2', '對話演練2', '故事創作2', '角色扮演2'],
-        SUMMATIVE: ['章節測驗1', '章節測驗2', '表演評量', '期末測驗']
-      },
-      G2E3: {
-        FORMATIVE: ['複合題目1', '創意寫作1', '討論參與1', '研究技能1', '複合題目2', '創意寫作2', '討論參與2', '研究技能2'],
-        SUMMATIVE: ['複合測試1', '複合測試2', '研究專題', '綜合評量']
-      },
-      
-      // Grade 3 Levels for LT | G3年級LT分級
-      G3E1: {
-        FORMATIVE: ['句型練習1', '閱讀測驗1', '基礎寫作1', '會話練習1', '句型練習2', '閱讀測驗2', '基礎寫作2', '會話練習2'],
-        SUMMATIVE: ['程度測試1', '程度測試2', '口語評量', '期末測試']
-      },
-      G3E2: {
-        FORMATIVE: ['文本分析1', '作文初稿1', '報告準備1', '小組合作1', '文本分析2', '作文初稿2', '報告準備2', '小組合作2'],
-        SUMMATIVE: ['文學測驗1', '文學測驗2', '作文集評', '期末專題']
-      },
-      G3E3: {
-        FORMATIVE: ['批判思考1', '學術寫作1', '辯論技巧1', '研究方法1', '批判思考2', '學術寫作2', '辯論技巧2', '研究方法2'],
-        SUMMATIVE: ['學術測試1', '學術測試2', '論文專題', '綜合考試']
-      },
-      
-      // Grade 4-6 LT Levels | G4-G6年級LT分級
-      G4E1: {
-        FORMATIVE: ['進階句型1', '短文理解1', '段落寫作1', '討論表達1', '進階句型2', '短文理解2', '段落寫作2', '討論表達2'],
-        SUMMATIVE: ['階段測試1', '階段測試2', '綜合口試', '期末考核']
-      },
-      G4E2: {
-        FORMATIVE: ['文章解析1', '議論文1', '簡報製作1', '團隊協作1', '文章解析2', '議論文2', '簡報製作2', '團隊協作2'],
-        SUMMATIVE: ['主題測驗1', '主題測驗2', '專題發表', '學期總評']
-      },
-      G5E1: {
-        FORMATIVE: ['高階閱讀1', '論述寫作1', '專題討論1', '資料整理1', '高階閱讀2', '論述寫作2', '專題討論2', '資料整理2'],
-        SUMMATIVE: ['能力測試1', '能力測試2', '研究報告', '口試評量']
-      },
-      G5E2: {
-        FORMATIVE: ['文學賞析1', '創作練習1', '評論寫作1', '學術討論1', '文學賞析2', '創作練習2', '評論寫作2', '學術討論2'],
-        SUMMATIVE: ['文學測驗1', '文學測驗2', '創作作品', '學術論文']
-      },
-      G6E1: {
-        FORMATIVE: ['綜合理解1', '應用寫作1', '思辨表達1', '專案管理1', '綜合理解2', '應用寫作2', '思辨表達2', '專案管理2'],
-        SUMMATIVE: ['總合測試1', '總合測試2', '畢業專題', '綜合評估']
-      },
-      G6E2: {
-        FORMATIVE: ['高級分析1', '學術論述1', '獨立研究1', '領導實踐1', '高級分析2', '學術論述2', '獨立研究2', '領導實踐2'],
-        SUMMATIVE: ['高級測試1', '高級測試2', '畢業論文', '成果發表']
-      }
-    },
-    
-    // IT (International Teacher) Assessment Titles by Level | IT老師分級評量標題
-    IT: {
-      // Grade 1 Levels for IT | G1年級IT分級
-      G1E1: {
-        FORMATIVE: ['ABC Quiz 1', 'Phonics 1', 'Story Time 1', 'Song Practice 1', 'ABC Quiz 2', 'Phonics 2', 'Story Time 2', 'Song Practice 2'],
-        SUMMATIVE: ['Basic Test 1', 'Basic Test 2', 'Listening Test', 'Speaking Test']
-      },
-      G1E2: {
-        FORMATIVE: ['Vocab Build 1', 'Reading Fun 1', 'Writing Start 1', 'Talk Time 1', 'Vocab Build 2', 'Reading Fun 2', 'Writing Start 2', 'Talk Time 2'],
-        SUMMATIVE: ['Unit Test 1', 'Unit Test 2', 'Mid-term', 'Show & Tell']
-      },
-      G1E3: {
-        FORMATIVE: ['Smart Quiz 1', 'Story Write 1', 'Debate Start 1', 'Project Begin 1', 'Smart Quiz 2', 'Story Write 2', 'Debate Start 2', 'Project Begin 2'],
-        SUMMATIVE: ['Advanced Test 1', 'Advanced Test 2', 'Portfolio', 'Final Project']
-      },
-      
-      // Grade 2 Levels for IT | G2年級IT分級
-      G2E1: {
-        FORMATIVE: ['Word Game 1', 'Story Read 1', 'Picture Talk 1', 'Fun Activity 1', 'Word Game 2', 'Story Read 2', 'Picture Talk 2', 'Fun Activity 2'],
-        SUMMATIVE: ['Level Test 1', 'Level Test 2', 'Presentation', 'Review Test']
-      },
-      G2E2: {
-        FORMATIVE: ['Grammar Fun 1', 'Role Play 1', 'Story Create 1', 'Drama Time 1', 'Grammar Fun 2', 'Role Play 2', 'Story Create 2', 'Drama Time 2'],
-        SUMMATIVE: ['Chapter Test 1', 'Chapter Test 2', 'Performance', 'Final Exam']
-      },
-      G2E3: {
-        FORMATIVE: ['Think Quiz 1', 'Creative Write 1', 'Group Talk 1', 'Research Start 1', 'Think Quiz 2', 'Creative Write 2', 'Group Talk 2', 'Research Start 2'],
-        SUMMATIVE: ['Challenge Test 1', 'Challenge Test 2', 'Research Work', 'Complete Review']
-      },
-      
-      // Grade 3 Levels for IT | G3年級IT分級
-      G3E1: {
-        FORMATIVE: ['Sentence Work 1', 'Read & Think 1', 'Write Basic 1', 'Conversation 1', 'Sentence Work 2', 'Read & Think 2', 'Write Basic 2', 'Conversation 2'],
-        SUMMATIVE: ['Level Check 1', 'Level Check 2', 'Speaking Test', 'Final Review']
-      },
-      G3E2: {
-        FORMATIVE: ['Text Study 1', 'Essay Draft 1', 'Present Prep 1', 'Team Work 1', 'Text Study 2', 'Essay Draft 2', 'Present Prep 2', 'Team Work 2'],
-        SUMMATIVE: ['Literature Test 1', 'Literature Test 2', 'Essay Collection', 'Project Final']
-      },
-      G3E3: {
-        FORMATIVE: ['Critical Think 1', 'Academic Write 1', 'Debate Skill 1', 'Research Method 1', 'Critical Think 2', 'Academic Write 2', 'Debate Skill 2', 'Research Method 2'],
-        SUMMATIVE: ['Academic Test 1', 'Academic Test 2', 'Thesis Work', 'Comprehensive']
-      },
-      
-      // Grade 4-6 IT Levels | G4-G6年級IT分級
-      G4E1: {
-        FORMATIVE: ['Advanced Read 1', 'Paragraph Write 1', 'Discussion 1', 'Project Part 1', 'Advanced Read 2', 'Paragraph Write 2', 'Discussion 2', 'Project Part 2'],
-        SUMMATIVE: ['Progress Test 1', 'Progress Test 2', 'Oral Exam', 'Final Assessment']
-      },
-      G4E2: {
-        FORMATIVE: ['Text Analysis 1', 'Argument Write 1', 'Presentation 1', 'Collaboration 1', 'Text Analysis 2', 'Argument Write 2', 'Presentation 2', 'Collaboration 2'],
-        SUMMATIVE: ['Theme Test 1', 'Theme Test 2', 'Project Present', 'Semester Final']
-      },
-      G5E1: {
-        FORMATIVE: ['Complex Read 1', 'Essay Develop 1', 'Seminar 1', 'Research Skill 1', 'Complex Read 2', 'Essay Develop 2', 'Seminar 2', 'Research Skill 2'],
-        SUMMATIVE: ['Ability Test 1', 'Ability Test 2', 'Research Report', 'Oral Defense']
-      },
-      G5E2: {
-        FORMATIVE: ['Literary Study 1', 'Creative Work 1', 'Review Write 1', 'Academic Talk 1', 'Literary Study 2', 'Creative Work 2', 'Review Write 2', 'Academic Talk 2'],
-        SUMMATIVE: ['Literature Exam 1', 'Literature Exam 2', 'Creative Portfolio', 'Academic Paper']
-      },
-      G6E1: {
-        FORMATIVE: ['Integrated Read 1', 'Applied Write 1', 'Critical Express 1', 'Project Lead 1', 'Integrated Read 2', 'Applied Write 2', 'Critical Express 2', 'Project Lead 2'],
-        SUMMATIVE: ['Comprehensive 1', 'Comprehensive 2', 'Capstone Project', 'Final Evaluation']
-      },
-      G6E2: {
-        FORMATIVE: ['Advanced Analysis 1', 'Academic Discourse 1', 'Independent Study 1', 'Leadership Practice 1', 'Advanced Analysis 2', 'Academic Discourse 2', 'Independent Study 2', 'Leadership Practice 2'],
-        SUMMATIVE: ['Advanced Exam 1', 'Advanced Exam 2', 'Graduation Thesis', 'Final Presentation']
-      }
     }
   },
   
@@ -209,18 +67,84 @@ const SYSTEM_CONFIG = {
 /**
  * Handle web app GET requests | 處理網頁應用程式 GET 請求
  */
-function doGet() {
-  // Create HTML output from dashboard template | 從控制台範本建立 HTML 輸出
-  const htmlTemplate = HtmlService.createTemplateFromFile('dashboard');
-  
-  // Add server-side data to template | 將伺服器端資料加入範本
-  htmlTemplate.config = SYSTEM_CONFIG;
-  htmlTemplate.timestamp = new Date().toLocaleString();
-  
-  return htmlTemplate.evaluate()
-    .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+function doGet(e) {
+  try {
+    // Log the request for debugging
+    console.log('doGet called with parameters:', e.parameter);
+    
+    // Check for page parameter | 檢查頁面參數
+    const page = e.parameter.page;
+    
+    if (page === 'ht') {
+      console.log('Loading HT Dashboard');
+      // Return HT Dashboard | 返回 HT 控制台
+      const htmlTemplate = HtmlService.createTemplateFromFile('dashboard_for_HT');
+      
+      // Add server-side data to template | 將伺服器端資料加入範本
+      htmlTemplate.config = SYSTEM_CONFIG;
+      htmlTemplate.timestamp = new Date().toLocaleString();
+      htmlTemplate.isWebApp = true;
+      
+      return htmlTemplate.evaluate()
+        .setTitle('HT Dashboard | 學年主任控制台')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    } else {
+      console.log('Loading Main Dashboard');
+      // Default: Return main dashboard | 預設：返回主控制台
+      const htmlTemplate = HtmlService.createTemplateFromFile('dashboard');
+      
+      // Add server-side data to template | 將伺服器端資料加入範本
+      htmlTemplate.config = SYSTEM_CONFIG;
+      htmlTemplate.timestamp = new Date().toLocaleString();
+      
+      return htmlTemplate.evaluate()
+        .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    }
+  } catch (error) {
+    console.error('doGet error:', error);
+    // Return a simple error page
+    return HtmlService.createHtmlOutput(`
+      <!DOCTYPE html>
+      <html>
+      <head><title>Error</title></head>
+      <body>
+        <h1>系統錯誤 | System Error</h1>
+        <p>Error: ${error.message}</p>
+        <p>請檢查系統配置 | Please check system configuration</p>
+        <pre>${error.stack}</pre>
+      </body>
+      </html>
+    `);
+  }
+}
+
+/**
+ * Test function to check if HT dashboard files exist
+ */
+function testHTDashboardFiles() {
+  try {
+    // Try to create template from HT dashboard file
+    const htTemplate = HtmlService.createTemplateFromFile('dashboard_for_HT');
+    console.log('✅ dashboard_for_HT.html found and readable');
+    
+    // Try to create template from main dashboard file
+    const mainTemplate = HtmlService.createTemplateFromFile('dashboard');
+    console.log('✅ dashboard.html found and readable');
+    
+    return {
+      success: true,
+      message: 'All dashboard files are accessible'
+    };
+  } catch (error) {
+    console.error('❌ File access error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
 }
 
 // ===== MENU SYSTEM | 選單系統 =====
@@ -246,8 +170,9 @@ function onOpen() {
     .addSubMenu(ui.createMenu('👨‍🏫 Teacher Management | 老師管理')
       .addItem('📋 Batch Create Gradebooks | 批量建立成績簿', 'batchCreateGradebooks')
       .addItem('➕ Create Single Gradebook | 新增單一成績簿', 'createSingleGradebook')
-      .addItem('📊 Check All Gradebooks | 檢查所有成績簿', 'checkAllGradebooks')
+      .addItem('👨‍🏫 Create HT Gradebooks | 建立HT成績簿', 'createHTGradebooks')
       .addSeparator()
+      .addItem('📊 Check All Gradebooks | 檢查所有成績簿', 'checkAllGradebooks')
       .addItem('🔗 Update Gradebook Links | 更新成績簿連結', 'updateGradebookLinks'))
     
     .addSubMenu(ui.createMenu('📊 Progress Management | 進度管理')
@@ -271,6 +196,16 @@ function onOpen() {
       .addItem('📐 Validate Formulas | 檢查公式正確性', 'validateFormulas')
       .addSeparator()
       .addItem('🔧 Repair Sheets | 修復損壞格式', 'repairDamagedSheets'))
+    
+    .addSubMenu(ui.createMenu('🏷️ Assessment Management | 評量管理')
+      .addItem('➕ Add HT Sheet | 新增HT工作表', 'addHTSheetToExistingMasterData')
+      .addSeparator()
+      .addItem('👨‍🏫 HT Dashboard | HT控制台', 'openHTDashboard')
+      .addItem('🔄 Quick Sync | 快速同步', 'quickSyncAssessmentTitles')
+      .addSeparator()
+      .addItem('✏️ Edit Assessment Titles | 編輯評量標題', 'manageHTAssessmentTitles')
+      .addItem('🔄 Reset to Default | 重設為預設', 'resetHTAssessmentTitles')
+      .addItem('💾 Sync All Classes | 同步所有班級', 'syncHTAssessmentTitles'))
     
     .addSeparator()
     .addItem('📖 User Guide | 使用說明', 'showUserGuide')
@@ -867,14 +802,196 @@ function createMasterDataSheet(systemFolder) {
   studentsSheet.getRange(1, 1, 1, studentHeaders.length).setValues([studentHeaders]);
   studentsSheet.getRange(1, 1, 1, studentHeaders.length).setFontWeight('bold').setBackground('#4285F4').setFontColor('white');
   
-  // Add sample student data | 新增範例學生資料
+  // Add comprehensive test student data | 新增完整測試學生資料
+  // Structure: Each grade has 6 classes (2 per teacher group), each class has 3+ students
+  // Teacher groups: G1-G2 (same teachers), G3-G4 (same teachers), G5-G6 (same teachers)
   const sampleStudents = [
-    ['LE11020', 'Emily Lee', 'Emily', 'G1', '104', 'G1 Trailblazers', 'Mr. Johnson', 'Ms. Smith', 'emily@school.edu', '在學'],
-    ['LE11043', 'Ryan Tu', 'Ryan', 'G2', '201', 'G2 Adventurers', 'Mr. Davis', 'Ms. Brown', 'ryan@school.edu', '在學'],
-    ['LE11065', 'Sarah Chen', 'Sarah', 'G3', '302', 'G3 Explorers', 'Mr. Taylor', 'Ms. Wang', 'sarah@school.edu', '在學'],
-    ['LE11087', 'David Kim', 'David', 'G4', '403', 'G4 Inventors', 'Mr. Anderson', 'Ms. Liu', 'david@school.edu', '在學'],
-    ['LE11109', 'Lisa Zhang', 'Lisa', 'G5', '501', 'G5 Pioneers', 'Mr. White', 'Ms. Yang', 'lisa@school.edu', '在學'],
-    ['LE11131', 'Alex Wong', 'Alex', 'G6', '602', 'G6 Pathfinders', 'Mr. Collins', 'Ms. Kumar', 'alex@school.edu', '在學']
+    // Grade 1 Students - G1-G2 Teacher Group
+    // G1 Achievers (LT: Ms. Johnson HT, IT: Mr. Smith)
+    ['LE11001', 'Emily Chen', 'Emily', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'emily.chen@school.edu', '在學'],
+    ['LE11002', 'Ryan Lee', 'Ryan', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'ryan.lee@school.edu', '在學'],
+    ['LE11003', 'Sarah Kim', 'Sarah', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'sarah.kim@school.edu', '在學'],
+    ['LE11004', 'David Wang', 'David', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'david.wang@school.edu', '在學'],
+    
+    // G1 Builders (LT: Ms. Johnson HT, IT: Mr. Smith) - Same teacher, different class
+    ['LE11005', 'Lisa Zhang', 'Lisa', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'lisa.zhang@school.edu', '在學'],
+    ['LE11006', 'Alex Wu', 'Alex', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'alex.wu@school.edu', '在學'],
+    ['LE11007', 'Maya Patel', 'Maya', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'maya.patel@school.edu', '在學'],
+    
+    // G1 Creators (LT: Ms. Davis, IT: Mr. Brown)
+    ['LE11008', 'Kevin Liu', 'Kevin', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'kevin.liu@school.edu', '在學'],
+    ['LE11009', 'Emma Yang', 'Emma', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'emma.yang@school.edu', '在學'],
+    ['LE11010', 'Jason Ho', 'Jason', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'jason.ho@school.edu', '在學'],
+    
+    // G1 Dreamers (LT: Ms. Davis, IT: Mr. Brown) - Same teacher, different class
+    ['LE11011', 'Sophie Chen', 'Sophie', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'sophie.chen@school.edu', '在學'],
+    ['LE11012', 'Lucas Kim', 'Lucas', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'lucas.kim@school.edu', '在學'],
+    ['LE11013', 'Zoe Wang', 'Zoe', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'zoe.wang@school.edu', '在學'],
+    
+    // G1 Explorers (LT: Ms. Wilson, IT: Mr. Garcia HT)
+    ['LE11014', 'Max Zhang', 'Max', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'max.zhang@school.edu', '在學'],
+    ['LE11015', 'Chloe Liu', 'Chloe', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'chloe.liu@school.edu', '在學'],
+    ['LE11016', 'Oscar Wu', 'Oscar', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'oscar.wu@school.edu', '在學'],
+    
+    // G1 Pioneers (LT: Ms. Wilson, IT: Mr. Garcia HT) - Same teacher, different class
+    ['LE11017', 'Luna Yang', 'Luna', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'luna.yang@school.edu', '在學'],
+    ['LE11018', 'Noah Chen', 'Noah', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'noah.chen@school.edu', '在學'],
+    ['LE11019', 'Ivy Kim', 'Ivy', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'ivy.kim@school.edu', '在學'],
+    
+    // Grade 2 Students - Same G1-G2 Teacher Group
+    // G2 Achievers (LT: Ms. Johnson HT, IT: Mr. Smith)
+    ['LE11020', 'Ethan Wang', 'Ethan', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'ethan.wang@school.edu', '在學'],
+    ['LE11021', 'Mia Zhang', 'Mia', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'mia.zhang@school.edu', '在學'],
+    ['LE11022', 'Leo Wu', 'Leo', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'leo.wu@school.edu', '在學'],
+    
+    // G2 Builders (LT: Ms. Johnson HT, IT: Mr. Smith)
+    ['LE11023', 'Aria Liu', 'Aria', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'aria.liu@school.edu', '在學'],
+    ['LE11024', 'Kai Yang', 'Kai', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'kai.yang@school.edu', '在學'],
+    ['LE11025', 'Nora Chen', 'Nora', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'nora.chen@school.edu', '在學'],
+    
+    // G2 Creators (LT: Ms. Davis, IT: Mr. Brown)
+    ['LE11026', 'Felix Kim', 'Felix', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'felix.kim@school.edu', '在學'],
+    ['LE11027', 'Ruby Wang', 'Ruby', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'ruby.wang@school.edu', '在學'],
+    ['LE11028', 'Owen Zhang', 'Owen', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'owen.zhang@school.edu', '在學'],
+    
+    // G2 Dreamers (LT: Ms. Davis, IT: Mr. Brown)
+    ['LE11029', 'Hazel Wu', 'Hazel', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'hazel.wu@school.edu', '在學'],
+    ['LE11030', 'Isaac Liu', 'Isaac', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'isaac.liu@school.edu', '在學'],
+    ['LE11031', 'Violet Yang', 'Violet', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'violet.yang@school.edu', '在學'],
+    
+    // G2 Explorers (LT: Ms. Wilson, IT: Mr. Garcia HT)
+    ['LE11032', 'Miles Chen', 'Miles', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'miles.chen@school.edu', '在學'],
+    ['LE11033', 'Stella Kim', 'Stella', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'stella.kim@school.edu', '在學'],
+    ['LE11034', 'River Wang', 'River', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'river.wang@school.edu', '在學'],
+    
+    // G2 Pioneers (LT: Ms. Wilson, IT: Mr. Garcia HT)
+    ['LE11035', 'Aurora Zhang', 'Aurora', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'aurora.zhang@school.edu', '在學'],
+    ['LE11036', 'Phoenix Wu', 'Phoenix', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'phoenix.wu@school.edu', '在學'],
+    ['LE11037', 'Sage Liu', 'Sage', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'sage.liu@school.edu', '在學'],
+    
+    // Grade 3 Students - G3-G4 Teacher Group
+    // G3 Achievers (LT: Ms. Taylor HT, IT: Mr. Anderson)
+    ['LE11038', 'Blake Yang', 'Blake', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'blake.yang@school.edu', '在學'],
+    ['LE11039', 'Nova Chen', 'Nova', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'nova.chen@school.edu', '在學'],
+    ['LE11040', 'Atlas Kim', 'Atlas', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'atlas.kim@school.edu', '在學'],
+    
+    // G3 Builders (LT: Ms. Taylor HT, IT: Mr. Anderson)
+    ['LE11041', 'Luna Wang', 'Luna', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'luna.wang@school.edu', '在學'],
+    ['LE11042', 'Orion Zhang', 'Orion', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'orion.zhang@school.edu', '在學'],
+    ['LE11043', 'Iris Wu', 'Iris', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'iris.wu@school.edu', '在學'],
+    
+    // G3 Creators (LT: Ms. Martinez, IT: Mr. Thompson)
+    ['LE11044', 'Zara Liu', 'Zara', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'zara.liu@school.edu', '在學'],
+    ['LE11045', 'Finn Yang', 'Finn', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'finn.yang@school.edu', '在學'],
+    ['LE11046', 'Rose Chen', 'Rose', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'rose.chen@school.edu', '在學'],
+    
+    // G3 Dreamers (LT: Ms. Martinez, IT: Mr. Thompson)
+    ['LE11047', 'Jude Kim', 'Jude', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'jude.kim@school.edu', '在學'],
+    ['LE11048', 'Wren Wang', 'Wren', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'wren.wang@school.edu', '在學'],
+    ['LE11049', 'Cole Zhang', 'Cole', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'cole.zhang@school.edu', '在學'],
+    
+    // G3 Explorers (LT: Ms. Robinson, IT: Mr. Lee HT)
+    ['LE11050', 'Jade Wu', 'Jade', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'jade.wu@school.edu', '在學'],
+    ['LE11051', 'Neo Liu', 'Neo', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'neo.liu@school.edu', '在學'],
+    ['LE11052', 'Sky Yang', 'Sky', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'sky.yang@school.edu', '在學'],
+    
+    // G3 Pioneers (LT: Ms. Robinson, IT: Mr. Lee HT)
+    ['LE11053', 'Dawn Chen', 'Dawn', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'dawn.chen@school.edu', '在學'],
+    ['LE11054', 'Storm Kim', 'Storm', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'storm.kim@school.edu', '在學'],
+    ['LE11055', 'Rain Wang', 'Rain', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'rain.wang@school.edu', '在學'],
+    
+    // Grade 4 Students - Same G3-G4 Teacher Group
+    // G4 Achievers (LT: Ms. Taylor HT, IT: Mr. Anderson)
+    ['LE11056', 'Echo Zhang', 'Echo', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'echo.zhang@school.edu', '在學'],
+    ['LE11057', 'Blaze Wu', 'Blaze', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'blaze.wu@school.edu', '在學'],
+    ['LE11058', 'Vale Liu', 'Vale', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'vale.liu@school.edu', '在學'],
+    
+    // G4 Builders (LT: Ms. Taylor HT, IT: Mr. Anderson)
+    ['LE11059', 'Cruz Yang', 'Cruz', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'cruz.yang@school.edu', '在學'],
+    ['LE11060', 'Lane Chen', 'Lane', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'lane.chen@school.edu', '在學'],
+    ['LE11061', 'Sage Kim', 'Sage', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'sage.kim@school.edu', '在學'],
+    
+    // G4 Creators (LT: Ms. Martinez, IT: Mr. Thompson)
+    ['LE11062', 'Reed Wang', 'Reed', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'reed.wang@school.edu', '在學'],
+    ['LE11063', 'Bay Zhang', 'Bay', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'bay.zhang@school.edu', '在學'],
+    ['LE11064', 'Roe Wu', 'Roe', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'roe.wu@school.edu', '在學'],
+    
+    // G4 Dreamers (LT: Ms. Martinez, IT: Mr. Thompson)
+    ['LE11065', 'Dune Liu', 'Dune', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'dune.liu@school.edu', '在學'],
+    ['LE11066', 'Vale Yang', 'Vale', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'vale.yang@school.edu', '在學'],
+    ['LE11067', 'Fox Chen', 'Fox', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'fox.chen@school.edu', '在學'],
+    
+    // G4 Explorers (LT: Ms. Robinson, IT: Mr. Lee HT)
+    ['LE11068', 'Sage Kim', 'Sage', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'sage.kim2@school.edu', '在學'],
+    ['LE11069', 'West Wang', 'West', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'west.wang@school.edu', '在學'],
+    ['LE11070', 'True Zhang', 'True', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'true.zhang@school.edu', '在學'],
+    
+    // G4 Pioneers (LT: Ms. Robinson, IT: Mr. Lee HT)
+    ['LE11071', 'Blue Wu', 'Blue', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'blue.wu@school.edu', '在學'],
+    ['LE11072', 'Hope Liu', 'Hope', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'hope.liu@school.edu', '在學'],
+    ['LE11073', 'Joy Yang', 'Joy', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'joy.yang@school.edu', '在學'],
+    
+    // Grade 5 Students - G5-G6 Teacher Group
+    // G5 Achievers (LT: Ms. White HT, IT: Mr. Clark)
+    ['LE11074', 'Peace Chen', 'Peace', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'peace.chen@school.edu', '在學'],
+    ['LE11075', 'Grace Kim', 'Grace', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'grace.kim@school.edu', '在學'],
+    ['LE11076', 'Faith Wang', 'Faith', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'faith.wang@school.edu', '在學'],
+    
+    // G5 Builders (LT: Ms. White HT, IT: Mr. Clark)
+    ['LE11077', 'Honor Zhang', 'Honor', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'honor.zhang@school.edu', '在學'],
+    ['LE11078', 'Noble Wu', 'Noble', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'noble.wu@school.edu', '在學'],
+    ['LE11079', 'Brave Liu', 'Brave', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'brave.liu@school.edu', '在學'],
+    
+    // G5 Creators (LT: Ms. Kumar, IT: Mr. Patel)
+    ['LE11080', 'Truth Yang', 'Truth', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'truth.yang@school.edu', '在學'],
+    ['LE11081', 'Wisdom Chen', 'Wisdom', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'wisdom.chen@school.edu', '在學'],
+    ['LE11082', 'Justice Kim', 'Justice', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'justice.kim@school.edu', '在學'],
+    
+    // G5 Dreamers (LT: Ms. Kumar, IT: Mr. Patel)
+    ['LE11083', 'Freedom Wang', 'Freedom', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'freedom.wang@school.edu', '在學'],
+    ['LE11084', 'Liberty Zhang', 'Liberty', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'liberty.zhang@school.edu', '在學'],
+    ['LE11085', 'Unity Wu', 'Unity', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'unity.wu@school.edu', '在學'],
+    
+    // G5 Explorers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
+    ['LE11086', 'Harmony Liu', 'Harmony', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'harmony.liu@school.edu', '在學'],
+    ['LE11087', 'Serenity Yang', 'Serenity', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'serenity.yang@school.edu', '在學'],
+    ['LE11088', 'Destiny Chen', 'Destiny', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'destiny.chen@school.edu', '在學'],
+    
+    // G5 Pioneers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
+    ['LE11089', 'Journey Kim', 'Journey', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'journey.kim@school.edu', '在學'],
+    ['LE11090', 'Victory Wang', 'Victory', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'victory.wang@school.edu', '在學'],
+    ['LE11091', 'Triumph Zhang', 'Triumph', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'triumph.zhang@school.edu', '在學'],
+    
+    // Grade 6 Students - Same G5-G6 Teacher Group
+    // G6 Achievers (LT: Ms. White HT, IT: Mr. Clark)
+    ['LE11092', 'Legacy Wu', 'Legacy', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'legacy.wu@school.edu', '在學'],
+    ['LE11093', 'Champion Liu', 'Champion', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'champion.liu@school.edu', '在學'],
+    ['LE11094', 'Marvel Yang', 'Marvel', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'marvel.yang@school.edu', '在學'],
+    
+    // G6 Builders (LT: Ms. White HT, IT: Mr. Clark)
+    ['LE11095', 'Miracle Chen', 'Miracle', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'miracle.chen@school.edu', '在學'],
+    ['LE11096', 'Wonder Kim', 'Wonder', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'wonder.kim@school.edu', '在學'],
+    ['LE11097', 'Magic Wang', 'Magic', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'magic.wang@school.edu', '在學'],
+    
+    // G6 Creators (LT: Ms. Kumar, IT: Mr. Patel)
+    ['LE11098', 'Dream Zhang', 'Dream', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'dream.zhang@school.edu', '在學'],
+    ['LE11099', 'Vision Wu', 'Vision', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'vision.wu@school.edu', '在學'],
+    ['LE11100', 'Future Liu', 'Future', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'future.liu@school.edu', '在學'],
+    
+    // G6 Dreamers (LT: Ms. Kumar, IT: Mr. Patel)
+    ['LE11101', 'Promise Yang', 'Promise', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'promise.yang@school.edu', '在學'],
+    ['LE11102', 'Bright Chen', 'Bright', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'bright.chen@school.edu', '在學'],
+    ['LE11103', 'Shine Kim', 'Shine', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'shine.kim@school.edu', '在學'],
+    
+    // G6 Explorers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
+    ['LE11104', 'Radiant Wang', 'Radiant', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'radiant.wang@school.edu', '在學'],
+    ['LE11105', 'Glorious Zhang', 'Glorious', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'glorious.zhang@school.edu', '在學'],
+    ['LE11106', 'Brilliant Wu', 'Brilliant', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'brilliant.wu@school.edu', '在學'],
+    
+    // G6 Pioneers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
+    ['LE11107', 'Stellar Liu', 'Stellar', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'stellar.liu@school.edu', '在學'],
+    ['LE11108', 'Cosmic Yang', 'Cosmic', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'cosmic.yang@school.edu', '在學'],
+    ['LE11109', 'Infinite Chen', 'Infinite', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'infinite.chen@school.edu', '在學']
   ];
   
   studentsSheet.getRange(2, 1, sampleStudents.length, studentHeaders.length).setValues(sampleStudents);
@@ -930,22 +1047,56 @@ function createMasterDataSheet(systemFolder) {
   classesSheet.getRange(4, 1, 1, classHeaders.length).setValues([classHeaders]);
   classesSheet.getRange(4, 1, 1, classHeaders.length).setFontWeight('bold').setBackground('#FF5722').setFontColor('white');
   
-  // Add sample class data with correct Level format (G[grade]E[level]) | 新增範例班級資料，使用正確的Level格式（G[年級]E[級別]）
+  // Add comprehensive class data matching the new student structure | 新增符合新學生結構的完整班級資料
+  // Each grade has 6 classes (2 per teacher), with proper Level format (G[grade]E[level])
   const sampleClasses = [
-    ['G1 Trailblazers', 'Mr. Johnson', 'Ms. Smith', 'G1E1', '12'],
-    ['G1 Discoverers', 'Ms. Chen', 'Mr. Wilson', 'G1E2', '15'],
-    ['G2 Adventurers', 'Mr. Davis', 'Ms. Brown', 'G2E1', '14'],
-    ['G2 Innovators', 'Ms. Garcia', 'Mr. Lee', 'G2E2', '13'],
-    ['G3 Explorers', 'Mr. Taylor', 'Ms. Wang', 'G3E1', '16'],
-    ['G3 Navigators', 'Ms. Miller', 'Mr. Kim', 'G3E2', '11'],
-    ['G4 Inventors', 'Mr. Anderson', 'Ms. Liu', 'G4E1', '15'],
-    ['G4 Voyagers', 'Ms. Thompson', 'Mr. Zhang', 'G4E2', '12'],
-    ['G5 Pioneers', 'Mr. White', 'Ms. Yang', 'G5E1', '14'],
-    ['G5 Guardians', 'Ms. Rodriguez', 'Mr. Park', 'G5E2', '13'],
-    ['G6 Pathfinders', 'Mr. Collins', 'Ms. Kumar', 'G6E1', '16'],
-    ['G6 Seekers', 'Ms. Foster', 'Mr. Chen', 'G6E2', '10'],
-    ['G6 Visionaries', 'Mr. Martinez', 'Ms. Wong', 'G6E3', '15'],
-    ['G6 Achievers', 'Ms. Jackson', 'Mr. Lin', 'G6E3', '12']
+    // Grade 1 Classes - G1-G2 Teacher Group
+    ['G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'G1E1', '4'],
+    ['G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'G1E1', '3'],
+    ['G1 Creators', 'Ms. Davis', 'Mr. Brown', 'G1E2', '3'],
+    ['G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'G1E2', '3'],
+    ['G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'G1E3', '3'],
+    ['G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'G1E3', '3'],
+    
+    // Grade 2 Classes - Same G1-G2 Teacher Group
+    ['G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'G2E1', '3'],
+    ['G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'G2E1', '3'],
+    ['G2 Creators', 'Ms. Davis', 'Mr. Brown', 'G2E2', '3'],
+    ['G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'G2E2', '3'],
+    ['G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'G2E3', '3'],
+    ['G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'G2E3', '3'],
+    
+    // Grade 3 Classes - G3-G4 Teacher Group
+    ['G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'G3E1', '3'],
+    ['G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'G3E1', '3'],
+    ['G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'G3E2', '3'],
+    ['G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'G3E2', '3'],
+    ['G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'G3E3', '3'],
+    ['G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'G3E3', '3'],
+    
+    // Grade 4 Classes - Same G3-G4 Teacher Group
+    ['G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'G4E1', '3'],
+    ['G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'G4E1', '3'],
+    ['G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'G4E2', '3'],
+    ['G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'G4E2', '3'],
+    ['G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'G4E3', '3'],
+    ['G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'G4E3', '3'],
+    
+    // Grade 5 Classes - G5-G6 Teacher Group
+    ['G5 Achievers', 'Ms. White', 'Mr. Clark', 'G5E1', '3'],
+    ['G5 Builders', 'Ms. White', 'Mr. Clark', 'G5E1', '3'],
+    ['G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'G5E2', '3'],
+    ['G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'G5E2', '3'],
+    ['G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'G5E3', '3'],
+    ['G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'G5E3', '3'],
+    
+    // Grade 6 Classes - Same G5-G6 Teacher Group
+    ['G6 Achievers', 'Ms. White', 'Mr. Clark', 'G6E1', '3'],
+    ['G6 Builders', 'Ms. White', 'Mr. Clark', 'G6E1', '3'],
+    ['G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'G6E2', '3'],
+    ['G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'G6E2', '3'],
+    ['G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'G6E3', '3'],
+    ['G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'G6E3', '3']
   ];
   
   classesSheet.getRange(5, 1, sampleClasses.length, classHeaders.length).setValues(sampleClasses);
@@ -1008,8 +1159,744 @@ function createMasterDataSheet(systemFolder) {
   // Set Students sheet as active | 設定學生工作表為活躍狀態
   masterSheet.setActiveSheet(studentsSheet);
   
+  // Setup HT (Head Teachers) sheet | 設定學年主任資料工作表
+  const htSheet = masterSheet.insertSheet('HT Teachers | HT老師');
+  
+  // Title | 標題
+  htSheet.getRange('A1:D1').merge().setValue('👨‍🏫 Head Teachers Configuration | 學年主任配置');
+  htSheet.getRange('A1').setFontSize(16).setFontWeight('bold').setHorizontalAlignment('center');
+  htSheet.getRange('A1:D1').setBackground('#34A853').setFontColor('white');
+  
+  // Instructions | 說明
+  htSheet.getRange('A2:D2').merge().setValue('Configure Head Teachers for each grade level | 配置各年級的學年主任');
+  htSheet.getRange('A2').setFontStyle('italic').setHorizontalAlignment('center');
+  htSheet.getRange('A2:D2').setBackground('#E8F5E8');
+  
+  // Headers for HT data | HT資料標題
+  const htHeaders = [
+    'Grade | 年級',
+    'IT HT Name | IT學年主任',
+    'LT HT Name | LT學年主任', 
+    'Notes | 備註'
+  ];
+  
+  htSheet.getRange(4, 1, 1, htHeaders.length).setValues([htHeaders]);
+  htSheet.getRange(4, 1, 1, htHeaders.length).setFontWeight('bold').setBackground('#34A853').setFontColor('white');
+  
+  // Add comprehensive HT data based on new test structure | 根據新測試結構新增完整HT資料
+  // Each grade group has HTs identified from the teacher structure above
+  const sampleHTs = [
+    ['G1', 'Mr. Garcia', 'Ms. Johnson', 'G1-G2 Teacher Group - G1 HTs'],
+    ['G2', 'Mr. Garcia', 'Ms. Johnson', 'G1-G2 Teacher Group - G2 HTs'],
+    ['G3', 'Mr. Lee', 'Ms. Taylor', 'G3-G4 Teacher Group - G3 HTs'],
+    ['G4', 'Mr. Lee', 'Ms. Taylor', 'G3-G4 Teacher Group - G4 HTs'],
+    ['G5', 'Mr. Collins', 'Ms. White', 'G5-G6 Teacher Group - G5 HTs'],
+    ['G6', 'Mr. Collins', 'Ms. White', 'G5-G6 Teacher Group - G6 HTs']
+  ];
+  
+  htSheet.getRange(5, 1, sampleHTs.length, htHeaders.length).setValues(sampleHTs);
+  
+  // Set up data validation for Grade column | 設定年級欄位的資料驗證
+  const gradeRange = htSheet.getRange('A5:A10'); // Grade column for sample data
+  const gradeRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['G1', 'G2', 'G3', 'G4', 'G5', 'G6'])
+    .setAllowInvalid(false)
+    .setHelpText('Select grade level | 選擇年級')
+    .build();
+  gradeRange.setDataValidation(gradeRule);
+  
+  // Add usage instructions | 新增使用說明
+  htSheet.getRange('F1').setValue('💡 Usage Instructions | 使用說明');
+  htSheet.getRange('F1').setFontWeight('bold').setFontSize(12).setBackground('#FFF3C4');
+  htSheet.getRange('F2').setValue('1. Each grade should have exactly 2 HTs (IT and LT)');
+  htSheet.getRange('F3').setValue('2. IT HT manages IT teacher assessment titles');
+  htSheet.getRange('F4').setValue('3. LT HT manages LT teacher assessment titles');
+  htSheet.getRange('F5').setValue('4. HT can only edit their grade level (E1, E2, E3)');
+  htSheet.getRange('F6').setValue('');
+  htSheet.getRange('F7').setValue('1. 每個年級都應該有2位HT（IT和LT）');
+  htSheet.getRange('F8').setValue('2. IT HT管理IT老師的評量標題');
+  htSheet.getRange('F9').setValue('3. LT HT管理LT老師的評量標題');
+  htSheet.getRange('F10').setValue('4. HT只能編輯自己年級的級別（E1, E2, E3）');
+  
+  // Auto-resize columns | 自動調整欄寬
+  htSheet.autoResizeColumns(1, htHeaders.length);
+
   console.log(`✅ Master data sheet created: ${masterSheet.getName()}`);
+  
+  // Auto-generate teachers from sample student data | 從範例學生資料自動生成老師
+  try {
+    const teacherData = extractTeachersFromStudentData(masterSheet);
+    const teachersSheet = masterSheet.getSheetByName('Auto-Generated Teachers | 自動生成老師');
+    
+    if (teachersSheet && teacherData.length > 0) {
+      // Clear existing data (keep headers) | 清除現有資料（保留標題）
+      const lastRow = teachersSheet.getLastRow();
+      if (lastRow > 4) {
+        teachersSheet.getRange(5, 1, lastRow - 4, 6).clear();
+      }
+      
+      // Add new teacher data | 新增老師資料
+      teachersSheet.getRange(5, 1, teacherData.length, 6).setValues(teacherData);
+      
+      // Add summary | 新增摘要
+      const summaryRow = 5 + teacherData.length + 1;
+      teachersSheet.getRange(summaryRow, 1, 1, 6).merge().setValue(
+        `📊 Summary: Found ${teacherData.length} teachers extracted from student data | 摘要：從學生資料中提取了 ${teacherData.length} 位老師`
+      );
+      teachersSheet.getRange(summaryRow, 1).setBackground('#E8F5E8').setFontWeight('bold');
+      
+      console.log(`✅ Auto-generated ${teacherData.length} teachers from sample student data`);
+    }
+  } catch (error) {
+    console.log('⚠️ Warning: Could not auto-generate teachers during master data creation:', error.message);
+  }
+  
   return masterSheet;
+}
+
+/**
+ * Add HT Teachers sheet to existing Master Data if it doesn't exist | 如果HT老師工作表不存在，則新增到現有的主控資料表
+ */
+function addHTSheetToExistingMasterData() {
+  try {
+    console.log('🔍 Checking for HT Teachers sheet in Master Data...');
+    
+    // Access Master Data using standard pattern
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
+    
+    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
+    if (!masterFiles.hasNext()) {
+      throw new Error('Master data sheet not found | 找不到主控資料表');
+    }
+    
+    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
+    
+    // Check if HT sheet already exists
+    let htSheet = masterSheet.getSheetByName('HT Teachers | HT老師');
+    if (htSheet) {
+      console.log('✅ HT Teachers sheet already exists');
+      showMessage('Sheet Exists | 工作表已存在', 'HT Teachers sheet already exists in Master Data | HT老師工作表已存在於主控資料表中');
+      return htSheet;
+    }
+    
+    // Create new HT sheet
+    console.log('📝 Creating HT Teachers sheet...');
+    htSheet = masterSheet.insertSheet('HT Teachers | HT老師');
+    
+    // Setup the HT sheet with the same structure as in createMasterDataSheet
+    // Title | 標題
+    htSheet.getRange('A1:D1').merge().setValue('👨‍🏫 Head Teachers Configuration | 學年主任配置');
+    htSheet.getRange('A1').setFontSize(16).setFontWeight('bold').setHorizontalAlignment('center');
+    htSheet.getRange('A1:D1').setBackground('#34A853').setFontColor('white');
+    
+    // Instructions | 說明
+    htSheet.getRange('A2:D2').merge().setValue('Configure Head Teachers for each grade level | 配置各年級的學年主任');
+    htSheet.getRange('A2').setFontStyle('italic').setHorizontalAlignment('center');
+    htSheet.getRange('A2:D2').setBackground('#E8F5E8');
+    
+    // Headers for HT data | HT資料標題
+    const htHeaders = [
+      'Grade | 年級',
+      'IT HT Name | IT學年主任',
+      'LT HT Name | LT學年主任', 
+      'Notes | 備註'
+    ];
+    
+    htSheet.getRange(4, 1, 1, htHeaders.length).setValues([htHeaders]);
+    htSheet.getRange(4, 1, 1, htHeaders.length).setFontWeight('bold').setBackground('#34A853').setFontColor('white');
+    
+    // Add sample HT data for all grades | 新增所有年級的範例HT資料
+    const sampleHTs = [
+      ['G1', 'Ms. Sarah Johnson', '李小明', 'Grade 1 Head Teachers'],
+      ['G2', 'Mr. David Brown', '王美華', 'Grade 2 Head Teachers'],
+      ['G3', 'Ms. Emily Davis', '張志強', 'Grade 3 Head Teachers'],
+      ['G4', 'Mr. Michael Wilson', '陳淑芬', 'Grade 4 Head Teachers'],
+      ['G5', 'Ms. Jessica Taylor', '劉建國', 'Grade 5 Head Teachers'],
+      ['G6', 'Mr. Robert Anderson', '黃麗娟', 'Grade 6 Head Teachers']
+    ];
+    
+    htSheet.getRange(5, 1, sampleHTs.length, htHeaders.length).setValues(sampleHTs);
+    
+    // Set up data validation for Grade column | 設定年級欄位的資料驗證
+    const gradeRange = htSheet.getRange('A5:A10'); // Grade column for sample data
+    const gradeRule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['G1', 'G2', 'G3', 'G4', 'G5', 'G6'])
+      .setAllowInvalid(false)
+      .setHelpText('Select grade level | 選擇年級')
+      .build();
+    gradeRange.setDataValidation(gradeRule);
+    
+    // Add usage instructions | 新增使用說明
+    htSheet.getRange('F1').setValue('💡 Usage Instructions | 使用說明');
+    htSheet.getRange('F1').setFontWeight('bold').setFontSize(12).setBackground('#FFF3C4');
+    htSheet.getRange('F2').setValue('1. Each grade should have exactly 2 HTs (IT and LT)');
+    htSheet.getRange('F3').setValue('2. IT HT manages IT teacher assessment titles');
+    htSheet.getRange('F4').setValue('3. LT HT manages LT teacher assessment titles');
+    htSheet.getRange('F5').setValue('4. HT can only edit their grade level (E1, E2, E3)');
+    htSheet.getRange('F6').setValue('');
+    htSheet.getRange('F7').setValue('1. 每個年級都應該有2位HT（IT和LT）');
+    htSheet.getRange('F8').setValue('2. IT HT管理IT老師的評量標題');
+    htSheet.getRange('F9').setValue('3. LT HT管理LT老師的評量標題');
+    htSheet.getRange('F10').setValue('4. HT只能編輯自己年級的級別（E1, E2, E3）');
+    
+    // Auto-resize columns | 自動調整欄寬
+    htSheet.autoResizeColumns(1, htHeaders.length);
+    
+    console.log('✅ HT Teachers sheet created successfully');
+    showMessage('Success | 成功', 'HT Teachers sheet has been added to Master Data | HT老師工作表已新增到主控資料表');
+    
+    return htSheet;
+    
+  } catch (error) {
+    console.error('❌ Error adding HT sheet:', error.message);
+    showError('Error | 錯誤', `Failed to add HT Teachers sheet: ${error.message} | 無法新增HT老師工作表: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Get HT (Head Teacher) information from Master Data | 從主控資料表取得學年主任資訊
+ */
+function getHTData() {
+  try {
+    // Access Master Data
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
+    
+    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
+    if (!masterFiles.hasNext()) {
+      throw new Error('Master data sheet not found | 找不到主控資料表');
+    }
+    
+    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
+    const htSheet = masterSheet.getSheetByName('HT Teachers | HT老師');
+    
+    if (!htSheet) {
+      throw new Error('HT Teachers sheet not found | 找不到HT老師工作表');
+    }
+    
+    // Get HT data starting from row 5 (after headers)
+    const lastRow = htSheet.getLastRow();
+    if (lastRow < 5) {
+      return {}; // No HT data
+    }
+    
+    const htData = htSheet.getRange(5, 1, lastRow - 4, 4).getValues();
+    const htMap = {};
+    
+    // Convert to map for easy lookup
+    htData.forEach(row => {
+      const [grade, itHT, ltHT, notes] = row;
+      if (grade && (itHT || ltHT)) {
+        htMap[grade] = {
+          itHT: itHT || '',
+          ltHT: ltHT || '',
+          notes: notes || ''
+        };
+      }
+    });
+    
+    return htMap;
+    
+  } catch (error) {
+    console.error('Error getting HT data:', error.message);
+    return {};
+  }
+}
+
+/**
+ * Identify current user as HT and determine their permissions | 識別當前用戶為HT並確定其權限
+ */
+function getCurrentHTContext() {
+  try {
+    const currentFile = SpreadsheetApp.getActiveSpreadsheet();
+    const fileName = currentFile.getName();
+    const userEmail = Session.getActiveUser().getEmail();
+    
+    console.log(`Checking HT context for file: ${fileName}`);
+    console.log(`User email: ${userEmail}`);
+    
+    // Get HT data from Master Data
+    const htData = getHTData();
+    
+    // Check if current file is an HT gradebook by filename pattern
+    // Support multiple patterns:
+    // 1. New format: "G1_IT_HT_Ms_Smith_2425S2_Gradebook"
+    // 2. Old format: "G1 IT HT - John Smith - Gradebook" or "G1 LT HT - 李小明 - 成績簿"
+    let match = null;
+    let grade, teacherType, htName;
+    
+    // Try new format first
+    const newPattern = /^(G[1-6])_(IT|LT)_HT_(.+?)_\d{4}S\d_Gradebook$/i;
+    match = fileName.match(newPattern);
+    
+    if (match) {
+      [, grade, teacherType, htName] = match;
+      htName = htName.replace(/_/g, ' '); // Convert underscores back to spaces
+    } else {
+      // Try old format
+      const oldPattern = /^(G[1-6])\s+(IT|LT)\s+HT\s+-\s+(.+?)\s+-\s+(Gradebook|成績簿)/i;
+      match = fileName.match(oldPattern);
+      
+      if (match) {
+        [, grade, teacherType, htName] = match;
+      }
+    }
+    
+    if (!match) {
+      return null; // Not an HT gradebook
+    }
+    const gradeData = htData[grade];
+    
+    if (!gradeData) {
+      console.log(`No HT data found for grade ${grade}`);
+      return null;
+    }
+    
+    // Verify HT name matches
+    const expectedName = teacherType === 'IT' ? gradeData.itHT : gradeData.ltHT;
+    
+    if (!expectedName || !htName.includes(expectedName.split(' ')[0])) {
+      console.log(`HT name mismatch. Expected: ${expectedName}, Found: ${htName}`);
+      return null;
+    }
+    
+    // Generate allowed levels for this HT
+    const allowedLevels = [`${grade}E1`, `${grade}E2`, `${grade}E3`];
+    
+    return {
+      isHT: true,
+      grade: grade,
+      teacherType: teacherType,
+      htName: htName,
+      allowedLevels: allowedLevels,
+      fileName: fileName
+    };
+    
+  } catch (error) {
+    console.error('Error getting HT context:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Check if current user has HT permissions for assessment title management | 檢查當前用戶是否有評量標題管理的HT權限
+ */
+function checkHTPermissions() {
+  const htContext = getCurrentHTContext();
+  
+  if (!htContext) {
+    showError(
+      'Access Denied | 拒絕存取',
+      'This function is only available to Head Teachers in their HT gradebook files. | 此功能僅供學年主任在其HT成績簿檔案中使用。'
+    );
+    return null;
+  }
+  
+  console.log('HT permissions verified:', htContext);
+  return htContext;
+}
+
+/**
+ * HT Login and Management Interface | HT登入管理界面
+ */
+function htLoginAndManage() {
+  try {
+    console.log('Starting HT login and management interface...');
+    
+    // Get HT data from Master Data
+    const htData = getHTData();
+    if (!htData || Object.keys(htData).length === 0) {
+      showError('No HT Data | 無HT資料', 'No HT teachers found in Master Data. Please add HT teachers first. | 在主控資料中找不到HT老師。請先新增HT老師。');
+      return;
+    }
+    
+    // Show HT selection interface
+    showHTSelectionInterface(htData);
+    
+  } catch (error) {
+    console.error('Error in htLoginAndManage:', error.message);
+    showError('Error | 錯誤', `Failed to open HT management: ${error.message} | 無法開啟HT管理: ${error.message}`);
+  }
+}
+
+/**
+ * Show HT selection interface | 顯示HT選擇界面
+ */
+function showHTSelectionInterface(htData) {
+  let html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>👨‍🏫 HT Assessment Management | HT評量管理</h2>
+      <p>Please select your identity to access assessment title management. | 請選擇您的身份以存取評量標題管理。</p>
+      
+      <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3>📋 Select Your HT Role | 選擇您的HT角色</h3>
+        <p>Choose your grade and teacher type to manage assessment titles. | 選擇您的年級和老師類型來管理評量標題。</p>
+      </div>
+      
+      <form id="htSelectionForm">
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background-color: #34A853; color: white;">
+              <th style="padding: 10px; border: 1px solid #ddd;">Select | 選擇</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">Grade | 年級</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">IT HT</th>
+              <th style="padding: 10px; border: 1px solid #ddd;">LT HT</th>
+            </tr>
+          </thead>
+          <tbody>
+  `;
+  
+  // Add HT selection options
+  Object.keys(htData).sort().forEach(grade => {
+    const gradeHTs = htData[grade];
+    
+    html += `
+      <tr>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+          ${gradeHTs.itHT ? `<input type="radio" name="htSelection" value="${grade}_IT_${gradeHTs.itHT}" id="${grade}_IT">` : ''}
+          ${gradeHTs.ltHT ? `<input type="radio" name="htSelection" value="${grade}_LT_${gradeHTs.ltHT}" id="${grade}_LT">` : ''}
+        </td>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">${grade}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">
+          ${gradeHTs.itHT ? `
+            <label for="${grade}_IT" style="cursor: pointer; display: block; padding: 5px;">
+              📚 ${gradeHTs.itHT} (IT HT)
+            </label>
+          ` : '<span style="color: #999;">No IT HT assigned</span>'}
+        </td>
+        <td style="padding: 10px; border: 1px solid #ddd;">
+          ${gradeHTs.ltHT ? `
+            <label for="${grade}_LT" style="cursor: pointer; display: block; padding: 5px;">
+              📝 ${gradeHTs.ltHT} (LT HT)
+            </label>
+          ` : '<span style="color: #999;">No LT HT assigned</span>'}
+        </td>
+      </tr>
+    `;
+  });
+  
+  html += `
+          </tbody>
+        </table>
+        
+        <div style="margin: 20px 0; text-align: center;">
+          <button type="button" onclick="proceedWithHTManagement()" style="background-color: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px;">
+            🚀 Proceed to Management | 進入管理
+          </button>
+          <button type="button" onclick="google.script.host.close()" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+            ❌ Cancel | 取消
+          </button>
+        </div>
+      </form>
+      
+      <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h4>💡 Important Notes | 重要說明:</h4>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Each HT can manage 3 levels: E1, E2, E3 for their grade | 每位HT可管理3個級別：其年級的E1、E2、E3</li>
+          <li>IT HT manages IT teacher assessment titles | IT HT管理IT老師的評量標題</li>
+          <li>LT HT manages LT teacher assessment titles | LT HT管理LT老師的評量標題</li>
+          <li>Changes will sync to all teachers in your grade level | 變更會同步到您年級的所有老師</li>
+        </ul>
+      </div>
+      
+      <script>
+        function proceedWithHTManagement() {
+          const selected = document.querySelector('input[name="htSelection"]:checked');
+          if (!selected) {
+            alert('Please select your HT role first. | 請先選擇您的HT角色。');
+            return;
+          }
+          
+          const [grade, teacherType, htName] = selected.value.split('_');
+          console.log('Selected HT:', { grade, teacherType, htName });
+          
+          // Create mock HT context for direct management
+          const htContext = {
+            htName: htName,
+            grade: grade,
+            teacherType: teacherType,
+            allowedLevels: [grade + 'E1', grade + 'E2', grade + 'E3'],
+            isDirectAccess: true
+          };
+          
+          // Call server function to proceed with management
+          google.script.run
+            .withSuccessHandler(function(result) {
+              if (result.success) {
+                google.script.host.close();
+              } else {
+                alert('Error: ' + result.message);
+              }
+            })
+            .withFailureHandler(function(error) {
+              alert('Error: ' + error.message);
+            })
+            .proceedWithHTManagementServer(htContext);
+        }
+      </script>
+    </div>
+  `;
+  
+  // Show the interface
+  const htmlOutput = HtmlService.createHtmlOutput(html)
+    .setWidth(700)
+    .setHeight(500);
+  
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'HT Login & Management | HT登入管理');
+}
+
+/**
+ * Server-side function to proceed with HT management | 伺服器端函數來進行HT管理
+ */
+function proceedWithHTManagementServer(htContext) {
+  try {
+    console.log('Proceeding with HT management for:', htContext);
+    
+    // Get current assessment titles for this HT's levels
+    const currentTitles = getHTCurrentAssessmentTitles(htContext);
+    
+    // Show assessment title management interface
+    showHTAssessmentTitleInterface(htContext, currentTitles);
+    
+    return { success: true };
+    
+  } catch (error) {
+    console.error('Error in proceedWithHTManagementServer:', error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * HT Assessment Title Management - Main function | HT評量標題管理 - 主要函數
+ */
+function manageHTAssessmentTitles() {
+  // Check HT permissions first
+  const htContext = checkHTPermissions();
+  if (!htContext) {
+    return; // Permission check failed, error already shown
+  }
+  
+  try {
+    console.log('Starting HT Assessment Title Management for:', htContext);
+    
+    // Get current assessment titles for this HT's levels
+    const currentTitles = getHTCurrentAssessmentTitles(htContext);
+    
+    // Show assessment title management interface
+    showHTAssessmentTitleInterface(htContext, currentTitles);
+    
+  } catch (error) {
+    console.error('Error in manageHTAssessmentTitles:', error.message);
+    showError('Error | 錯誤', `Failed to manage assessment titles: ${error.message} | 無法管理評量標題: ${error.message}`);
+  }
+}
+
+/**
+ * Get current assessment titles for HT's allowed levels | 取得HT允許級別的當前評量標題
+ */
+function getHTCurrentAssessmentTitles(htContext) {
+  const titles = {};
+  
+  htContext.allowedLevels.forEach(level => {
+    const levelTitles = getAssessmentTitles(null, htContext.teacherType, level);
+    titles[level] = levelTitles;
+  });
+  
+  return titles;
+}
+
+/**
+ * Show HT Assessment Title Management Interface | 顯示HT評量標題管理界面
+ */
+function showHTAssessmentTitleInterface(htContext, currentTitles) {
+  // Create HTML interface
+  let html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>🏷️ Assessment Title Management | 評量標題管理</h2>
+      <p><strong>HT:</strong> ${htContext.htName} (${htContext.grade} ${htContext.teacherType})</p>
+      <p><strong>Allowed Levels | 允許級別:</strong> ${htContext.allowedLevels.join(', ')}</p>
+      
+      <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3>📝 Edit Assessment Titles | 編輯評量標題</h3>
+        <p>You can edit assessment titles for your grade levels. Changes will apply to all classes in your grade. | 您可以編輯您年級的評量標題。變更將套用到您年級的所有班級。</p>
+      </div>
+  `;
+  
+  // Add interface for each allowed level
+  htContext.allowedLevels.forEach(level => {
+    const levelTitles = currentTitles[level];
+    
+    html += `
+      <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px;">
+        <h4>${level} Assessment Titles | ${level} 評量標題</h4>
+        
+        <div style="margin: 10px 0;">
+          <label><strong>Formative Assessments | 平時評量:</strong></label>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0;">
+    `;
+    
+    // Add formative assessment input fields
+    for (let i = 0; i < 8; i++) {
+      const currentTitle = levelTitles.formative[i] || `F.A.${i + 1}`;
+      html += `<input type="text" id="formative_${level}_${i}" value="${currentTitle}" style="padding: 5px; border: 1px solid #ccc; border-radius: 3px;">`;
+    }
+    
+    html += `
+          </div>
+        </div>
+        
+        <div style="margin: 10px 0;">
+          <label><strong>Summative Assessments | 總結評量:</strong></label>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0;">
+    `;
+    
+    // Add summative assessment input fields
+    for (let i = 0; i < 4; i++) {
+      const currentTitle = levelTitles.summative[i] || `S.A.${i + 1}`;
+      html += `<input type="text" id="summative_${level}_${i}" value="${currentTitle}" style="padding: 5px; border: 1px solid #ccc; border-radius: 3px;">`;
+    }
+    
+    html += `
+          </div>
+        </div>
+        
+        <div style="margin: 15px 0;">
+          <button onclick="updateLevelTitles('${level}')" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+            Update ${level} | 更新 ${level}
+          </button>
+          <button onclick="resetLevelTitles('${level}')" style="background-color: #ff9800; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+            Reset ${level} | 重設 ${level}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += `
+      <div style="margin: 20px 0; text-align: center;">
+        <button onclick="updateAllLevels()" style="background-color: #2196F3; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px;">
+          💾 Update All Levels | 更新所有級別
+        </button>
+        <button onclick="google.script.host.close()" style="background-color: #999; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+          ❌ Close | 關閉
+        </button>
+      </div>
+      
+      <script>
+        function updateLevelTitles(level) {
+          // Implementation will be added
+          console.log('Updating level:', level);
+        }
+        
+        function resetLevelTitles(level) {
+          // Implementation will be added
+          console.log('Resetting level:', level);
+        }
+        
+        function updateAllLevels() {
+          // Implementation will be added
+          console.log('Updating all levels');
+        }
+      </script>
+    </div>
+  `;
+  
+  // Show the interface
+  const htmlOutput = HtmlService.createHtmlOutput(html)
+    .setWidth(800)
+    .setHeight(600);
+  
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'HT Assessment Title Management | HT評量標題管理');
+}
+
+/**
+ * Reset HT Assessment Titles to Default | 重設HT評量標題為預設
+ */
+function resetHTAssessmentTitles() {
+  const htContext = checkHTPermissions();
+  if (!htContext) {
+    return;
+  }
+  
+  try {
+    // Confirm reset action
+    const ui = SpreadsheetApp.getUi();
+    const response = ui.alert(
+      'Confirm Reset | 確認重設',
+      `Are you sure you want to reset all assessment titles for ${htContext.grade} ${htContext.teacherType} to default values?\n\n確定要將 ${htContext.grade} ${htContext.teacherType} 的所有評量標題重設為預設值嗎？`,
+      ui.ButtonSet.YES_NO
+    );
+    
+    if (response !== ui.Button.YES) {
+      return;
+    }
+    
+    // Reset titles for each allowed level
+    let updatedCount = 0;
+    
+    htContext.allowedLevels.forEach(level => {
+      const result = resetAssessmentTitlesByLevel(level, htContext.teacherType);
+      if (result.success) {
+        updatedCount++;
+      }
+    });
+    
+    showMessage(
+      'Reset Complete | 重設完成',
+      `Successfully reset assessment titles for ${updatedCount} levels.\n\n成功重設 ${updatedCount} 個級別的評量標題。`
+    );
+    
+  } catch (error) {
+    console.error('Error resetting HT assessment titles:', error.message);
+    showError('Error | 錯誤', `Failed to reset assessment titles: ${error.message} | 無法重設評量標題: ${error.message}`);
+  }
+}
+
+/**
+ * Sync HT Assessment Titles to All Classes | 同步HT評量標題到所有班級
+ */
+function syncHTAssessmentTitles() {
+  const htContext = checkHTPermissions();
+  if (!htContext) {
+    return;
+  }
+  
+  try {
+    // Confirm sync action
+    const ui = SpreadsheetApp.getUi();
+    const response = ui.alert(
+      'Confirm Sync | 確認同步',
+      `Are you sure you want to sync assessment titles to all ${htContext.grade} ${htContext.teacherType} gradebooks?\n\n確定要將評量標題同步到所有 ${htContext.grade} ${htContext.teacherType} 成績簿嗎？`,
+      ui.ButtonSet.YES_NO
+    );
+    
+    if (response !== ui.Button.YES) {
+      return;
+    }
+    
+    // Sync titles for each allowed level
+    let totalUpdated = 0;
+    const results = [];
+    
+    htContext.allowedLevels.forEach(level => {
+      const result = syncAssessmentTitlesToExistingGradebooksByTeacherLevel(htContext.teacherType, level);
+      if (result.success) {
+        totalUpdated += result.updatedSheets || 0;
+        results.push(`${level}: ${result.updatedSheets || 0} sheets updated`);
+      }
+    });
+    
+    showMessage(
+      'Sync Complete | 同步完成',
+      `Successfully updated ${totalUpdated} gradebook sheets.\n\nDetails | 詳細:\n${results.join('\n')}\n\n成功更新 ${totalUpdated} 個成績簿工作表。`
+    );
+    
+  } catch (error) {
+    console.error('Error syncing HT assessment titles:', error.message);
+    showError('Error | 錯誤', `Failed to sync assessment titles: ${error.message} | 無法同步評量標題: ${error.message}`);
+  }
 }
 
 /**
@@ -1130,7 +2017,7 @@ function createGradebookTemplate(systemFolder) {
   template.deleteSheet(defaultSheet);
   
   // Create class gradebook format | 建立班級成績簿格式
-  setupClassSheet(sampleSheet, 'Sample Class | 範例班級');
+  setupClassSheetHeaders(sampleSheet, 'Sample Class | 範例班級');
   
   // Add teacher info sheet | 新增老師資訊工作表
   const teacherInfoSheet = template.insertSheet('📋 Teacher Info | 老師資訊');
@@ -1143,6 +2030,631 @@ function createGradebookTemplate(systemFolder) {
   return template;
 }
 
+// ===== BATCH GRADEBOOK CREATION | 批量成績簿建立 =====
+
+/**
+ * Batch create gradebooks for all teachers | 批量建立所有老師的成績簿
+ */
+function batchCreateGradebooks() {
+  try {
+    const startTime = new Date();
+    
+    // Update auto-generated teachers first | 先更新自動生成老師資料
+    try {
+      updateAutoGeneratedTeachers();
+      console.log('✅ Auto-generated teachers updated before batch creation');
+    } catch (error) {
+      console.log('⚠️ Warning: Could not update auto-generated teachers:', error.message);
+    }
+    
+    // Get master data
+    const masterData = getMasterDataSheet();
+    if (!masterData) {
+      throw new Error('Master Data sheet not found | 找不到主控資料表');
+    }
+    
+    // Get all teacher data
+    const teacherData = extractTeacherData(masterData);
+    if (!teacherData || teacherData.length === 0) {
+      throw new Error('No teacher data found | 找不到老師資料');
+    }
+    
+    // Get system folders
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
+    
+    let successCount = 0;
+    let errorCount = 0;
+    const errors = [];
+    
+    // Get HT data for checking during creation - group by grade pairs
+    const htData = getHTData();
+    const htTeachers = [];
+    if (htData && Object.keys(htData).length > 0) {
+      // Define grade groups and find unique HTs
+      const gradeGroups = {
+        'G1-G2': ['G1', 'G2'],
+        'G3-G4': ['G3', 'G4'], 
+        'G5-G6': ['G5', 'G6']
+      };
+      
+      const processedHTs = new Set();
+      
+      Object.entries(gradeGroups).forEach(([groupName, grades]) => {
+        const firstGrade = grades[0];
+        const gradeData = htData[firstGrade];
+        
+        if (gradeData) {
+          // IT HT for this grade group
+          if (gradeData.itHT && !processedHTs.has(`${gradeData.itHT}-IT`)) {
+            htTeachers.push({ 
+              name: gradeData.itHT, 
+              type: 'IT', 
+              gradeGroup: groupName,
+              grades: grades,
+              responsibilities: grades.map(g => `${g}E1, ${g}E2, ${g}E3`).join(', ')
+            });
+            processedHTs.add(`${gradeData.itHT}-IT`);
+          }
+          
+          // LT HT for this grade group
+          if (gradeData.ltHT && !processedHTs.has(`${gradeData.ltHT}-LT`)) {
+            htTeachers.push({ 
+              name: gradeData.ltHT, 
+              type: 'LT', 
+              gradeGroup: groupName,
+              grades: grades,
+              responsibilities: grades.map(g => `${g}E1, ${g}E2, ${g}E3`).join(', ')
+            });
+            processedHTs.add(`${gradeData.ltHT}-LT`);
+          }
+        }
+      });
+      
+      console.log('🔍 Found HT teachers:', htTeachers.map(ht => `${ht.name} (${ht.gradeGroup} ${ht.type})`));
+    }
+    
+    let htEnhancedCount = 0;
+    
+    // Create gradebooks for each teacher (check if HT during creation)
+    for (let i = 0; i < teacherData.length; i++) {
+      const teacher = teacherData[i];
+      try {
+        console.log(`Processing teacher ${i + 1}/${teacherData.length}: ${teacher.name}`);
+        
+        // Check if this teacher is an HT
+        const htInfo = htTeachers.find(ht => ht.name === teacher.name);
+        
+        let gradebook;
+        
+        if (htInfo) {
+          // This is an HT teacher - create enhanced gradebook
+          console.log(`👨‍🏫 ${teacher.name} is HT (${htInfo.gradeGroup} ${htInfo.type}) - creating enhanced gradebook`);
+          
+          const gradebookName = `${teacher.name} - HT ${htInfo.gradeGroup} ${htInfo.type} - Gradebook`;
+          
+          // Enhance teacher record with HT information
+          const htEnhancedTeacher = {
+            ...teacher,
+            isHT: true,
+            htGradeGroup: htInfo.gradeGroup,
+            htGrades: htInfo.grades,
+            htType: htInfo.type,
+            htResponsibilities: htInfo.responsibilities,
+            htPermissions: htInfo.grades.flatMap(grade => [`${grade}E1`, `${grade}E2`, `${grade}E3`])
+          };
+          
+          gradebook = createTeacherGradebook(htEnhancedTeacher, teacherGradebooksFolder, gradebookName);
+          
+          // Add HT-specific assessment management sheet
+          try {
+            addHTAssessmentManagementSheet(gradebook, htInfo);
+            console.log(`✅ Added HT Assessment Management sheet for ${teacher.name}`);
+            htEnhancedCount++;
+          } catch (htError) {
+            console.error(`⚠️ Failed to add HT sheet for ${teacher.name}:`, htError);
+            // Continue anyway, basic gradebook was created
+          }
+          
+        } else {
+          // Regular teacher - create standard gradebook
+          gradebook = createTeacherGradebook(teacher, teacherGradebooksFolder);
+        }
+        
+        successCount++;
+        console.log(`✅ Created gradebook for ${teacher.name}: ${gradebook.getName()}`);
+        
+      } catch (error) {
+        console.error(`❌ Error creating gradebook for ${teacher.name}:`, error);
+        errorCount++;
+        errors.push(`${teacher.name}: ${error.message}`);
+      }
+    }
+    
+    const endTime = new Date();
+    const duration = Math.round((endTime - startTime) / 1000);
+    
+    // Calculate statistics
+    const regularTeachersCount = successCount - htEnhancedCount;
+    
+    const detailedMessage = `
+📊 Batch Creation Complete | 批次建立完成
+
+📚 Teacher Gradebooks Created | 教師成績簿已建立:
+• Total teachers | 總教師數: ${teacherData.length}
+• Successfully created | 成功建立: ${successCount} gradebooks
+• Regular teachers | 一般教師: ${regularTeachersCount} gradebooks
+• Head Teachers (HT Enhanced) | 學年主任（增強版）: ${htEnhancedCount} gradebooks
+• Errors | 錯誤: ${errorCount} gradebooks
+
+⏱️ Total Duration | 總耗時: ${duration} seconds
+🎉 All gradebooks created successfully! | 所有成績簿建立成功！
+
+${errors.length > 0 ? `\n❌ Errors encountered | 遇到的錯誤:\n${errors.join('\n')}` : ''}
+
+💡 Note: HT teachers have enhanced gradebooks with Assessment Title Management functionality.
+💡 注意：HT教師擁有增強版成績簿，具備評量標題管理功能。
+    `;
+    
+    // Return result object for dashboard compatibility
+    return {
+      success: errorCount === 0,
+      successCount: successCount,
+      regularTeachers: regularTeachersCount,
+      htEnhanced: htEnhancedCount,
+      errorCount: errorCount,
+      errors: errors,
+      duration: duration,
+      totalTeachers: teacherData.length,
+      message: detailedMessage
+    };
+    
+  } catch (error) {
+    console.error('Batch creation failed:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: `Batch creation failed: ${error.message}`
+    };
+  }
+}
+
+/**
+ * Extract teacher data from master data sheet | 從主控資料表提取老師資料
+ */
+function extractTeacherData(masterDataSheet) {
+  const sheet = masterDataSheet.getSheetByName('Students');
+  if (!sheet) {
+    throw new Error('Students sheet not found in Master Data | 在主控資料中找不到Students工作表');
+  }
+  
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  
+  // Find teacher columns - try multiple possible column names including bilingual versions
+  let ltTeacherCol = headers.indexOf('LT Teacher | LT老師');
+  let itTeacherCol = headers.indexOf('IT Teacher | IT老師');
+  let gradeCol = headers.indexOf('Grade | 年級');
+  let classCol = headers.indexOf('Homeroom | 班級');
+  
+  // Try alternative column names
+  if (ltTeacherCol === -1) {
+    ltTeacherCol = headers.indexOf('LT Teacher');
+    if (ltTeacherCol === -1) {
+      ltTeacherCol = headers.indexOf('LT');
+      if (ltTeacherCol === -1) {
+        ltTeacherCol = headers.indexOf('Language Teacher');
+      }
+    }
+  }
+  
+  if (itTeacherCol === -1) {
+    itTeacherCol = headers.indexOf('IT Teacher');
+    if (itTeacherCol === -1) {
+      itTeacherCol = headers.indexOf('IT');
+      if (itTeacherCol === -1) {
+        itTeacherCol = headers.indexOf('Information Teacher');
+      }
+    }
+  }
+  
+  if (gradeCol === -1) {
+    gradeCol = headers.indexOf('Grade');
+    if (gradeCol === -1) {
+      gradeCol = headers.indexOf('Year');
+    }
+  }
+  
+  let englishClassCol = headers.indexOf('English Class | 英文班級');
+  if (englishClassCol === -1) {
+    englishClassCol = headers.indexOf('English Class');
+    if (englishClassCol === -1) {
+      englishClassCol = headers.indexOf('EnglishClass');
+    }
+  }
+  
+  if (classCol === -1) {
+    classCol = headers.indexOf('Class');
+    if (classCol === -1) {
+      classCol = headers.indexOf('Level');
+      if (classCol === -1) {
+        classCol = headers.indexOf('Homeroom');
+      }
+    }
+  }
+  
+  // Enhanced error message with actual headers found
+  if (ltTeacherCol === -1 || itTeacherCol === -1) {
+    const availableHeaders = headers.filter(h => h && h.trim() !== '').join(', ');
+    throw new Error(`Teacher columns not found | 找不到老師欄位\nAvailable columns | 可用欄位: ${availableHeaders}\nExpected: LT Teacher, IT Teacher or similar`);
+  }
+  
+  if (gradeCol === -1 || classCol === -1) {
+    const availableHeaders = headers.filter(h => h && h.trim() !== '').join(', ');
+    throw new Error(`Grade/Class columns not found | 找不到年級/班級欄位\nAvailable columns | 可用欄位: ${availableHeaders}\nExpected: Grade, Class or similar`);
+  }
+  
+  const teacherMap = new Map();
+  
+  // Process each student row
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (!row[0]) continue; // Skip empty rows
+    
+    const grade = row[gradeCol];
+    const homeroom = row[classCol];
+    const englishClass = englishClassCol !== -1 ? row[englishClassCol] : row[classCol];
+    const ltTeacher = row[ltTeacherCol];
+    const itTeacher = row[itTeacherCol];
+    
+    // Debug logging for first few rows
+    if (i <= 3) {
+      console.log(`Row ${i}: Grade=${grade}, Homeroom=${homeroom}, EnglishClass=${englishClass}, LT=${ltTeacher}, IT=${itTeacher}`);
+    }
+    
+    // Add LT teacher
+    if (ltTeacher) {
+      const key = `${ltTeacher}_LT`;
+      if (!teacherMap.has(key)) {
+        teacherMap.set(key, {
+          name: ltTeacher,
+          type: 'LT',
+          classes: new Set()
+        });
+      }
+      // Use English Class for all teachers
+      teacherMap.get(key).classes.add(englishClass || homeroom);
+    }
+    
+    // Add IT teacher
+    if (itTeacher) {
+      const key = `${itTeacher}_IT`;
+      if (!teacherMap.has(key)) {
+        teacherMap.set(key, {
+          name: itTeacher,
+          type: 'IT',
+          classes: new Set()
+        });
+      }
+      // Use English Class for all teachers
+      teacherMap.get(key).classes.add(englishClass || homeroom);
+    }
+  }
+  
+  // Convert to array and add class arrays
+  const result = Array.from(teacherMap.values()).map(teacher => ({
+    ...teacher,
+    classes: Array.from(teacher.classes)
+  }));
+  
+  // Debug logging for teacher extraction results
+  console.log('=== Teacher Extraction Results ===');
+  result.forEach(teacher => {
+    console.log(`${teacher.name} (${teacher.type}): ${teacher.classes.length} classes - ${teacher.classes.join(', ')}`);
+  });
+  console.log('===================================');
+  
+  return result;
+}
+
+/**
+ * Create gradebook for a specific teacher | 為特定老師建立成績簿
+ */
+function createTeacherGradebook(teacher, parentFolder) {
+  const gradebookName = `${SYSTEM_CONFIG.SEMESTER}_${teacher.name}_${teacher.type}_Gradebook`;
+  
+  // Check if gradebook already exists
+  const existingFiles = parentFolder.getFilesByName(gradebookName);
+  if (existingFiles.hasNext()) {
+    console.log(`Gradebook already exists for ${teacher.name}, skipping...`);
+    return existingFiles.next();
+  }
+  
+  // Create new gradebook
+  const gradebook = SpreadsheetApp.create(gradebookName);
+  const file = DriveApp.getFileById(gradebook.getId());
+  file.moveTo(parentFolder);
+  
+  // Remove default sheet
+  const defaultSheet = gradebook.getActiveSheet();
+  
+  // Create teacher info sheet
+  const teacherInfoSheet = gradebook.insertSheet('📋 Teacher Info | 老師資訊');
+  setupTeacherInfoSheet(teacherInfoSheet, teacher);
+  
+  // Create class sheets with real student data
+  console.log(`Creating gradebook for ${teacher.name} (${teacher.type}) with ${teacher.classes.length} classes: ${teacher.classes.join(', ')}`);
+  
+  for (const className of teacher.classes) {
+    console.log(`  Creating sheet for class: ${className}`);
+    const classSheet = gradebook.insertSheet(`📚 ${className}`);
+    setupClassSheet(classSheet, className, teacher.name, teacher.type);
+  }
+  
+  // Delete default sheet
+  gradebook.deleteSheet(defaultSheet);
+  
+  // Set teacher info as active sheet
+  gradebook.setActiveSheet(teacherInfoSheet);
+  
+  return gradebook;
+}
+
+/**
+ * Get actual student count for a specific class and teacher
+ */
+function getStudentCountForClass(className, teacherName, teacherType) {
+  try {
+    const students = getStudentsForClass(className, teacherName, teacherType);
+    return students.length;
+  } catch (error) {
+    console.error(`Error getting student count for ${className}:`, error.message);
+    return 0;
+  }
+}
+
+/**
+ * Get students from Master Data for a specific class and teacher
+ */
+function getStudentsForClass(className, teacherName, teacherType) {
+  try {
+    const masterData = getMasterDataSheet();
+    if (!masterData) {
+      throw new Error('Master Data sheet not found');
+    }
+    
+    const studentsSheet = masterData.getSheetByName('Students');
+    if (!studentsSheet) {
+      throw new Error('Students sheet not found in Master Data');
+    }
+    
+    const data = studentsSheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find column indices
+    const englishClassCol = headers.findIndex(h => h.includes('English Class'));
+    const ltTeacherCol = headers.findIndex(h => h.includes('LT Teacher'));
+    const itTeacherCol = headers.findIndex(h => h.includes('IT Teacher'));
+    const statusCol = headers.findIndex(h => h.includes('Status'));
+    
+    if (englishClassCol === -1 || ltTeacherCol === -1 || itTeacherCol === -1) {
+      throw new Error('Required columns not found in Students sheet');
+    }
+    
+    // Filter students for this class and teacher
+    const students = [];
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const englishClass = row[englishClassCol];
+      const ltTeacher = row[ltTeacherCol];
+      const itTeacher = row[itTeacherCol];
+      const status = row[statusCol];
+      
+      // Only include active students (在學)
+      if (status !== '在學') continue;
+      
+      // Check if this student belongs to the class and teacher
+      const matchesClass = englishClass === className;
+      const matchesTeacher = (teacherType === 'LT' && ltTeacher === teacherName) || 
+                            (teacherType === 'IT' && itTeacher === teacherName);
+      
+      if (matchesClass && matchesTeacher) {
+        students.push({
+          studentId: row[0],
+          studentName: row[1],
+          englishName: row[2],
+          grade: row[3],
+          homeroom: row[4],
+          englishClass: row[5],
+          ltTeacher: row[6],
+          itTeacher: row[7],
+          email: row[8],
+          status: row[9]
+        });
+      }
+    }
+    
+    return students;
+    
+  } catch (error) {
+    console.error('Error getting students for class:', error.message);
+    return [];
+  }
+}
+
+/**
+ * Setup class sheet with real student data in the format matching the screenshot
+ */
+function setupClassSheetWithRealData(sheet, className, teacherName = null, teacherType = null) {
+  // Get real student data
+  const students = teacherName && teacherType ? 
+    getStudentsForClass(className, teacherName, teacherType) : [];
+  
+  if (students.length === 0) {
+    console.log(`No students found for ${className} with teacher ${teacherName} (${teacherType})`);
+    // Fallback to sample data format
+    setupClassSheetFallback(sheet, className);
+    return;
+  }
+  
+  // Set class name in A1 with orange background like screenshot and emoji
+  sheet.getRange('A1').setValue(`📚 ${className}`);
+  sheet.getRange('A1').setFontSize(14).setFontWeight('bold')
+    .setBackground('#FF9800').setFontColor('white');
+  
+  // Create header structure matching screenshot
+  // Row 1: Group headers (B1-G1 should be empty as requested)
+  const row1Headers = ['', '', '', '', '', '', ''];
+  
+  // Add Formative Assessment group header
+  row1Headers.push('Formative Assessments');
+  for (let i = 1; i < 8; i++) { // F.A.1 to F.A.8
+    row1Headers.push('');
+  }
+  
+  // Add Summative Assessment group header  
+  row1Headers.push('Summative Assessments');
+  for (let i = 1; i < 4; i++) { // S.A.1 to S.A.4
+    row1Headers.push('');
+  }
+  
+  row1Headers.push('Final');
+  
+  // Row 2: Individual column headers
+  const row2Headers = ['', 'Student Name', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Final Assessment'];
+  
+  // Add F.A. columns
+  for (let i = 1; i <= 8; i++) {
+    row2Headers.push(`F.A.${i}`);
+  }
+  
+  // Add S.A. columns
+  for (let i = 1; i <= 4; i++) {
+    row2Headers.push(`S.A.${i}`);
+  }
+  
+  row2Headers.push('Final');
+  
+  // Set headers
+  sheet.getRange(1, 1, 1, row1Headers.length).setValues([row1Headers]);
+  sheet.getRange(2, 1, 1, row2Headers.length).setValues([row2Headers]);
+  
+  // Format group headers
+  sheet.getRange(1, 8, 1, 8).setBackground('#4285F4').setFontColor('white').setFontWeight('bold'); // Formative blue
+  sheet.getRange(1, 16, 1, 4).setBackground('#34A853').setFontColor('white').setFontWeight('bold'); // Summative green
+  
+  // Format column headers
+  sheet.getRange(2, 1, 1, row2Headers.length).setFontWeight('bold');
+  sheet.getRange(2, 4).setBackground('#9C27B0').setFontColor('white'); // Term Grade purple
+  sheet.getRange(2, 5).setBackground('#2196F3').setFontColor('white'); // FA Average blue
+  sheet.getRange(2, 6).setBackground('#4CAF50').setFontColor('white'); // SA Average green  
+  sheet.getRange(2, 7).setBackground('#FF9800').setFontColor('white'); // Final orange
+  
+  // Add student data starting from row 3
+  let currentRow = 3;
+  students.forEach((student, index) => {
+    const studentRow = [
+      index + 1, // Row number
+      student.studentName,
+      student.studentId,
+      '', // Term Grade - will be calculated
+      '', // FA Average - will be calculated  
+      '', // SA Average - will be calculated
+      '', // Final Assessment - to be filled
+    ];
+    
+    // Add empty cells for F.A.1-8
+    for (let i = 0; i < 8; i++) {
+      studentRow.push('');
+    }
+    
+    // Add empty cells for S.A.1-4
+    for (let i = 0; i < 4; i++) {
+      studentRow.push('');
+    }
+    
+    // Add empty cell for Final
+    studentRow.push('');
+    
+    sheet.getRange(currentRow, 1, 1, studentRow.length).setValues([studentRow]);
+    currentRow++;
+  });
+  
+  // Add "Average:" row at the bottom like in screenshot
+  const averageRow = currentRow;
+  sheet.getRange(averageRow, 2).setValue('Average:');
+  sheet.getRange(averageRow, 2).setFontWeight('bold');
+  
+  // Add average formulas for each assessment column
+  const lastStudentRow = currentRow - 1;
+  
+  // Term Grade average (column D)
+  sheet.getRange(averageRow, 4).setFormula(`=IFERROR(ROUND(AVERAGEIF(D3:D${lastStudentRow},">0"),1))`);
+  
+  // FA Average (column E)  
+  sheet.getRange(averageRow, 5).setFormula(`=IFERROR(ROUND(AVERAGEIF(E3:E${lastStudentRow},">0"),1))`);
+  
+  // SA Average (column F)
+  sheet.getRange(averageRow, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(F3:F${lastStudentRow},">0"),1))`);
+  
+  // Final average (column G)
+  sheet.getRange(averageRow, 7).setFormula(`=IFERROR(ROUND(AVERAGEIF(G3:G${lastStudentRow},">0"),1))`);
+  
+  // Add average formulas for each F.A. column (H-O)
+  for (let col = 8; col <= 15; col++) {
+    const colLetter = String.fromCharCode(64 + col);
+    sheet.getRange(averageRow, col).setFormula(`=IFERROR(ROUND(AVERAGEIF(${colLetter}3:${colLetter}${lastStudentRow},">0"),1))`);
+  }
+  
+  // Add average formulas for each S.A. column (P-S)
+  for (let col = 16; col <= 19; col++) {
+    const colLetter = String.fromCharCode(64 + col);
+    sheet.getRange(averageRow, col).setFormula(`=IFERROR(ROUND(AVERAGEIF(${colLetter}3:${colLetter}${lastStudentRow},">0"),1))`);
+  }
+  
+  // Final column average (T)
+  sheet.getRange(averageRow, 20).setFormula(`=IFERROR(ROUND(AVERAGEIF(T3:T${lastStudentRow},">0"),1))`);
+  
+  // Set individual student formulas
+  for (let row = 3; row < averageRow; row++) {
+    // Term Grade formula - new correct format
+    sheet.getRange(row, 4).setFormula(`=IF(AND(ISNUMBER(E${row}), ISNUMBER(F${row}), ISNUMBER(G${row}), E${row} > 0, F${row} > 0, G${row} > 0), ROUND((E${row} * 0.15 + F${row} * 0.2 + G${row} * 0.1) / 0.45, 1), "")`);
+    
+    // FA Average formula
+    sheet.getRange(row, 5).setFormula(`=IFERROR(ROUND(AVERAGEIF(H${row}:O${row},">0"),1))`);
+    
+    // SA Average formula
+    sheet.getRange(row, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(P${row}:S${row},">0"),1))`);
+    
+    // Final Assessment formula - G3=T3
+    sheet.getRange(row, 7).setFormula(`=T${row}`);
+  }
+  
+  // Format and freeze
+  sheet.setFrozenRows(2);
+  sheet.setFrozenColumns(3);
+  sheet.autoResizeColumns(1, row2Headers.length);
+  
+  // Add borders
+  const dataRange = sheet.getRange(1, 1, averageRow, row2Headers.length);
+  dataRange.setBorder(true, true, true, true, true, true);
+}
+
+/**
+ * Fallback setup for class sheet when no student data is found
+ */
+function setupClassSheetFallback(sheet, className) {
+  sheet.getRange('A1').setValue(`${className} - No student data found | 找不到學生資料`);
+  sheet.getRange('A1').setFontSize(14).setFontWeight('bold')
+    .setBackground('#FF5722').setFontColor('white');
+  
+  sheet.getRange('A3').setValue('Please check:');
+  sheet.getRange('A4').setValue('1. Student data exists in Master Data sheet');
+  sheet.getRange('A5').setValue('2. English Class names match exactly');
+  sheet.getRange('A6').setValue('3. Teacher names match exactly');
+  sheet.getRange('A7').setValue('4. Student status is "在學"');
+}
+
 /**
  * Setup class sheet headers only (no sample data) | 只設定班級工作表標題（無範例資料）
  */
@@ -1150,9 +2662,8 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
   // Clear sheet | 清空工作表
   sheet.clear();
   
-  // Get dynamic assessment titles for this class with teacher type | 取得此班級及教師類型的動態評量標題
-  const assessmentTitles = getAssessmentTitles(className, teacherType);
-  console.log(`Using assessment titles for ${className} (${teacherType || 'DEFAULT'}):`, assessmentTitles);
+  // Use fixed default assessment titles to ensure consistent column identification | 使用固定的預設評量標題以確保欄位識別一致
+  console.log(`Creating gradebook for ${className} (${teacherType || 'DEFAULT'}) with default titles`);
   
   // Build headers array with new structure | 建立新結構的標題陣列
   const row1Headers = []; // Group titles row
@@ -1172,8 +2683,8 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
     } else {
       row1Headers.push(''); // Empty for other columns in group
     }
-    // Use dynamic titles from configuration | 使用配置中的動態標題
-    const title = assessmentTitles.formative[i] || `F.A.${i + 1}`;
+    // Use fixed default titles for consistent identification | 使用固定預設標題以確保識別一致
+    const title = `F.A.${i + 1}`;
     row2Headers.push(title);
   }
   
@@ -1185,8 +2696,8 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
     } else {
       row1Headers.push(''); // Empty for other columns in group
     }
-    // Use dynamic titles from configuration | 使用配置中的動態標題
-    const title = assessmentTitles.summative[i] || `S.A.${i + 1}`;
+    // Use fixed default titles for consistent identification | 使用固定預設標題以確保識別一致
+    const title = `S.A.${i + 1}`;
     row2Headers.push(title);
   }
   
@@ -1257,138 +2768,59 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
 /**
  * Setup class sheet with gradebook format | 設定班級工作表成績簿格式
  */
-function setupClassSheet(sheet, className) {
-  // Clear sheet | 清空工作表
-  sheet.clear();
-  
-  // Class title | 班級標題
-  sheet.getRange('A1:Q1').merge().setValue(`📚 ${className} - Grade Sheet | 成績表`);
-  sheet.getRange('A1').setFontSize(16).setFontWeight('bold').setHorizontalAlignment('center');
-  sheet.getRange('A1:Q1').setBackground('#4285F4').setFontColor('white');
-  
-  // Create bilingual gradebook headers | 建立雙語成績簿標題
-  const headers = ['Student ID | 學生編號', 'Student Name | 學生姓名', 'English Name | 英文姓名'];
-  
-  // Add Formative Assessment columns | 新增平時評量欄位
-  for (let i = 1; i <= SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT; i++) {
-    headers.push(`F.A.${i} | 平時${i}`);
-  }
-  
-  // Add Summative Assessment columns | 新增總結評量欄位
-  for (let i = 1; i <= SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT; i++) {
-    headers.push(`S.A.${i} | 總結${i}`);
-  }
-  
-  // Add Final and calculation columns | 新增期末考和計算欄位
-  if (SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL) {
-    headers.push('Final | 期末考');
-  }
-  
-  headers.push(
-    'F.A. Average | 平時平均',
-    'S.A. Average | 總結平均',
-    'Semester Grade | 學期成績',
-    'Letter Grade | 等第',
-    'Notes | 備註'
-  );
-  
-  // Set headers | 設定標題
-  sheet.getRange(2, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange(2, 1, 1, headers.length).setFontWeight('bold').setBackground('#34A853').setFontColor('white');
-  
-  // Add sample student row with formulas | 新增含公式的範例學生列
-  const sampleRow = ['LE11001', 'Sample Student | 範例學生', 'Sample'];
-  
-  // Add empty assessment cells | 新增空白評量格子
-  const totalAssessments = SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT + SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT;
-  if (SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL) {
-    for (let i = 0; i <= totalAssessments; i++) sampleRow.push('');
-  } else {
-    for (let i = 0; i < totalAssessments; i++) sampleRow.push('');
-  }
-  
-  // Calculate column positions | 計算欄位位置
-  const faStartCol = 4; // F.A.1 starts at column D
-  const faEndCol = faStartCol + SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT - 1;
-  const saStartCol = faEndCol + 1;
-  const saEndCol = saStartCol + SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT - 1;
-  const finalCol = SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL ? saEndCol + 1 : null;
-  const avgStartCol = finalCol ? finalCol + 1 : saEndCol + 1;
-  
-  // Add formula cells | 新增公式格子
-  const faAvgFormula = `=AVERAGEIF(${getColumnLetter(faStartCol)}3:${getColumnLetter(faEndCol)}3,">0")`;
-  const saAvgFormula = `=AVERAGEIF(${getColumnLetter(saStartCol)}3:${getColumnLetter(saEndCol)}3,">0")`;
-  
-  sampleRow.push(faAvgFormula); // F.A. Average
-  sampleRow.push(saAvgFormula); // S.A. Average
-  
-  // Semester grade formula | 學期成績公式
-  const semesterFormula = finalCol 
-    ? `=(${getColumnLetter(avgStartCol)}3*${SYSTEM_CONFIG.WEIGHTS.FORMATIVE}+${getColumnLetter(avgStartCol + 1)}3*${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE}+${getColumnLetter(finalCol)}3*${SYSTEM_CONFIG.WEIGHTS.FINAL})/${SYSTEM_CONFIG.WEIGHTS.FORMATIVE + SYSTEM_CONFIG.WEIGHTS.SUMMATIVE + SYSTEM_CONFIG.WEIGHTS.FINAL}`
-    : `=(${getColumnLetter(avgStartCol)}3*${SYSTEM_CONFIG.WEIGHTS.FORMATIVE}+${getColumnLetter(avgStartCol + 1)}3*${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE})/${SYSTEM_CONFIG.WEIGHTS.FORMATIVE + SYSTEM_CONFIG.WEIGHTS.SUMMATIVE}`;
-  
-  sampleRow.push(semesterFormula);
-  
-  // Letter grade formula | 等第公式
-  const letterGradeFormula = `=IF(${getColumnLetter(avgStartCol + 2)}3>=90,"A",IF(${getColumnLetter(avgStartCol + 2)}3>=80,"B",IF(${getColumnLetter(avgStartCol + 2)}3>=70,"C",IF(${getColumnLetter(avgStartCol + 2)}3>=60,"D","F"))))`;
-  sampleRow.push(letterGradeFormula);
-  sampleRow.push(''); // Notes
-  
-  // Set sample row | 設定範例列
-  sheet.getRange(3, 1, 1, sampleRow.length).setValues([sampleRow]);
-  
-  // Format sheet | 格式化工作表
-  sheet.autoResizeColumns(1, headers.length);
-  sheet.getDataRange().setBorder(true, true, true, true, true, true);
-  
-  // Apply freeze after ensuring no merge conflicts | 確保沒有合併衝突後再凍結
-  try {
-    sheet.setFrozenRows(2);
-    sheet.setFrozenColumns(3);
-  } catch (error) {
-    console.log(`Warning: Could not set frozen rows/columns for ${sheet.getName()}: ${error.message}`);
-    // Try alternative freeze settings | 嘗試替代凍結設定
-    try {
-      sheet.setFrozenRows(1);
-      sheet.setFrozenColumns(3);
-    } catch (altError) {
-      console.log(`Alternative freeze also failed for ${sheet.getName()}: ${altError.message}`);
-    }
-  }
+function setupClassSheet(sheet, className, teacherName = null, teacherType = null) {
+  // Simply call the main setup function
+  setupClassSheetWithRealData(sheet, className, teacherName, teacherType);
 }
+
 
 /**
  * Setup teacher info sheet | 設定老師資訊工作表
  */
-function setupTeacherInfoSheet(sheet) {
+function setupTeacherInfoSheet(sheet, teacher = null) {
   // Clear sheet | 清空工作表
   sheet.clear();
   
   // Title | 標題
-  sheet.getRange('A1:D1').merge().setValue('📋 Teacher Information | 老師資訊');
+  sheet.getRange('A1:D1').merge().setValue('📋 Gradebook Info');
   sheet.getRange('A1').setFontSize(18).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.getRange('A1:D1').setBackground('#FF9800').setFontColor('white');
   
   // Teacher info template | 老師資訊範本
   const teacherInfo = [
-    ['Teacher Name | 老師姓名:', 'Teacher Name Here | 在此填入老師姓名'],
-    ['Subject | 科目:', 'LT/IT'],
+    ['Teacher Name | 老師姓名:', teacher ? teacher.name : 'Teacher Name Here | 在此填入老師姓名'],
+    ['Subject | 科目:', teacher ? teacher.type : 'LT/IT'],
     ['Semester | 學期:', SYSTEM_CONFIG.SEMESTER],
     ['Last Updated | 最後更新:', new Date().toLocaleString()],
     ['', ''],
-    ['Classes Overview | 班級總覽:', ''],
-    ['Class Name | 班級名稱', 'Student Count | 學生數量'],
-    ['G1 Achievers (Example)', '25'],
-    ['G2 Builders (Example)', '23']
+    ['Class Name | 班級名稱', 'Student Count | 學生數量']
   ];
+  
+  // Add actual classes with real student counts if teacher data is provided
+  if (teacher && teacher.classes) {
+    teacher.classes.forEach(className => {
+      const studentCount = getStudentCountForClass(className, teacher.name, teacher.type);
+      teacherInfo.push([className, studentCount.toString()]);
+    });
+  } else {
+    teacherInfo.push(['Example Class | 範例班級', '25']);
+  }
   
   sheet.getRange(3, 1, teacherInfo.length, 2).setValues(teacherInfo);
   sheet.getRange(3, 1, 4, 1).setFontWeight('bold');
-  sheet.getRange(8, 1, 1, 2).setFontWeight('bold').setBackground('#E3F2FD');
+  
+  // Calculate dynamic row positions based on actual data length
+  const headerRowIndex = 6; // "Class Name | Student Count" header is now at index 5 (0-based)
+  
+  // Format the header row - bold but no background color
+  sheet.getRange(3 + headerRowIndex, 1, 1, 2).setFontWeight('bold');
+  
+  // Instructions start after all teacher info data + 2 buffer rows
+  const instructionsStartRow = 3 + teacherInfo.length + 2;
   
   // Instructions | 使用說明
-  sheet.getRange('A13').setValue('💡 How to use this gradebook | 如何使用此成績簿:');
-  sheet.getRange('A13').setFontWeight('bold').setFontSize(12);
+  sheet.getRange(instructionsStartRow, 1).setValue('💡 How to use this gradebook | 如何使用此成績簿:');
+  sheet.getRange(instructionsStartRow, 1).setFontWeight('bold').setFontSize(12);
   
   const instructions = [
     '1. Each sheet tab represents a different class | 每個分頁代表不同班級',
@@ -1399,14 +2831,17 @@ function setupTeacherInfoSheet(sheet) {
   ];
   
   instructions.forEach((instruction, index) => {
-    sheet.getRange(`A${14 + index}`).setValue(instruction);
-    sheet.getRange(`A${14 + index}`).setFontSize(10);
+    sheet.getRange(instructionsStartRow + 1 + index, 1).setValue(instruction);
+    sheet.getRange(instructionsStartRow + 1 + index, 1).setFontSize(10);
   });
   
   // Format | 格式化
   sheet.setColumnWidth(1, 250);
   sheet.setColumnWidth(2, 200);
-  sheet.getRange('A1:D20').setBorder(true, true, true, true, true, true);
+  
+  // Dynamic border range based on actual content
+  const totalRows = instructionsStartRow + instructions.length + 1;
+  sheet.getRange(1, 1, totalRows, 4).setBorder(true, true, true, true, true, true);
 }
 
 /**
@@ -2349,30 +3784,21 @@ function updateExistingSheetHeadersByTeacherLevel(sheet, teacherType, classCode)
     const headerRange = sheet.getRange(2, 1, 1, sheet.getLastColumn());
     const headers = headerRange.getValues()[0];
     
-    // Find the start of formative assessments
-    let formativeStartIndex = -1;
-    for (let i = 0; i < headers.length; i++) {
-      const header = String(headers[i]).toLowerCase();
-      if (header.includes('f.a.') || 
-          header.includes('formative') || 
-          assessmentTitles.formative.some(title => 
-            String(title).toLowerCase() === header
-          )) {
-        formativeStartIndex = i;
-        break;
-      }
-    }
+    // Formative assessments start at column H (index 7, 1-based column 8)
+    const formativeStartIndex = 7; // Column H is at index 7 (0-based)
     
-    if (formativeStartIndex === -1) {
+    // Verify column H contains F.A.1 or similar formative assessment title
+    const columnHHeader = String(headers[7]).toLowerCase();
+    if (!columnHHeader.includes('f.a.')) {
       return {
         success: false,
-        message: 'Could not find formative assessment columns'
+        message: `Expected formative assessment at column H, but found: ${headers[7]}`
       };
     }
     
     // Update formative assessment headers
     for (let i = 0; i < assessmentTitles.formative.length; i++) {
-      const col = formativeStartIndex + i + 1; // +1 for 1-based indexing
+      const col = formativeStartIndex + i + 1; // formativeStartIndex=7 (H), so H=8, I=9, etc.
       if (col <= sheet.getLastColumn()) {
         sheet.getRange(2, col).setValue(assessmentTitles.formative[i]);
       }
@@ -2381,7 +3807,7 @@ function updateExistingSheetHeadersByTeacherLevel(sheet, teacherType, classCode)
     // Find and update summative assessment headers
     const summativeStartIndex = formativeStartIndex + assessmentTitles.formative.length;
     for (let i = 0; i < assessmentTitles.summative.length; i++) {
-      const col = summativeStartIndex + i + 1; // +1 for 1-based indexing
+      const col = summativeStartIndex + i + 1; // Continue from after formative columns
       if (col <= sheet.getLastColumn()) {
         sheet.getRange(2, col).setValue(assessmentTitles.summative[i]);
       }
@@ -2696,2421 +4122,597 @@ function checkAssessmentTitleSystemStatus() {
   }
 }
 
-/**
- * Complete test workflow for Assessment Title Management
- * Assessment Title Management完整測試流程
- */
-function completeAssessmentTitleTest() {
-  console.log('\n🚀 開始 Assessment Title Management 完整測試\n');
-  
-  try {
-    // 步驟1：初始化系統（如果還沒做過）
-    console.log('=== 步驟1：初始化系統 ===');
-    try {
-      const initResult = initializeSystem();
-      console.log('✅ 系統初始化完成');
-    } catch (error) {
-      console.log(`⚠️ 初始化過程中的訊息: ${error.message}`);
-      console.log('繼續執行下一步...');
-    }
-
-    // 步驟2：檢查系統狀態
-    console.log('\n=== 步驟2：檢查系統狀態 ===');
-    try {
-      const configs = getAllClassConfigurations();
-      console.log(`✅ 找到 ${configs.length} 個班級配置`);
-      
-      if (configs.length > 0) {
-        console.log('前3個班級配置:');
-        configs.slice(0, 3).forEach((config, index) => {
-          console.log(`  ${index + 1}. ${config.className} → ${config.classCode} (Level: ${config.level})`);
-        });
-      }
-    } catch (error) {
-      console.log(`❌ 檢查系統狀態失敗: ${error.message}`);
-      return { success: false, step: 2, error: error.message };
-    }
-
-    // 步驟3：設定LT G1E1的評量標題
-    console.log('\n=== 步驟3：設定LT G1E1的評量標題 ===');
-    try {
-      const result = updateAssessmentTitlesByTeacherLevel('LT', 'G1E1', 
-        ['中文測驗1', '語音練習1', '故事分享1', '歌謠練習1', '中文測驗2', '語音練習2', '故事分享2', '歌謠練習2'],
-        ['基礎測試1', '基礎測試2', '聽力測驗', '口語測驗']
-      );
-      
-      if (result.success) {
-        console.log('✅ LT G1E1評量標題設定成功');
-        console.log(`📊 同步結果: ${result.syncResult?.updatedSheets || 0} 個工作表已更新`);
-      } else {
-        console.log(`❌ 設定失敗: ${result.message}`);
-      }
-      
-      console.log('完整更新結果:', result);
-    } catch (error) {
-      console.log(`❌ 設定評量標題失敗: ${error.message}`);
-      return { success: false, step: 3, error: error.message };
-    }
-
-    // 步驟4：檢查更新後的標題
-    console.log('\n=== 步驟4：檢查更新後的標題 ===');
-    try {
-      const currentTitles = showCurrentAssessmentTitles('LT', 'G1E1');
-      console.log('✅ 標題檢查完成');
-    } catch (error) {
-      console.log(`❌ 檢查標題失敗: ${error.message}`);
-    }
-
-    // 步驟5：建立成績簿（會使用新的標題）
-    console.log('\n=== 步驟5：建立成績簿 ===');
-    try {
-      const gradebookResult = createGradebooksForAllTeachers();
-      console.log('✅ 成績簿建立完成');
-      console.log('成績簿建立結果:', gradebookResult);
-    } catch (error) {
-      console.log(`❌ 建立成績簿過程中的訊息: ${error.message}`);
-      console.log('這可能是因為成績簿已經存在，這是正常的。');
-    }
-
-    console.log('\n🎉 Assessment Title Management 完整測試完成！');
-    
-    return {
-      success: true,
-      message: '完整測試流程執行完畢，請檢查上方詳細日誌',
-      timestamp: new Date().toISOString()
-    };
-    
-  } catch (error) {
-    console.log(`❌ 測試過程中發生未預期的錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `測試失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
+// ===== HT DASHBOARD SUPPORT FUNCTIONS | HT控制台支援函數 =====
 
 /**
- * Diagnose Master Data file issues
- * 診斷 Master Data 檔案問題
+ * Get all HT gradebooks for a specific grade
+ * 取得指定年段的所有HT成績簿
  */
-function diagnoseMasterDataFile() {
-  console.log('\n🔍 診斷 Master Data 檔案問題\n');
-  
+function getHTGradebooksForGrade(grade) {
   try {
-    // 1. 檢查主資料夾
-    console.log('=== 1. 檢查主資料夾 ===');
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    console.log(`主資料夾: ${systemFolder.getName()}`);
+    console.log(`Loading HT gradebooks for grade: ${grade}`);
     
-    // 2. 檢查 Master Data 資料夾
-    console.log('\n=== 2. 檢查 Master Data 資料夾 ===');
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
+    // Get system folder
+    const mainFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(mainFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS, false);
     
-    if (!masterDataFolder) {
-      console.log('❌ Master Data 資料夾不存在');
-      console.log(`期望的資料夾名稱: ${SYSTEM_CONFIG.FOLDERS.MASTER_DATA}`);
-      
-      // 列出主資料夾中的所有子資料夾
-      console.log('\n可用的子資料夾:');
-      const subFolders = systemFolder.getFolders();
-      while (subFolders.hasNext()) {
-        const folder = subFolders.next();
-        console.log(`  - ${folder.getName()}`);
-      }
-      
-      return { success: false, message: 'Master Data 資料夾不存在' };
+    if (!teacherGradebooksFolder) {
+      return {
+        success: false,
+        error: 'Teacher gradebooks folder not found'
+      };
     }
     
-    console.log(`✅ Master Data 資料夾: ${masterDataFolder.getName()}`);
+    const gradebooks = [];
+    const files = teacherGradebooksFolder.getFiles();
     
-    // 3. 列出 Master Data 資料夾中的所有檔案
-    console.log('\n=== 3. 列出 Master Data 資料夾中的檔案 ===');
-    const files = masterDataFolder.getFiles();
-    let fileCount = 0;
-    const fileList = [];
+    // HT gradebook naming pattern: G1_IT_HT_Ms_Smith_2425S2_Gradebook
+    const htPattern = new RegExp(`^${grade}_(IT|LT)_HT_(.+?)_\\d{4}S\\d_Gradebook$`, 'i');
     
     while (files.hasNext()) {
       const file = files.next();
-      fileCount++;
-      fileList.push(file.getName());
-      console.log(`${fileCount}. ${file.getName()}`);
-    }
-    
-    if (fileCount === 0) {
-      console.log('❌ Master Data 資料夾是空的');
-      return { success: false, message: 'Master Data 資料夾是空的' };
-    }
-    
-    // 4. 檢查特定的檔案名稱
-    console.log('\n=== 4. 檢查 Master Data 檔案 ===');
-    const expectedFileName = 'Master Data | 主控資料';
-    console.log(`期望的檔案名稱: ${expectedFileName}`);
-    
-    const masterDataFiles = masterDataFolder.getFilesByName(expectedFileName);
-    if (!masterDataFiles.hasNext()) {
-      console.log('❌ 找不到符合名稱的檔案');
-      console.log('可能的檔案名稱模式:');
-      fileList.forEach(fileName => {
-        if (fileName.includes('Master') || fileName.includes('主控') || fileName.includes('Data')) {
-          console.log(`  🎯 可能匹配: ${fileName}`);
-        }
-      });
+      const fileName = file.getName();
       
-      return { success: false, message: '找不到 Master Data 檔案', availableFiles: fileList };
-    }
-    
-    // 5. 檢查檔案內容
-    console.log('\n=== 5. 檢查檔案內容 ===');
-    const masterDataFile = masterDataFiles.next();
-    console.log(`✅ 找到檔案: ${masterDataFile.getName()}`);
-    
-    try {
-      const spreadsheet = SpreadsheetApp.openById(masterDataFile.getId());
-      const sheets = spreadsheet.getSheets();
-      
-      console.log(`📄 檔案包含 ${sheets.length} 個工作表:`);
-      sheets.forEach((sheet, index) => {
-        console.log(`  ${index + 1}. ${sheet.getName()}`);
-      });
-      
-      // 檢查 Students 工作表
-      const studentsSheet = spreadsheet.getSheetByName('Students | 學生資料');
-      if (!studentsSheet) {
-        console.log('❌ 找不到 Students | 學生資料 工作表');
+      const match = fileName.match(htPattern);
+      if (match) {
+        const [, teacherType, teacherNamePart] = match;
+        const teacherName = teacherNamePart.replace(/_/g, ' ');
         
-        // 嘗試其他可能的名稱
-        const possibleNames = ['Students', '學生資料', 'Student Data'];
-        for (const name of possibleNames) {
-          const sheet = spreadsheet.getSheetByName(name);
-          if (sheet) {
-            console.log(`✅ 找到類似工作表: ${sheet.getName()}`);
-            break;
-          }
-        }
-        
-        return { success: false, message: '找不到 Students 工作表' };
-      }
-      
-      console.log(`✅ 找到 Students 工作表: ${studentsSheet.getName()}`);
-      
-      // 檢查工作表標題
-      const headers = studentsSheet.getRange(1, 1, 1, studentsSheet.getLastColumn()).getValues()[0];
-      console.log('\n工作表標題:');
-      headers.forEach((header, index) => {
-        console.log(`  ${index + 1}. ${header}`);
-      });
-      
-      // 檢查是否有教師欄位
-      const ltTeacherIndex = headers.findIndex(header => header.includes('LT Teacher'));
-      const itTeacherIndex = headers.findIndex(header => header.includes('IT Teacher'));
-      
-      console.log(`\nLT Teacher 欄位索引: ${ltTeacherIndex}`);
-      console.log(`IT Teacher 欄位索引: ${itTeacherIndex}`);
-      
-      if (ltTeacherIndex === -1 || itTeacherIndex === -1) {
-        console.log('❌ 找不到教師欄位');
-        return { success: false, message: '找不到教師欄位' };
-      }
-      
-      console.log('✅ 找到教師欄位');
-      
-      return {
-        success: true,
-        message: 'Master Data 檔案檢查完成',
-        fileCount: fileCount,
-        hasStudentsSheet: true,
-        hasTeacherColumns: true
-      };
-      
-    } catch (error) {
-      console.log(`❌ 無法開啟檔案: ${error.message}`);
-      return { success: false, message: `無法開啟檔案: ${error.message}` };
-    }
-    
-  } catch (error) {
-    console.log(`❌ 診斷過程中發生錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `診斷失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
-
-/**
- * Comprehensive diagnostic function to examine Master Data file structure
- * 全面診斷 Master Data 檔案結構
- */
-function diagnoseMasterDataSheets() {
-  console.log('\n🔍 全面診斷 Master Data 檔案工作表結構\n');
-  
-  try {
-    // 1. 找到 Master Data 檔案
-    console.log('=== 1. 定位 Master Data 檔案 ===');
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    
-    if (!masterDataFolder) {
-      throw new Error('Master Data 資料夾不存在');
-    }
-    
-    // 嘗試多個可能的檔案名稱
-    const possibleFileNames = [
-      'Master Data | 主控資料',
-      'Gradebook Master Data | 成績簿主控資料表',
-      'Master Data',
-      '主控資料'
-    ];
-    
-    let masterDataSpreadsheet = null;
-    let foundFileName = null;
-    
-    for (const fileName of possibleFileNames) {
-      const files = masterDataFolder.getFilesByName(fileName);
-      if (files.hasNext()) {
-        masterDataSpreadsheet = SpreadsheetApp.openById(files.next().getId());
-        foundFileName = fileName;
-        console.log(`✅ 找到檔案: ${foundFileName}`);
-        break;
-      }
-    }
-    
-    if (!masterDataSpreadsheet) {
-      console.log('❌ 找不到 Master Data 檔案');
-      console.log('資料夾中的檔案:');
-      const files = masterDataFolder.getFiles();
-      while (files.hasNext()) {
-        console.log(`  - ${files.next().getName()}`);
-      }
-      return { success: false, message: 'Master Data 檔案不存在' };
-    }
-    
-    // 2. 列出所有工作表
-    console.log('\n=== 2. 工作表清單 ===');
-    const sheets = masterDataSpreadsheet.getSheets();
-    console.log(`檔案包含 ${sheets.length} 個工作表:`);
-    
-    const sheetInfo = [];
-    sheets.forEach((sheet, index) => {
-      const name = sheet.getName();
-      const lastRow = sheet.getLastRow();
-      const lastCol = sheet.getLastColumn();
-      
-      console.log(`${index + 1}. "${name}" (${lastRow} 行 × ${lastCol} 欄)`);
-      
-      // 獲取標題行
-      let headers = [];
-      if (lastRow > 0 && lastCol > 0) {
-        try {
-          headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-        } catch (e) {
-          console.log(`    ⚠️ 無法讀取標題: ${e.message}`);
-        }
-      }
-      
-      sheetInfo.push({
-        name: name,
-        index: index,
-        rows: lastRow,
-        columns: lastCol,
-        headers: headers
-      });
-    });
-    
-    // 3. 檢查學生資料工作表
-    console.log('\n=== 3. 學生資料工作表分析 ===');
-    const studentSheetVariants = [
-      'Students | 學生資料',
-      'Students',
-      '學生資料', 
-      'Student Data',
-      'student',
-      'Student'
-    ];
-    
-    let studentsSheet = null;
-    let studentsSheetName = null;
-    
-    for (const variant of studentSheetVariants) {
-      const sheet = masterDataSpreadsheet.getSheetByName(variant);
-      if (sheet) {
-        studentsSheet = sheet;
-        studentsSheetName = variant;
-        console.log(`✅ 找到學生工作表: "${variant}"`);
-        break;
-      }
-    }
-    
-    if (!studentsSheet) {
-      console.log('❌ 找不到學生資料工作表');
-      console.log('可能的工作表名稱:');
-      sheetInfo.forEach(info => {
-        if (info.name.toLowerCase().includes('student') || 
-            info.name.includes('學生') || 
-            info.name.toLowerCase().includes('pupil')) {
-          console.log(`  🎯 可能匹配: "${info.name}"`);
-        }
-      });
-    } else {
-      // 分析學生工作表結構
-      console.log(`\n學生工作表 "${studentsSheetName}" 詳細資訊:`);
-      console.log(`  - 資料行數: ${studentsSheet.getLastRow()}`);
-      console.log(`  - 欄位數: ${studentsSheet.getLastColumn()}`);
-      
-      if (studentsSheet.getLastRow() > 0 && studentsSheet.getLastColumn() > 0) {
-        const headers = studentsSheet.getRange(1, 1, 1, studentsSheet.getLastColumn()).getValues()[0];
-        console.log(`  - 欄位標題 (${headers.length} 個):`);
-        
-        const teacherColumns = [];
-        headers.forEach((header, index) => {
-          console.log(`      ${index + 1}. "${header}"`);
-          
-          if (header.includes('Teacher') || header.includes('老師') || header.includes('教師')) {
-            teacherColumns.push({ index: index, name: header });
-          }
+        gradebooks.push({
+          id: file.getId(),
+          name: fileName,
+          teacherName: teacherName,
+          teacherType: teacherType,
+          grade: grade,
+          semester: SYSTEM_CONFIG.SEMESTER,
+          lastModified: file.getLastUpdated().toLocaleDateString(),
+          url: `https://docs.google.com/spreadsheets/d/${file.getId()}`
         });
+      }
+    }
+    
+    // Also check for regular teacher gradebooks that might be HT-related
+    files.forEach = function() {}; // Reset iterator
+    const regularFiles = teacherGradebooksFolder.getFiles();
+    
+    while (regularFiles.hasNext()) {
+      const file = regularFiles.next();
+      const fileName = file.getName();
+      
+      // Check if this is a regular teacher gradebook that might be an HT
+      // Pattern: TeacherName_SEMESTER_Gradebook
+      const regularPattern = /^(.+?)_\d{4}S\d_Gradebook$/i;
+      const regularMatch = fileName.match(regularPattern);
+      
+      if (regularMatch && !fileName.includes('_HT_')) {
+        const [, teacherName] = regularMatch;
         
-        console.log(`\n  - 教師相關欄位 (${teacherColumns.length} 個):`);
-        if (teacherColumns.length === 0) {
-          console.log('      ❌ 找不到教師欄位');
-        } else {
-          teacherColumns.forEach(col => {
-            console.log(`      ✅ 欄位 ${col.index + 1}: "${col.name}"`);
-          });
-        }
-      }
-    }
-    
-    // 4. 檢查教師工作表
-    console.log('\n=== 4. 教師工作表分析 ===');
-    const teacherSheetVariants = [
-      'Auto-Generated Teachers | 自動生成老師',
-      'Teachers | 教師資料',
-      'Teachers',
-      '教師資料',
-      'Teacher Data',
-      'teacher'
-    ];
-    
-    let teachersSheet = null;
-    for (const variant of teacherSheetVariants) {
-      const sheet = masterDataSpreadsheet.getSheetByName(variant);
-      if (sheet) {
-        teachersSheet = sheet;
-        console.log(`✅ 找到教師工作表: "${variant}"`);
-        break;
-      }
-    }
-    
-    if (!teachersSheet) {
-      console.log('❌ 找不到教師工作表');
-      console.log('可能的工作表名稱:');
-      sheetInfo.forEach(info => {
-        if (info.name.toLowerCase().includes('teacher') || 
-            info.name.includes('教師') || 
-            info.name.includes('老師')) {
-          console.log(`  🎯 可能匹配: "${info.name}"`);
-        }
-      });
-    }
-    
-    // 5. 檢查班級工作表
-    console.log('\n=== 5. 班級工作表分析 ===');
-    const classSheetVariants = [
-      'Classes | 班級資料',
-      'Classes',
-      '班級資料',
-      'Class Data'
-    ];
-    
-    let classesSheet = null;
-    for (const variant of classSheetVariants) {
-      const sheet = masterDataSpreadsheet.getSheetByName(variant);
-      if (sheet) {
-        classesSheet = sheet;
-        console.log(`✅ 找到班級工作表: "${variant}"`);
-        break;
-      }
-    }
-    
-    if (!classesSheet) {
-      console.log('❌ 找不到班級工作表');
-      console.log('可能的工作表名稱:');
-      sheetInfo.forEach(info => {
-        if (info.name.toLowerCase().includes('class') || 
-            info.name.includes('班級')) {
-          console.log(`  🎯 可能匹配: "${info.name}"`);
-        }
-      });
-    }
-    
-    // 6. 總結和建議
-    console.log('\n=== 6. 診斷總結 ===');
-    const summary = {
-      masterDataFileFound: !!masterDataSpreadsheet,
-      fileName: foundFileName,
-      totalSheets: sheets.length,
-      studentsSheetFound: !!studentsSheet,
-      studentsSheetName: studentsSheetName,
-      teachersSheetFound: !!teachersSheet,
-      classesSheetFound: !!classesSheet,
-      allSheetNames: sheets.map(s => s.getName())
-    };
-    
-    console.log(`檔案狀態: ${summary.masterDataFileFound ? '✅ 正常' : '❌ 問題'}`);
-    console.log(`學生工作表: ${summary.studentsSheetFound ? '✅ 找到' : '❌ 缺失'}`);
-    console.log(`教師工作表: ${summary.teachersSheetFound ? '✅ 找到' : '❌ 缺失'}`);
-    console.log(`班級工作表: ${summary.classesSheetFound ? '✅ 找到' : '❌ 缺失'}`);
-    
-    if (!summary.studentsSheetFound) {
-      console.log('\n⚠️ 建議: 學生工作表名稱不符合預期');
-      console.log('   程式碼中尋找的名稱: "Students | 學生資料" 或 "Students"');
-      console.log('   請確認工作表名稱是否正確，或更新程式碼中的工作表名稱');
-    }
-    
-    return {
-      success: true,
-      summary: summary,
-      sheetDetails: sheetInfo
-    };
-    
-  } catch (error) {
-    console.log(`❌ 診斷過程發生錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `診斷失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
-
-/**
- * Comprehensive diagnostic function to examine Master Data file structure
- * 全面診斷 Master Data 檔案結構
- */
-function diagnoseMasterDataSheets() {
-  console.log('\n🔍 全面診斷 Master Data 檔案工作表結構\n');
-  
-  try {
-    // 1. 找到 Master Data 檔案
-    console.log('=== 1. 定位 Master Data 檔案 ===');
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    
-    if (!masterDataFolder) {
-      throw new Error('Master Data 資料夾不存在');
-    }
-    
-    // 嘗試多個可能的檔案名稱
-    const possibleFileNames = [
-      'Master Data | 主控資料',
-      'Gradebook Master Data | 成績簿主控資料表',
-      'Master Data',
-      '主控資料'
-    ];
-    
-    let masterDataSpreadsheet = null;
-    let foundFileName = null;
-    
-    for (const fileName of possibleFileNames) {
-      const files = masterDataFolder.getFilesByName(fileName);
-      if (files.hasNext()) {
-        masterDataSpreadsheet = SpreadsheetApp.openById(files.next().getId());
-        foundFileName = fileName;
-        console.log(`✅ 找到檔案: ${foundFileName}`);
-        break;
-      }
-    }
-    
-    if (!masterDataSpreadsheet) {
-      console.log('❌ 找不到 Master Data 檔案');
-      console.log('資料夾中的檔案:');
-      const files = masterDataFolder.getFiles();
-      while (files.hasNext()) {
-        console.log(`  - ${files.next().getName()}`);
-      }
-      return { success: false, message: 'Master Data 檔案不存在' };
-    }
-    
-    // 2. 列出所有工作表
-    console.log('\n=== 2. 工作表清單 ===');
-    const sheets = masterDataSpreadsheet.getSheets();
-    console.log(`檔案包含 ${sheets.length} 個工作表:`);
-    
-    const sheetInfo = [];
-    sheets.forEach((sheet, index) => {
-      const name = sheet.getName();
-      const lastRow = sheet.getLastRow();
-      const lastCol = sheet.getLastColumn();
-      
-      console.log(`${index + 1}. "${name}" (${lastRow} 行 × ${lastCol} 欄)`);
-      
-      // 獲取標題行
-      let headers = [];
-      if (lastRow > 0 && lastCol > 0) {
+        // Check if this teacher is also an HT for this grade
         try {
-          headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-        } catch (e) {
-          console.log(`    ⚠️ 無法讀取標題: ${e.message}`);
-        }
-      }
-      
-      sheetInfo.push({
-        name: name,
-        index: index,
-        rows: lastRow,
-        columns: lastCol,
-        headers: headers
-      });
-    });
-    
-    // 3. 檢查學生資料工作表
-    console.log('\n=== 3. 學生資料工作表分析 ===');
-    const studentSheetVariants = [
-      'Students | 學生資料',
-      'Students',
-      '學生資料', 
-      'Student Data',
-      'student',
-      'Student'
-    ];
-    
-    let studentsSheet = null;
-    let studentsSheetName = null;
-    
-    for (const variant of studentSheetVariants) {
-      const sheet = masterDataSpreadsheet.getSheetByName(variant);
-      if (sheet) {
-        studentsSheet = sheet;
-        studentsSheetName = variant;
-        console.log(`✅ 找到學生工作表: "${variant}"`);
-        break;
-      }
-    }
-    
-    if (!studentsSheet) {
-      console.log('❌ 找不到學生資料工作表');
-      console.log('可能的工作表名稱:');
-      sheetInfo.forEach(info => {
-        if (info.name.toLowerCase().includes('student') || 
-            info.name.includes('學生') || 
-            info.name.toLowerCase().includes('pupil')) {
-          console.log(`  🎯 可能匹配: "${info.name}"`);
-        }
-      });
-    } else {
-      // 分析學生工作表結構
-      console.log(`\n學生工作表 "${studentsSheetName}" 詳細資訊:`);
-      console.log(`  - 資料行數: ${studentsSheet.getLastRow()}`);
-      console.log(`  - 欄位數: ${studentsSheet.getLastColumn()}`);
-      
-      if (studentsSheet.getLastRow() > 0 && studentsSheet.getLastColumn() > 0) {
-        const headers = studentsSheet.getRange(1, 1, 1, studentsSheet.getLastColumn()).getValues()[0];
-        console.log(`  - 欄位標題 (${headers.length} 個):`);
-        
-        const teacherColumns = [];
-        headers.forEach((header, index) => {
-          console.log(`      ${index + 1}. "${header}"`);
-          
-          if (header.includes('Teacher') || header.includes('老師') || header.includes('教師')) {
-            teacherColumns.push({ index: index, name: header });
-          }
-        });
-        
-        console.log(`\n  - 教師相關欄位 (${teacherColumns.length} 個):`);
-        if (teacherColumns.length === 0) {
-          console.log('      ❌ 找不到教師欄位');
-        } else {
-          teacherColumns.forEach(col => {
-            console.log(`      ✅ 欄位 ${col.index + 1}: "${col.name}"`);
-          });
-        }
-      }
-    }
-    
-    // 4. 總結和建議
-    console.log('\n=== 4. 診斷總結 ===');
-    const summary = {
-      masterDataFileFound: !!masterDataSpreadsheet,
-      fileName: foundFileName,
-      totalSheets: sheets.length,
-      studentsSheetFound: !!studentsSheet,
-      studentsSheetName: studentsSheetName,
-      allSheetNames: sheets.map(s => s.getName())
-    };
-    
-    console.log(`檔案狀態: ${summary.masterDataFileFound ? '✅ 正常' : '❌ 問題'}`);
-    console.log(`學生工作表: ${summary.studentsSheetFound ? '✅ 找到' : '❌ 缺失'}`);
-    
-    if (!summary.studentsSheetFound) {
-      console.log('\n⚠️ 建議: 學生工作表名稱不符合預期');
-      console.log('   程式碼中尋找的名稱: "Students | 學生資料" 或 "Students"');
-      console.log('   請確認工作表名稱是否正確，或更新程式碼中的工作表名稱');
-    }
-    
-    return {
-      success: true,
-      summary: summary,
-      sheetDetails: sheetInfo
-    };
-    
-  } catch (error) {
-    console.log(`❌ 診斷過程發生錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `診斷失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
-
-/**
- * Test teacher type detection with improved logic
- * 測試改進的教師類型檢測邏輯
- */
-function testImprovedTeacherTypeDetection() {
-  console.log('\n🔍 測試改進的教師類型檢測邏輯\n');
-  
-  try {
-    // 1. 測試教師類型對應表
-    console.log('=== 1. 建立教師類型對應表 ===');
-    const teacherTypeMap = getTeacherTypeMapping();
-    
-    console.log(`找到 ${teacherTypeMap.size} 位教師的類型信息:`);
-    teacherTypeMap.forEach((type, name) => {
-      console.log(`  ${name} → ${type}`);
-    });
-    
-    // 2. 測試檔名檢測
-    console.log('\n=== 2. 測試檔名檢測 ===');
-    const testFiles = [
-      'Ms. Kumar_2425S2_Gradebook',
-      'Mr. Collins_2425S2_Gradebook', 
-      'Ms. Yang_2425S2_Gradebook',
-      'Mr. White_2425S2_Gradebook'
-    ];
-    
-    testFiles.forEach(fileName => {
-      const detectedType = detectTeacherTypeFromFilename(fileName);
-      console.log(`${fileName} → ${detectedType || '未檢測到'}`);
-    });
-    
-    // 3. 實際檢查系統中的成績簿檔案
-    console.log('\n=== 3. 檢查實際成績簿檔案 ===');
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
-    
-    if (teacherGradebooksFolder) {
-      const files = teacherGradebooksFolder.getFiles();
-      let ltCount = 0;
-      let itCount = 0;
-      let unknownCount = 0;
-      
-      while (files.hasNext()) {
-        const file = files.next();
-        const fileName = file.getName();
-        const detectedType = detectTeacherTypeFromFilename(fileName);
-        
-        if (detectedType === 'LT') ltCount++;
-        else if (detectedType === 'IT') itCount++;
-        else unknownCount++;
-        
-        console.log(`${fileName} → ${detectedType || '未檢測到'}`);
-      }
-      
-      console.log(`\n📊 統計結果:`);
-      console.log(`  LT 教師: ${ltCount} 個檔案`);
-      console.log(`  IT 教師: ${itCount} 個檔案`);
-      console.log(`  未檢測到: ${unknownCount} 個檔案`);
-      
-      return {
-        success: true,
-        teacherMapSize: teacherTypeMap.size,
-        ltCount: ltCount,
-        itCount: itCount,
-        unknownCount: unknownCount
-      };
-    } else {
-      console.log('❌ 找不到成績簿資料夾');
-      return { success: false, message: '找不到成績簿資料夾' };
-    }
-    
-  } catch (error) {
-    console.log(`❌ 測試過程中發生錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `測試失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
-
-/**
- * Test function: Separate gradebook creation and title synchronization
- * 測試函數：分離成績簿建立和標題同步
- */
-function testSeparateGradebookAndTitleSync() {
-  console.log('\n🚀 開始測試：分離成績簿建立和標題同步\n');
-  
-  try {
-    // 步驟1：初始化系統
-    console.log('=== 步驟1：初始化系統 ===');
-    try {
-      const initResult = initializeSystem();
-      console.log('✅ 系統初始化完成');
-    } catch (error) {
-      console.log(`⚠️ 初始化過程中的訊息: ${error.message}`);
-    }
-
-    // 步驟2：建立成績簿（使用預設標題）
-    console.log('\n=== 步驟2：建立成績簿（使用預設標題）===');
-    try {
-      const gradebookResult = createGradebooksForAllTeachers();
-      console.log('✅ 成績簿建立完成（使用預設標題）');
-      console.log('建立結果:', gradebookResult);
-    } catch (error) {
-      console.log(`⚠️ 建立成績簿過程中的訊息: ${error.message}`);
-      console.log('如果成績簿已存在，這是正常的。');
-    }
-
-    // 步驟3：檢查建立後的預設標題
-    console.log('\n=== 步驟3：檢查建立後的預設標題 ===');
-    try {
-      console.log('檢查LT G1E1的預設標題:');
-      const defaultTitles = showCurrentAssessmentTitles('LT', 'G1E1');
-      console.log('✅ 預設標題檢查完成');
-    } catch (error) {
-      console.log(`❌ 檢查預設標題失敗: ${error.message}`);
-    }
-
-    // 步驟4：同步更新LT G1E1的評量標題到已存在的成績簿  
-    console.log('\n=== 步驟4：同步更新LT G1E1的評量標題 ===');
-    try {
-      const syncResult = syncAssessmentTitlesToExistingGradebooksByTeacherLevel('LT', 'G1E1');
-      
-      if (syncResult.success) {
-        console.log('✅ LT G1E1標題同步成功');
-        console.log(`📊 同步結果: ${syncResult.updatedSheets} 個工作表已更新`);
-        console.log(`📁 處理的檔案: ${syncResult.processedFiles} 個`);
-      } else {
-        console.log(`❌ 同步失敗: ${syncResult.message}`);
-      }
-      
-      console.log('完整同步結果:', syncResult);
-    } catch (error) {
-      console.log(`❌ 同步標題失敗: ${error.message}`);
-      return { success: false, step: 4, error: error.message };
-    }
-
-    // 步驟5：檢查同步後的標題
-    console.log('\n=== 步驟5：檢查同步後的標題 ===');
-    try {
-      console.log('檢查LT G1E1同步後的標題:');
-      const updatedTitles = showCurrentAssessmentTitles('LT', 'G1E1');
-      console.log('✅ 同步後標題檢查完成');
-    } catch (error) {
-      console.log(`❌ 檢查同步後標題失敗: ${error.message}`);
-    }
-
-    // 步驟6：測試IT類型的同步更新
-    console.log('\n=== 步驟6：測試IT G2E2的標題同步 ===');
-    try {
-      const itSyncResult = syncAssessmentTitlesToExistingGradebooksByTeacherLevel('IT', 'G2E2');
-      
-      if (itSyncResult.success) {
-        console.log('✅ IT G2E2標題同步成功');
-        console.log(`📊 同步結果: ${itSyncResult.updatedSheets} 個工作表已更新`);
-      } else {
-        console.log(`❌ IT同步失敗: ${itSyncResult.message}`);
-      }
-      
-      console.log('IT同步結果:', itSyncResult);
-    } catch (error) {
-      console.log(`❌ IT標題同步失敗: ${error.message}`);
-    }
-
-    console.log('\n🎉 分離成績簿建立和標題同步測試完成！');
-    console.log('📋 測試摘要：');
-    console.log('  1. ✅ 系統初始化');
-    console.log('  2. ✅ 成績簿建立（預設標題）');
-    console.log('  3. ✅ 標題同步到已存在的成績簿');
-    console.log('  4. ✅ 驗證標題更新結果');
-    
-    return {
-      success: true,
-      message: '分離測試流程執行完畢：先建立成績簿，再同步更新標題',
-      timestamp: new Date().toISOString()
-    };
-    
-  } catch (error) {
-    console.log(`❌ 測試過程中發生未預期的錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
-    return {
-      success: false,
-      message: `測試失敗: ${error.message}`,
-      error: error.stack
-    };
-  }
-}
-
-/**
- * Diagnostic function: Check why sync found 0 gradebooks
- * 診斷函數：檢查為什麼同步找不到成績簿
- */
-function diagnoseSyncIssues() {
-  console.log('\n🔍 開始診斷同步問題\n');
-  
-  try {
-    // 1. 檢查系統資料夾結構
-    console.log('=== 1. 檢查系統資料夾結構 ===');
-    const mainFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    console.log(`主資料夾: ${mainFolder.getName()}`);
-    
-    const teacherGradebooksFolder = getSubFolder(mainFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
-    console.log(`成績簿資料夾: ${teacherGradebooksFolder.getName()}`);
-    
-    // 2. 列出所有成績簿檔案
-    console.log('\n=== 2. 列出所有成績簿檔案 ===');
-    const gradebookFiles = teacherGradebooksFolder.getFiles();
-    let fileCount = 0;
-    let gradebookList = [];
-    
-    while (gradebookFiles.hasNext()) {
-      const file = gradebookFiles.next();
-      fileCount++;
-      gradebookList.push({
-        name: file.getName(),
-        id: file.getId(),
-        lastModified: file.getLastUpdated()
-      });
-      console.log(`${fileCount}. ${file.getName()} (ID: ${file.getId()})`);
-    }
-    
-    console.log(`📁 總共找到 ${fileCount} 個成績簿檔案`);
-    
-    // 3. 檢查班級配置
-    console.log('\n=== 3. 檢查班級配置 ===');
-    const configs = getAllClassConfigurations();
-    console.log(`📋 總共有 ${configs.length} 個班級配置`);
-    
-    // 找出 G1E1 相關的班級
-    const g1e1Classes = configs.filter(config => config.level === 'G1E1');
-    console.log(`🎯 G1E1 相關班級: ${g1e1Classes.length} 個`);
-    
-    g1e1Classes.forEach((config, index) => {
-      console.log(`  ${index + 1}. ${config.className} → ${config.classCode} (Level: ${config.level})`);
-    });
-    
-    // 4. 檢查成績簿檔案與班級的匹配
-    console.log('\n=== 4. 檢查成績簿檔案與班級的匹配 ===');
-    
-    for (const gradebook of gradebookList) {
-      console.log(`\n檢查檔案: ${gradebook.name}`);
-      
-      try {
-        const spreadsheet = SpreadsheetApp.openById(gradebook.id);
-        const sheets = spreadsheet.getSheets();
-        console.log(`  📄 包含 ${sheets.length} 個工作表:`);
-        
-        sheets.forEach((sheet, index) => {
-          const sheetName = sheet.getName();
-          console.log(`    ${index + 1}. ${sheetName}`);
-          
-          // 檢查是否匹配 G1E1 班級
-          const matchingConfig = g1e1Classes.find(config => 
-            sheetName.includes(config.className) || 
-            sheetName === config.className ||
-            sheetName.includes(config.classCode)
+          const htData = getHTData();
+          const isHT = htData.some(ht => 
+            ht.grade === grade && 
+            (ht.ltTeacher === teacherName || ht.itTeacher === teacherName)
           );
           
-          if (matchingConfig) {
-            console.log(`      ✅ 匹配 G1E1 班級: ${matchingConfig.className} (${matchingConfig.classCode})`);
-          }
-        });
-        
-      } catch (error) {
-        console.log(`  ❌ 無法開啟檔案: ${error.message}`);
-      }
-    }
-    
-    // 5. 檢查教師類型檢測
-    console.log('\n=== 5. 檢查教師類型檢測 ===');
-    
-    for (const gradebook of gradebookList) {
-      // 使用與同步函數相同的檢測邏輯
-      const fileName = gradebook.name;
-      const isLTTeacher = fileName.includes('_LT') || fileName.includes('LT (Local Teacher)');
-      const isITTeacher = fileName.includes('_IT') || fileName.includes('IT (International Teacher)');
-      
-      let teacherType = null;
-      if (isLTTeacher) teacherType = 'LT';
-      else if (isITTeacher) teacherType = 'IT';
-      
-      console.log(`${gradebook.name} → 教師類型: ${teacherType || '未檢測到'} (LT: ${isLTTeacher}, IT: ${isITTeacher})`);
-    }
-    
-    // 6. 模擬同步過程
-    console.log('\n=== 6. 模擬同步過程 ===');
-    
-    const targetLevel = 'G1E1';
-    const targetTeacherType = 'LT';
-    
-    console.log(`目標: ${targetTeacherType} ${targetLevel}`);
-    
-    // 找出目標班級
-    const targetClasses = configs.filter(config => config.level === targetLevel);
-    console.log(`目標班級: ${targetClasses.length} 個`);
-    
-    if (targetClasses.length === 0) {
-      console.log('❌ 沒有找到目標班級！');
-      return { success: false, message: '沒有找到目標班級' };
-    }
-    
-    // 檢查每個成績簿
-    for (const gradebook of gradebookList) {
-      // 使用與同步函數相同的檢測邏輯
-      const fileName = gradebook.name;
-      const isLTTeacher = fileName.includes('_LT') || fileName.includes('LT (Local Teacher)');
-      const isITTeacher = fileName.includes('_IT') || fileName.includes('IT (International Teacher)');
-      
-      let detectedTeacherType = null;
-      if (isLTTeacher) detectedTeacherType = 'LT';
-      else if (isITTeacher) detectedTeacherType = 'IT';
-      
-      if (detectedTeacherType === targetTeacherType) {
-        console.log(`\n檢查 ${targetTeacherType} 成績簿: ${gradebook.name}`);
-        
-        try {
-          const spreadsheet = SpreadsheetApp.openById(gradebook.id);
-          const sheets = spreadsheet.getSheets();
-          
-          for (const targetClass of targetClasses) {
-            const matchingSheet = sheets.find(sheet => {
-              const sheetName = sheet.getName();
-              return sheetName.includes(targetClass.className) || 
-                     sheetName === targetClass.className ||
-                     sheetName.includes(targetClass.classCode);
-            });
+          if (isHT) {
+            // Determine teacher type
+            const teacherType = getTeacherTypeMapping().get(teacherName) || 
+                             (fileName.includes('_IT') ? 'IT' : 'LT');
             
-            if (matchingSheet) {
-              console.log(`  ✅ 找到匹配工作表: ${matchingSheet.getName()} (目標班級: ${targetClass.className})`);
-            } else {
-              console.log(`  ❌ 沒有找到 ${targetClass.className} 的工作表`);
-            }
+            gradebooks.push({
+              id: file.getId(),
+              name: fileName,
+              teacherName: teacherName,
+              teacherType: teacherType,
+              grade: grade,
+              semester: SYSTEM_CONFIG.SEMESTER,
+              lastModified: file.getLastUpdated().toLocaleDateString(),
+              url: `https://docs.google.com/spreadsheets/d/${file.getId()}`,
+              isRegularTeacherFile: true
+            });
           }
-          
         } catch (error) {
-          console.log(`  ❌ 無法處理檔案: ${error.message}`);
+          console.log(`Error checking HT status for ${teacherName}: ${error.message}`);
         }
       }
     }
     
-    console.log('\n🎉 診斷完成！');
+    console.log(`Found ${gradebooks.length} HT gradebooks for grade ${grade}`);
     
     return {
       success: true,
-      totalFiles: fileCount,
-      gradebooks: gradebookList,
-      totalConfigs: configs.length,
-      g1e1Classes: g1e1Classes.length,
-      message: '診斷完成，請檢查上方詳細日誌'
+      gradebooks: gradebooks.sort((a, b) => a.teacherName.localeCompare(b.teacherName))
     };
     
   } catch (error) {
-    console.log(`❌ 診斷過程中發生錯誤: ${error.message}`);
-    console.log('錯誤堆疊:', error.stack);
-    
+    console.error(`Error loading HT gradebooks for grade ${grade}:`, error);
     return {
       success: false,
-      message: `診斷失敗: ${error.message}`,
-      error: error.stack
+      error: error.message
     };
   }
 }
 
 /**
- * Test function: Verify new Level format is working correctly
- * 測試函數：驗證新Level格式是否正常運作
+ * Launch HT Assessment Management for specific grade and teacher type
+ * 為特定年段和教師類型啟動HT評量管理
  */
-function testNewLevelFormat() {
-  console.log('\n=== Testing New Level Format (G1E1, G2E2, etc.) ===');
-  
-  // Test class name to level mapping
-  const testClasses = [
-    'G1 Trailblazers',
-    'G1 Discoverers', 
-    'G2 Adventurers',
-    'G2 Innovators',
-    'G3 Explorers',
-    'G3 Navigators',
-    'G4 Inventors',
-    'G4 Voyagers',
-    'G5 Pioneers',
-    'G5 Guardians',
-    'G6 Pathfinders',
-    'G6 Seekers',
-    'G6 Visionaries',
-    'G6 Achievers'
-  ];
-  
-  console.log('\n--- Testing Class Name to Level Mapping ---');
-  testClasses.forEach(className => {
-    const classCode = generateClassCodeFromName(className, '');
-    console.log(`${className} → ${classCode}`);
-  });
-  
-  // Test assessment title retrieval
-  console.log('\n--- Testing Assessment Title Retrieval ---');
-  const testLevels = ['G1E1', 'G2E2', 'G3E1', 'G6E3'];
-  
-  testLevels.forEach(level => {
-    console.log(`\nTesting Level: ${level}`);
-    
-    // Test LT titles
-    const ltTitles = getAssessmentTitles(level, 'LT');
-    console.log(`  LT Formative: ${ltTitles.formative.slice(0, 3).join(', ')}...`);
-    console.log(`  LT Summative: ${ltTitles.summative.slice(0, 2).join(', ')}...`);
-    
-    // Test IT titles  
-    const itTitles = getAssessmentTitles(level, 'IT');
-    console.log(`  IT Formative: ${itTitles.formative.slice(0, 3).join(', ')}...`);
-    console.log(`  IT Summative: ${itTitles.summative.slice(0, 2).join(', ')}...`);
-  });
-  
-  // Test getAllClassConfigurations with new format
-  console.log('\n--- Testing Class Configurations ---');
+function launchHTAssessmentManagement(grade, teacherType) {
   try {
-    const configs = getAllClassConfigurations();
-    console.log(`Found ${configs.length} class configurations:`);
-    configs.slice(0, 5).forEach(config => {
-      console.log(`  ${config.className} → ${config.classCode} (${config.level})`);
-    });
+    console.log(`Launching HT Assessment Management for ${grade} ${teacherType}`);
+    
+    // Create HT context for assessment management
+    const htContext = {
+      grade: grade,
+      teacherType: teacherType,
+      levels: ['E1', 'E2', 'E3'], // HT can manage all 3 levels of their grade
+      isHT: true
+    };
+    
+    // Launch assessment management interface with HT context
+    showAssessmentManagementInterface(htContext);
+    
+    return {
+      success: true,
+      message: `Assessment Management launched for HT ${grade} ${teacherType}`
+    };
+    
   } catch (error) {
-    console.log(`Error getting class configurations: ${error.message}`);
-  }
-  
-  console.log('\n=== Test Complete ===');
-  return {
-    success: true,
-    message: 'New Level format test completed successfully'
-  };
-}
-
-/**
- * Show message dialog | 顯示訊息對話框
- */
-function showMessage(title, message) {
-  try {
-    const ui = SpreadsheetApp.getUi();
-    ui.alert(title, message, ui.ButtonSet.OK);
-  } catch (error) {
-    console.log(`${title}: ${message}`);
+    console.error(`Error launching HT Assessment Management:`, error);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }
 
 /**
- * Show error dialog | 顯示錯誤對話框
+ * Enhanced assessment management interface that supports HT context
+ * 支援HT上下文的增強評量管理介面
+ */
+function showAssessmentManagementInterface(context = null) {
+  try {
+    let htmlContent;
+    
+    if (context && context.isHT) {
+      // HT-specific interface
+      htmlContent = createHTAssessmentManagementHTML(context);
+    } else {
+      // Regular teacher interface - get current context first
+      const currentContext = getCurrentTeacherContext();
+      if (!currentContext || !currentContext.success) {
+        throw new Error('無法識別當前教師身份。請確保您是從教師成績簿中執行此功能。');
+      }
+      htmlContent = createAssessmentManagementHTML(currentContext);
+    }
+    
+    const htmlOutput = HtmlService.createHtmlOutput(htmlContent)
+      .setWidth(800)
+      .setHeight(600)
+      .setTitle('Assessment Title Management | 評量標題管理');
+    
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Assessment Title Management | 評量標題管理');
+    
+  } catch (error) {
+    console.error('Error showing assessment management interface:', error);
+    SpreadsheetApp.getUi().alert('錯誤', `無法顯示評量管理介面: ${error.message}`, SpreadsheetApp.getUi().ButtonSet.OK);
+  }
+}
+
+/**
+ * Create HT-specific assessment management HTML interface
+ * 創建HT專用的評量管理HTML介面
+ */
+function createHTAssessmentManagementHTML(htContext) {
+  // Simple HT Assessment Management interface
+  return '<html><body><h1>HT Assessment Management</h1><p>Grade: ' + htContext.grade + ' ' + htContext.teacherType + '</p><p>功能開發中...</p></body></html>';
+}
+
+// ===== UTILITY FUNCTIONS | 工具函數 =====
+
+/**
+ * Show error dialog with bilingual message | 顯示雙語錯誤對話框
  */
 function showError(title, message) {
   try {
     const ui = SpreadsheetApp.getUi();
     ui.alert(title, message, ui.ButtonSet.OK);
   } catch (error) {
-    console.log(`${title}: ${message}`);
+    console.error('Error showing error dialog:', error);
+    console.error('Original error:', title, message);
   }
 }
 
 /**
- * Show confirmation dialog | 顯示確認對話框
+ * Show success/info message dialog | 顯示成功/資訊對話框
  */
-function showConfirm(title, message) {
+function showMessage(title, message) {
   try {
     const ui = SpreadsheetApp.getUi();
-    const response = ui.alert(title, message, ui.ButtonSet.YES_NO);
-    return response === ui.Button.YES;
+    ui.alert(title, message, ui.ButtonSet.OK);
   } catch (error) {
-    console.log(`${title}: ${message}`);
-    return false;
+    console.error('Error showing message dialog:', error);
+    console.error('Original message:', title, message);
   }
 }
 
-// ===== PLACEHOLDER FUNCTIONS | 佔位函數 =====
-// These functions are referenced in the menu but need to be implemented
-// 這些函數在選單中被引用但需要實作
-
-function openSystemFolder() {
-  try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    showMessage('📁 System Folder | 系統資料夾', `Opening system folder | 正在開啟系統資料夾:\n\n${systemFolder.getUrl()}`);
-  } catch (error) {
-    showError('❌ Error | 錯誤', `Cannot open system folder | 無法開啟系統資料夾: ${error.message}`);
-  }
-}
-
-function openMasterDataSheet() {
+/**
+ * Get master data sheet from system folder | 從系統資料夾取得主控資料表
+ */
+function getMasterDataSheet() {
   try {
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
     const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
-    if (masterDataFolder) {
-      const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-      if (masterFiles.hasNext()) {
-        const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-        showMessage('📋 Master Data | 主控資料表', `Opening master data sheet | 正在開啟主控資料表:\n\n${masterSheet.getUrl()}`);
-      } else {
-        showError('❌ Error | 錯誤', 'Master data sheet not found. Please initialize system first. | 找不到主控資料表，請先初始化系統。');
-      }
-    }
-  } catch (error) {
-    showError('❌ Error | 錯誤', `Cannot open master data | 無法開啟主控資料表: ${error.message}`);
-  }
-}
-
-/**
- * Open assessment title management interface | 開啟評量標題管理介面
- */
-function openSystemSettings() {
-  try {
-    const ui = SpreadsheetApp.getUi();
     
-    // Get all current configurations | 取得所有目前配置
-    const allTitles = getAllAssessmentTitles();
-    const configList = Object.keys(allTitles).map(key => `• ${key}`).join('\n');
-    
-    const settingsMessage = `
-⚙️ Assessment Title Management | 評量標題管理
-
-📋 Current Configurations | 目前配置:
-${configList}
-
-🔧 Available Functions | 可用功能:
-• manageAssessmentTitles() - Interactive title editor | 互動式標題編輯器
-• updateAssessmentTitles(target, formative, summative) - Update titles | 更新標題
-• resetAssessmentTitles(target) - Reset to default | 重設為預設值
-• getAllAssessmentTitles() - View all configurations | 查看所有配置
-
-📖 Example Usage | 使用範例:
-updateAssessmentTitles('G3 Advanced', 
-  ['Quiz 1', 'Essay 1', 'Project 1', 'Quiz 2', 'Essay 2', 'Project 2', 'Quiz 3', 'Essay 3'],
-  ['Test 1', 'Test 2', 'Midterm', 'Final']
-);
-
-💡 Tip: Use the Apps Script editor to run these functions | 提示：使用 Apps Script 編輯器運行這些函數
-    `;
-    
-    showMessage('⚙️ System Settings | 系統設定', settingsMessage);
-    
-  } catch (error) {
-    showError('❌ Settings Error | 設定錯誤', `Cannot open system settings | 無法開啟系統設定: ${error.message}`);
-  }
-}
-
-/**
- * Interactive assessment title management | 互動式評量標題管理
- */
-function manageAssessmentTitles() {
-  try {
-    const ui = SpreadsheetApp.getUi();
-    
-    // Get target (class or grade) | 取得目標（班級或年級）
-    const targetResponse = ui.prompt(
-      '🎯 Target Selection | 目標選擇',
-      'Enter class name or grade (e.g., "G3 Achievers", "G2", "Advanced English"):\n輸入班級名稱或年級（例如：G3 Achievers, G2, Advanced English）:',
-      ui.ButtonSet.OK_CANCEL
-    );
-    
-    if (targetResponse.getSelectedButton() !== ui.Button.OK) {
-      return;
-    }
-    
-    const target = targetResponse.getResponseText().trim();
-    if (!target) {
-      showError('❌ Error | 錯誤', 'Target cannot be empty | 目標不能為空');
-      return;
-    }
-    
-    // Get current titles for this target | 取得此目標的目前標題
-    const currentTitles = getAssessmentTitles(target);
-    
-    // Get formative titles | 取得平時評量標題
-    const formativeResponse = ui.prompt(
-      '📝 Formative Assessment Titles | 平時評量標題',
-      `Enter ${SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT} formative titles separated by commas:\n輸入 ${SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT} 個平時評量標題，用逗號分隔:\n\nCurrent: ${currentTitles.formative.join(', ')}`,
-      ui.ButtonSet.OK_CANCEL
-    );
-    
-    if (formativeResponse.getSelectedButton() !== ui.Button.OK) {
-      return;
-    }
-    
-    const formativeTitles = formativeResponse.getResponseText().split(',').map(title => title.trim());
-    
-    // Get summative titles | 取得總結評量標題
-    const summativeResponse = ui.prompt(
-      '📊 Summative Assessment Titles | 總結評量標題',
-      `Enter ${SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT} summative titles separated by commas:\n輸入 ${SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT} 個總結評量標題，用逗號分隔:\n\nCurrent: ${currentTitles.summative.join(', ')}`,
-      ui.ButtonSet.OK_CANCEL
-    );
-    
-    if (summativeResponse.getSelectedButton() !== ui.Button.OK) {
-      return;
-    }
-    
-    const summativeTitles = summativeResponse.getResponseText().split(',').map(title => title.trim());
-    
-    // Update titles | 更新標題
-    const success = updateAssessmentTitles(target, formativeTitles, summativeTitles);
-    
-    if (success) {
-      showMessage(
-        '✅ Success | 成功',
-        `Assessment titles updated for ${target}!\n已更新 ${target} 的評量標題！\n\nFormative: ${formativeTitles.join(', ')}\nSummative: ${summativeTitles.join(', ')}\n\n💡 New gradebooks will use these titles | 新的成績簿將使用這些標題`
-      );
-    } else {
-      showError('❌ Error | 錯誤', 'Failed to update assessment titles | 更新評量標題失敗');
-    }
-    
-  } catch (error) {
-    showError('❌ Management Error | 管理錯誤', `Error managing assessment titles | 管理評量標題時發生錯誤: ${error.message}`);
-  }
-}
-
-/**
- * Create gradebooks for all teachers with teacher-centric structure | 為所有老師建立以老師為中心的成績簿
- */
-function createGradebooksForAllTeachers(teacherArray) {
-  let successCount = 0;
-  let failedCount = 0;
-  const results = { success: 0, failed: 0, details: [] };
-  
-  try {
-    // Get system folders | 取得系統資料夾
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    
-    // Get master data sheet for student details | 取得主控資料表以獲取學生詳細資料
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    if (!masterFiles.hasNext()) {
-      throw new Error('Master data sheet not found');
-    }
-    
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    const studentsSheet = masterSheet.getSheetByName('Students');
-    const studentData = studentsSheet.getDataRange().getValues();
-    const headers = studentData[0];
-    
-    console.log('=== DEBUGGING GRADEBOOK CREATION ===');
-    console.log('Headers found:', headers);
-    console.log('Total student rows:', studentData.length - 1);
-    
-    // Find column indices | 找到欄位索引
-    const ltTeacherCol = headers.indexOf('LT Teacher | LT老師');
-    const itTeacherCol = headers.indexOf('IT Teacher | IT老師');
-    const englishClassCol = headers.indexOf('English Class | 英文班級');
-    const statusCol = headers.indexOf('Status | 狀態');
-    
-    console.log('Column indices:', {
-      ltTeacher: ltTeacherCol,
-      itTeacher: itTeacherCol,
-      englishClass: englishClassCol,
-      status: statusCol
-    });
-    
-    // Extract detailed teacher information with students | 提取包含學生資料的詳細老師資訊
-    const teacherDetails = new Map();
-    let processedStudents = 0;
-    let skippedStudents = 0;
-    
-    for (let i = 1; i < studentData.length; i++) {
-      const row = studentData[i];
-      const ltTeacher = row[ltTeacherCol];
-      const itTeacher = row[itTeacherCol];
-      const englishClass = row[englishClassCol];
-      const status = statusCol !== -1 ? row[statusCol] : '';
-      
-      console.log(`Row ${i}: Student=${row[1]}, LT=${ltTeacher}, IT=${itTeacher}, Class=${englishClass}, Status="${status}"`);
-      console.log(`Row ${i} data:`, row.slice(0, 6)); // Show first 6 columns
-      
-      // Only process students with "在學" status OR if Student ID and Name exist | 只處理狀態為"在學"的學生，或者學生編號和姓名都存在
-      const hasBasicInfo = row[0] && row[0].toString().trim() && row[1] && row[1].toString().trim();
-      const isActive = status === '在學' || (hasBasicInfo && (!status || status.toString().trim() === ''));
-      
-      if (!isActive) {
-        console.log(`  -> SKIPPED: Status="${status}", HasBasicInfo=${hasBasicInfo}`);
-        skippedStudents++;
-        continue;
-      }
-      
-      // If student has basic info but no status, auto-set to "在學"
-      if (hasBasicInfo && (!status || status.toString().trim() === '')) {
-        console.log(`  -> AUTO-SETTING status to "在學" for ${row[1]}`);
-      }
-      
-      processedStudents++;
-      
-      // Process LT Teacher | 處理 LT 老師
-      if (ltTeacher && ltTeacher.trim()) {
-        const teacherKey = `${ltTeacher.trim()}_LT`;
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: ltTeacher.trim(),
-            subject: 'LT (Local Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-      }
-      
-      // Process IT Teacher | 處理 IT 老師
-      if (itTeacher && itTeacher.trim()) {
-        const teacherKey = `${itTeacher.trim()}_IT`;
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: itTeacher.trim(),
-            subject: 'IT (International Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-      }
-    }
-    
-    console.log(`=== PROCESSING SUMMARY ===`);
-    console.log(`Total students processed: ${processedStudents}`);
-    console.log(`Total students skipped: ${skippedStudents}`);
-    console.log(`Teachers found: ${teacherDetails.size}`);
-    
-    teacherDetails.forEach((teacherInfo, teacherKey) => {
-      console.log(`Teacher: ${teacherKey}, Classes: ${teacherInfo.classes.size}`);
-      teacherInfo.classes.forEach((students, className) => {
-        console.log(`  - Class: ${className}, Students: ${students.length}`);
-      });
-    });
-    
-    console.log(`=== STARTING GRADEBOOK CREATION ===`);
-    
-    // Create gradebook for each teacher | 為每位老師建立成績簿
-    teacherDetails.forEach((teacherInfo, teacherKey) => {
-      try {
-        // Create teacher gradebook spreadsheet | 建立老師成績簿試算表
-        const gradebookName = `${teacherInfo.name}_${SYSTEM_CONFIG.SEMESTER}_Gradebook`;
-        const teacherGradebook = SpreadsheetApp.create(gradebookName);
-        DriveApp.getFileById(teacherGradebook.getId()).moveTo(teacherGradebooksFolder);
-        
-        // Delete default sheet | 刪除預設工作表
-        const defaultSheet = teacherGradebook.getSheets()[0];
-        
-        // Add teacher info sheet first | 首先新增老師資訊工作表
-        const teacherInfoSheet = teacherGradebook.insertSheet('📋 Teacher Info | 老師資訊');
-        setupTeacherInfoSheet(teacherInfoSheet);
-        
-        // Update teacher info with actual data | 更新老師資訊為實際資料
-        teacherInfoSheet.getRange('B3').setValue(teacherInfo.name);
-        teacherInfoSheet.getRange('B4').setValue(teacherInfo.subject);
-        
-        // Clear example classes and add real ones | 清除範例班級並新增真實班級
-        const lastRowToDelete = Math.max(11, 8 + teacherInfo.classes.size + 5); // Clear extra rows
-        teacherInfoSheet.getRange('A8:B' + lastRowToDelete).clear();
-        teacherInfoSheet.getRange('A8:B8').setValues([['Class Name | 班級名稱', 'Student Count | 學生數量']]);
-        teacherInfoSheet.getRange('A8:B8').setFontWeight('bold').setBackground('#E3F2FD');
-        
-        let classIndex = 0;
-        
-        console.log(`Teacher ${teacherInfo.name} has ${teacherInfo.classes.size} classes`);
-        
-        // Create a sheet for each class this teacher teaches | 為老師教授的每個班級建立工作表
-        teacherInfo.classes.forEach((students, className) => {
-          try {
-            // Create class sheet | 建立班級工作表
-            const classSheet = teacherGradebook.insertSheet(`📚 ${className}`);
-            
-            // Extract teacher type from teacherKey (format: "TeacherName_TYPE")
-            // 從teacherKey提取教師類型（格式：「教師姓名_類型」）
-            const teacherType = teacherKey.endsWith('_LT') ? 'LT' : 
-                               teacherKey.endsWith('_IT') ? 'IT' : null;
-            
-            setupClassSheetHeaders(classSheet, className, teacherType);
-            
-            // Add real student data | 新增真實學生資料
-            console.log(`Creating class sheet for ${className} with ${students.length} students`);
-            if (students.length > 0) {
-              // Sort students by Student ID (ascending) | 按學生編號升序排序
-              const sortedStudents = students.sort((a, b) => {
-                const idA = a[0] || ''; // Student ID
-                const idB = b[0] || ''; // Student ID
-                return idA.localeCompare(idB);
-              });
-              
-              console.log(`Students for ${className} (sorted by ID):`, sortedStudents.map(s => `${s[0]} - ${s[1]}`)); // Log ID and names
-              
-              // Step 1: Write basic student data first | 第一步：先寫入基本學生資料
-              const basicStudentRows = sortedStudents.map((studentRow, index) => [
-                index + 1,           // A: 序號 (排序後的新序號)
-                studentRow[1] || '', // B: Student Name (學生姓名)
-                studentRow[0] || ''  // C: Student ID (學生編號)
-              ]);
-              
-              console.log(`Writing ${basicStudentRows.length} basic student rows to sheet ${className}`);
-              console.log(`First basic student row:`, basicStudentRows[0]);
-              console.log(`All basic student rows:`, basicStudentRows);
-              
-              // Write basic student info (序號, 姓名, 學號) | 寫入基本學生資訊（序號, 姓名, 學號）
-              if (basicStudentRows.length > 0) {
-                classSheet.getRange(3, 1, basicStudentRows.length, 3).setValues(basicStudentRows);
-                console.log(`Successfully wrote ${basicStudentRows.length} student rows to ${className} sheet`);
-              }
-              
-              // Step 2: Add formulas for each student row | 第二步：為每個學生列新增公式
-              sortedStudents.forEach((studentRow, index) => {
-                const rowNum = 3 + index;
-                
-                // New column structure positions | 新的欄位結構位置
-                // D(4): Term Grade, E(5): Formative Avg, F(6): Summative Avg, G(7): Final Assessment
-                // H(8)-O(15): F.A.1-8, P(16)-S(19): S.A.1-4, T(20): Final
-                
-                const formativeStartCol = 8;  // Column H: F.A.1
-                const formativeEndCol = formativeStartCol + SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT - 1; // Column O: F.A.8
-                const summativeStartCol = formativeEndCol + 1; // Column P: S.A.1  
-                const summativeEndCol = summativeStartCol + SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT - 1; // Column S: S.A.4
-                const finalColNum = SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL ? summativeEndCol + 1 : null; // Column T: Final
-                
-                // Add Formative Assessment Average formula (Column E) | 新增平時評量平均公式（E欄）
-                // E3=IFERROR(ROUND(AVERAGEIF(H3:O3, ">0"),1),"")
-                const faAvgFormula = `=IFERROR(ROUND(AVERAGEIF(${getColumnLetter(formativeStartCol)}${rowNum}:${getColumnLetter(formativeEndCol)}${rowNum},">0"),1),"")`;
-                classSheet.getRange(rowNum, 5).setFormula(faAvgFormula);
-                
-                // Add Summative Assessment Average formula (Column F) | 新增總結評量平均公式（F欄）
-                // F3=IFERROR(ROUND(AVERAGEIF(P3:S3, ">0"),1),"")
-                const saAvgFormula = `=IFERROR(ROUND(AVERAGEIF(${getColumnLetter(summativeStartCol)}${rowNum}:${getColumnLetter(summativeEndCol)}${rowNum},">0"),1),"")`;
-                classSheet.getRange(rowNum, 6).setFormula(saAvgFormula);
-                
-                // Add Final Assessment formula (Column G) | 新增期末評量公式（G欄）
-                // G3=T3 (直接等於Final欄位)
-                if (finalColNum) {
-                  const finalAssessmentFormula = `=${getColumnLetter(finalColNum)}${rowNum}`;
-                  classSheet.getRange(rowNum, 7).setFormula(finalAssessmentFormula);
-                }
-                
-                // Add Term Grade formula (Column D) | 新增學期成績公式（D欄）
-                // D3=IF(AND(ISNUMBER(E3), ISNUMBER(F3), ISNUMBER(G3), E3 > 0, F3 > 0, G3 > 0), ROUND((E3 * 0.15 + F3 * 0.2 + G3 * 0.1) / 0.45, 1), "")
-                const termGradeFormula = finalColNum
-                  ? `=IF(AND(ISNUMBER(E${rowNum}), ISNUMBER(F${rowNum}), ISNUMBER(G${rowNum}), E${rowNum} > 0, F${rowNum} > 0, G${rowNum} > 0), ROUND((E${rowNum} * ${SYSTEM_CONFIG.WEIGHTS.FORMATIVE} + F${rowNum} * ${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE} + G${rowNum} * ${SYSTEM_CONFIG.WEIGHTS.FINAL}) / ${SYSTEM_CONFIG.WEIGHTS.FORMATIVE + SYSTEM_CONFIG.WEIGHTS.SUMMATIVE + SYSTEM_CONFIG.WEIGHTS.FINAL}, 1), "")`
-                  : `=IF(AND(ISNUMBER(E${rowNum}), ISNUMBER(F${rowNum}), E${rowNum} > 0, F${rowNum} > 0), ROUND((E${rowNum} * ${SYSTEM_CONFIG.WEIGHTS.FORMATIVE} + F${rowNum} * ${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE}) / ${SYSTEM_CONFIG.WEIGHTS.FORMATIVE + SYSTEM_CONFIG.WEIGHTS.SUMMATIVE}, 1), "")`;
-                classSheet.getRange(rowNum, 4).setFormula(termGradeFormula);
-                
-                console.log(`Added formulas for student ${studentRow[1]} at row ${rowNum}`);
-              });
-              
-              // Add Average row at bottom | 在底部新增平均行
-              const averageRowNum = 3 + sortedStudents.length + 1; // Skip one row after student data
-              
-              // Set "Average:" label in column B | 在B欄設定"Average:"標籤
-              classSheet.getRange(averageRowNum, 2).setValue('Average:');
-              classSheet.getRange(averageRowNum, 2).setFontWeight('bold');
-              
-              // Calculate total columns based on configuration | 根據配置計算總欄數
-              const formativeStartCol = 8;
-              const formativeEndCol = formativeStartCol + SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT - 1;
-              const summativeStartCol = formativeEndCol + 1;
-              const summativeEndCol = summativeStartCol + SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT - 1;
-              const finalCol = SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL ? summativeEndCol + 1 : null;
-              const lastCol = finalCol || summativeEndCol;
-              
-              // Add average formulas for relevant columns | 為相關欄位新增平均公式
-              const studentStartRow = 3;
-              const studentEndRow = 3 + sortedStudents.length - 1;
-              
-              // Term Grade average (Column D) | 學期成績平均（D欄）
-              // D26=IFERROR(ROUND(AVERAGEIF(D3:D22,">0"),1),"")
-              classSheet.getRange(averageRowNum, 4).setFormula(`=IFERROR(ROUND(AVERAGEIF(D${studentStartRow}:D${studentEndRow},">0"),1),"")`);
-              
-              // Formative Assessment Average (Column E) | 平時評量平均（E欄）
-              classSheet.getRange(averageRowNum, 5).setFormula(`=IFERROR(ROUND(AVERAGEIF(E${studentStartRow}:E${studentEndRow},">0"),1),"")`);
-              
-              // Summative Assessment Average (Column F) | 總結評量平均（F欄）
-              classSheet.getRange(averageRowNum, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(F${studentStartRow}:F${studentEndRow},">0"),1),"")`);
-              
-              // Final Assessment average (Column G) | 期末評量平均（G欄）
-              classSheet.getRange(averageRowNum, 7).setFormula(`=IFERROR(ROUND(AVERAGEIF(G${studentStartRow}:G${studentEndRow},">0"),1),"")`);
-              
-              // Individual assessment averages (F.A.1-8, S.A.1-4, Final) | 個別評量平均
-              for (let col = formativeStartCol; col <= lastCol; col++) {
-                const colLetter = getColumnLetter(col);
-                classSheet.getRange(averageRowNum, col).setFormula(`=IFERROR(ROUND(AVERAGEIF(${colLetter}${studentStartRow}:${colLetter}${studentEndRow},">0"),1),"")`);
-              }
-              
-              // Format the average row | 格式化平均行
-              const averageRange = classSheet.getRange(averageRowNum, 1, 1, lastCol);
-              averageRange.setFontWeight('bold');
-              averageRange.setBackground('#F5F5F5'); // Light gray background
-              averageRange.setBorder(true, true, true, true, true, true);
-              
-              // Format the data range | 格式化資料範圍
-              const totalStudents = sortedStudents.length;
-              const totalColumns = lastCol;
-              const dataRange = classSheet.getRange(3, 1, totalStudents, totalColumns);
-              dataRange.setBorder(true, true, true, true, true, true);
-              
-              // Auto-resize columns to fit content | 自動調整欄位寬度
-              classSheet.autoResizeColumns(1, totalColumns);
-              console.log(`Successfully wrote student data, formulas, and average row to ${className} sheet`);
-            } else {
-              console.log(`No students found for ${className}`);
-            }
-            
-            // Update class info in teacher info sheet | 在老師資訊工作表中更新班級資訊
-            const infoRow = 9 + classIndex;
-            const studentCount = students.length; // Use original count for info sheet
-            teacherInfoSheet.getRange(infoRow, 1, 1, 2).setValues([[className, studentCount]]);
-            console.log(`Updated Teacher Info sheet: ${className} has ${studentCount} students at row ${infoRow}`);
-            classIndex++;
-            
-          } catch (classError) {
-            console.log(`Error creating class sheet for ${className}: ${classError.message}`);
-          }
-        });
-        
-        // Delete default sheet if it still exists | 刪除預設工作表（如果仍存在）
-        if (teacherGradebook.getSheets().includes(defaultSheet)) {
-          teacherGradebook.deleteSheet(defaultSheet);
-        }
-        
-        // Set teacher info as active sheet | 設定老師資訊為活躍工作表
-        teacherGradebook.setActiveSheet(teacherInfoSheet);
-        
-        successCount++;
-        results.details.push(`✅ ${teacherInfo.name} (${teacherInfo.subject})`);
-        
-      } catch (teacherError) {
-        failedCount++;
-        results.details.push(`❌ ${teacherInfo.name} (${teacherInfo.subject}): ${teacherError.message}`);
-        console.log(`Error creating gradebook for ${teacherInfo.name}: ${teacherError.message}`);
-      }
-    });
-    
-    results.success = successCount;
-    results.failed = failedCount;
-    
-    return results;
-    
-  } catch (error) {
-    console.log(`Batch creation error: ${error.message}`);
-    return { success: 0, failed: teacherArray.length, details: [`❌ System error: ${error.message}`] };
-  }
-}
-
-function batchCreateGradebooks() {
-  try {
-    // Check system configuration | 檢查系統配置
-    if (!SYSTEM_CONFIG.MAIN_FOLDER_ID || SYSTEM_CONFIG.MAIN_FOLDER_ID === 'YOUR_FOLDER_ID_HERE') {
-      throw new Error('Please set MAIN_FOLDER_ID in Code.gs line 21 | 請在 Code.gs 第 21 行設定 MAIN_FOLDER_ID');
-    }
-    
-    // Check if system is initialized | 檢查系統是否已初始化
-    try {
-      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-      console.log(`Found system folder: ${systemFolder.getName()}`);
-    } catch (folderError) {
-      throw new Error(`Cannot access system folder. Please check MAIN_FOLDER_ID or run initializeSystem first. | 無法存取系統資料夾。請檢查 MAIN_FOLDER_ID 或先執行 initializeSystem。\n\nError: ${folderError.message}`);
-    }
-    
-    // Extract teacher data from Classes sheet | 從班級工作表提取老師資料
-    console.log('Extracting teacher data from Classes sheet...');
-    
-    // Get master data sheet
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
     if (!masterDataFolder) {
-      throw new Error('Master data folder not found | 找不到主控資料夾');
+      throw new Error('Master Data folder not found | 找不到主控資料資料夾');
     }
     
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    if (!masterFiles.hasNext()) {
-      throw new Error('Master data sheet not found | 找不到主控資料表');
+    // Try multiple possible file names
+    const possibleFileNames = [
+      'Master Data | 主控資料表',
+      'Gradebook Master Data | 成績簿主控資料表',
+      'Master Data',
+      '主控資料表'
+    ];
+    
+    let file = null;
+    for (const fileName of possibleFileNames) {
+      const files = masterDataFolder.getFilesByName(fileName);
+      if (files.hasNext()) {
+        file = files.next();
+        console.log(`Found master data sheet with name: ${fileName}`);
+        break;
+      }
     }
     
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    
-    // First validate student class assignments
-    console.log('Validating student class assignments...');
-    const validation = validateStudentClassAssignments();
-    if (!validation.isValid) {
-      console.log('⚠️ Class assignment validation issues found:');
-      validation.issues.forEach(issue => console.log(`  - ${issue}`));
-      console.log('Proceeding with gradebook creation, but please review student assignments.');
+    if (!file) {
+      // List all files in the folder for debugging
+      const allFiles = masterDataFolder.getFiles();
+      const fileList = [];
+      while (allFiles.hasNext()) {
+        fileList.push(allFiles.next().getName());
+      }
+      
+      throw new Error(`Master Data sheet not found. Tried names: ${possibleFileNames.join(', ')}. Available files: ${fileList.join(', ')}`);
     }
     
-    // Extract teachers from Classes sheet
-    const teacherData = extractTeachersFromClassesSheet(masterSheet);
-    
-    if (teacherData.length === 0) {
-      throw new Error('No teachers found in Classes sheet. Please check: 1. Classes sheet exists 2. Classes sheet has data 3. LT and IT teacher columns are filled | 班級工作表中找不到老師。請檢查：1. Classes 工作表存在 2. Classes 工作表有資料 3. LT 和 IT 老師欄位已填入');
-    }
-    
-    console.log(`Found ${teacherData.length} teachers`);
-    
-    // Start batch creation | 開始批量建立
-    console.log('Creating gradebooks...');
-    const results = createGradebooksForAllTeachers(teacherData);
-    
-    // Return results instead of showing messages | 返回結果而不是顯示訊息
-    return {
-      success: true,
-      message: `Successfully created ${results.success} gradebooks, ${results.failed} failed | 成功建立 ${results.success} 個成績簿，${results.failed} 個失敗`,
-      details: results
-    };
+    return SpreadsheetApp.openById(file.getId());
     
   } catch (error) {
-    console.error('Batch creation failed:', error.message);
+    console.error('Error getting master data sheet:', error);
     throw error;
   }
 }
 
-function createSingleGradebook() {
-  showMessage('➕ Create Gradebook | 建立成績簿', 'Create single gradebook feature coming soon | 建立單一成績簿功能即將推出');
-}
-
-function checkAllGradebooks() {
-  showMessage('📊 Check Gradebooks | 檢查成績簿', 'Check all gradebooks feature coming soon | 檢查所有成績簿功能即將推出');
-}
-
-function updateGradebookLinks() {
-  showMessage('🔗 Update Links | 更新連結', 'Update gradebook links feature coming soon | 更新成績簿連結功能即將推出');
-}
-
-function checkAllProgress() {
-  showMessage('📈 Check Progress | 檢查進度', 'Check all progress feature coming soon | 檢查全體進度功能即將推出');
-}
-
-function generateDetailedReport() {
-  showMessage('📋 Generate Report | 生成報告', 'Generate detailed report feature coming soon | 生成詳細報告功能即將推出');
-}
-
-function sendProgressReminders() {
-  showMessage('📧 Send Reminders | 發送提醒', 'Send progress reminders feature coming soon | 發送進度提醒功能即將推出');
-}
-
-function openProgressStats() {
-  showMessage('📊 Progress Stats | 進度統計', 'Progress statistics feature coming soon | 進度統計功能即將推出');
-}
-
-function importStudentData() {
-  showMessage('📥 Import Data | 匯入資料', 'Import student data feature coming soon | 匯入學生資料功能即將推出');
-}
-
-function exportStudentData() {
-  showMessage('📤 Export Data | 匯出資料', 'Export student data feature coming soon | 匯出學生資料功能即將推出');
-}
-
-function syncStudentData() {
-  showMessage('🔄 Sync Data | 同步資料', 'Sync student data feature coming soon | 同步學生資料功能即將推出');
-}
-
-function quickAddStudent() {
-  showMessage('✏️ Quick Add | 快速新增', 'Quick add student feature coming soon | 快速新增學生功能即將推出');
-}
-
-function updateGradebookTemplates() {
-  showMessage('📄 Update Templates | 更新範本', 'Update gradebook templates feature coming soon | 更新成績簿範本功能即將推出');
-}
-
-function beautifyGradebooks() {
-  showMessage('🎨 Beautify | 美化格式', 'Beautify gradebooks feature coming soon | 美化成績簿格式功能即將推出');
-}
-
-function validateFormulas() {
-  showMessage('📐 Validate | 檢查公式', 'Validate formulas feature coming soon | 檢查公式正確性功能即將推出');
-}
-
-function repairDamagedSheets() {
-  showMessage('🔧 Repair | 修復格式', 'Repair damaged sheets feature coming soon | 修復損壞格式功能即將推出');
-}
+// ===== MISSING SYSTEM MANAGEMENT FUNCTIONS | 遺失的系統管理函數 =====
 
 /**
- * Auto-fill student status when data is added | 當新增資料時自動填入學生狀態
+ * Open system folder in Google Drive | 在Google Drive中開啟系統資料夾
  */
-function autoFillStudentStatus() {
+function openSystemFolder() {
   try {
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
+    const url = systemFolder.getUrl();
     
-    if (!masterDataFolder) {
-      return; // Silently return if master data folder doesn't exist
-    }
+    showMessage('📁 Opening System Folder | 正在開啟系統資料夾', 
+      `System folder is opening in a new tab | 系統資料夾將在新分頁中開啟\n\nURL: ${url}`);
     
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    if (!masterFiles.hasNext()) {
-      return; // Silently return if master data sheet doesn't exist
-    }
-    
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    const studentsSheet = masterSheet.getSheetByName('Students');
-    
-    if (!studentsSheet) {
-      return; // Silently return if Students sheet doesn't exist
-    }
-    
-    const data = studentsSheet.getDataRange().getValues();
-    const headers = data[0];
-    
-    const studentIdCol = headers.indexOf('Student ID | 學生編號');
-    const studentNameCol = headers.indexOf('Student Name | 學生姓名');
-    const statusCol = headers.indexOf('Status | 狀態');
-    
-    if (studentIdCol === -1 || studentNameCol === -1 || statusCol === -1) {
-      return; // Required columns not found
-    }
-    
-    let changesNeeded = false;
-    
-    // Check each row and auto-fill status if needed
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      const studentId = row[studentIdCol];
-      const studentName = row[studentNameCol];
-      const currentStatus = row[statusCol];
-      
-      // If student ID and name exist but status is empty, set to "在學"
-      if (studentId && studentId.toString().trim() && 
-          studentName && studentName.toString().trim() && 
-          (!currentStatus || currentStatus.toString().trim() === '')) {
-        data[i][statusCol] = '在學';
-        changesNeeded = true;
-      }
-    }
-    
-    // Update the sheet if changes were made
-    if (changesNeeded) {
-      studentsSheet.getDataRange().setValues(data);
-    }
-    
-  } catch (error) {
-    console.log(`Auto-fill status error: ${error.message}`);
-    // Silently handle errors to avoid disrupting user workflow
-  }
-}
-
-/**
- * Manually trigger status auto-fill | 手動觸發狀態自動填入
- */
-function updateStudentStatus() {
-  autoFillStudentStatus();
-  showMessage('✅ Status Updated | 狀態已更新', 'Student status has been updated automatically | 學生狀態已自動更新');
-}
-
-/**
- * Debug function to check system status and data | 調試函數檢查系統狀態和資料
- */
-function debugSystemStatus() {
-  try {
-    const result = {
-      systemFolder: 'Not found',
-      masterDataSheet: 'Not found',
-      studentsData: 0,
-      studentsWithStatus: 0,
-      teachersFound: 0,
-      teacherGradebooksFolder: 'Not found',
-      studentSamples: [],
-      teacherSamples: [],
-      error: null
-    };
-    
-    // Check system folder
+    // Try to open URL (may not work in all contexts)
     try {
-      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-      result.systemFolder = systemFolder.getName();
+      const htmlOutput = HtmlService.createHtmlOutput(`
+        <script>
+          window.open('${url}', '_blank');
+          google.script.host.close();
+        </script>
+        <p>Opening system folder... | 正在開啟系統資料夾...</p>
+      `).setWidth(400).setHeight(200);
       
-      // Check master data
-      const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
-      if (masterDataFolder) {
-        const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-        if (masterFiles.hasNext()) {
-          const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-          result.masterDataSheet = 'Found';
-          
-          const studentsSheet = masterSheet.getSheetByName('Students');
-          if (studentsSheet) {
-            const studentData = studentsSheet.getDataRange().getValues();
-            const headers = studentData[0];
-            result.studentsData = studentData.length - 1; // Exclude header
-            
-            // Check student status
-            const statusCol = headers.indexOf('Status | 狀態');
-            const ltTeacherCol = headers.indexOf('LT Teacher | LT老師');
-            const itTeacherCol = headers.indexOf('IT Teacher | IT老師');
-            const englishClassCol = headers.indexOf('English Class | 英文班級');
-            
-            let studentsWithStatus = 0;
-            for (let i = 1; i < Math.min(6, studentData.length); i++) { // Check first 5 students
-              const row = studentData[i];
-              const status = statusCol !== -1 ? row[statusCol] : '';
-              const ltTeacher = row[ltTeacherCol];
-              const itTeacher = row[itTeacherCol];
-              const englishClass = englishClassCol !== -1 ? row[englishClassCol] : '';
-              
-              if (status === '在學') {
-                studentsWithStatus++;
-              }
-              
-              result.studentSamples.push({
-                name: row[1], // Student Name
-                status: status,
-                ltTeacher: ltTeacher,
-                itTeacher: itTeacher,
-                englishClass: englishClass
-              });
-            }
-            result.studentsWithStatus = studentsWithStatus;
-            
-            // Check for teachers
-            const teacherData = extractTeachersFromStudentData(masterSheet);
-            result.teachersFound = teacherData.length;
-            
-            // Get teacher samples
-            for (let i = 0; i < Math.min(3, teacherData.length); i++) {
-              result.teacherSamples.push({
-                name: teacherData[i][0],
-                subject: teacherData[i][1],
-                classes: teacherData[i][2]
-              });
-            }
-          }
-        }
-      }
-      
-      // Check teacher gradebooks folder
-      const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS, false);
-      if (teacherGradebooksFolder) {
-        result.teacherGradebooksFolder = teacherGradebooksFolder.getName();
-      }
-      
-    } catch (error) {
-      result.error = error.message;
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Opening System Folder | 開啟系統資料夾');
+    } catch (e) {
+      console.log('Direct URL opening not available, showing URL instead');
     }
-    
-    console.log('Debug Results:', result);
-    return result;
     
   } catch (error) {
-    console.error('Debug error:', error.message);
-    return { error: error.message };
-  }
-}
-
-function backupSystem() {
-  showMessage('🔄 Backup | 系統備份', 'System backup feature coming soon | 系統備份功能即將推出');
-}
-
-/**
- * Test function to check student assignment to teachers | 測試函數檢查學生分配給老師的過程
- */
-function testStudentAssignment() {
-  try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    
-    if (!masterFiles.hasNext()) {
-      return { error: 'Master data sheet not found' };
-    }
-    
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    const studentsSheet = masterSheet.getSheetByName('Students');
-    const studentData = studentsSheet.getDataRange().getValues();
-    const headers = studentData[0];
-    
-    // Find columns
-    const ltTeacherCol = headers.indexOf('LT Teacher | LT老師');
-    const itTeacherCol = headers.indexOf('IT Teacher | IT老師');
-    const englishClassCol = headers.indexOf('English Class | 英文班級');
-    const statusCol = headers.indexOf('Status | 狀態');
-    
-    console.log('Column indices:', { ltTeacherCol, itTeacherCol, englishClassCol, statusCol });
-    
-    // Test the assignment logic
-    const teacherDetails = new Map();
-    
-    for (let i = 1; i < studentData.length; i++) {
-      const row = studentData[i];
-      const ltTeacher = row[ltTeacherCol];
-      const itTeacher = row[itTeacherCol];
-      const englishClass = row[englishClassCol];
-      const status = statusCol !== -1 ? row[statusCol] : '';
-      
-      console.log(`Row ${i}:`, {
-        studentName: row[1],
-        ltTeacher,
-        itTeacher, 
-        englishClass,
-        status
-      });
-      
-      // Skip if not "在學"
-      if (status !== '在學') {
-        console.log(`Skipping ${row[1]} - status is not "在學"`);
-        continue;
-      }
-      
-      // Process LT Teacher
-      if (ltTeacher && ltTeacher.trim()) {
-        const teacherKey = `${ltTeacher.trim()}_LT`;
-        console.log(`Processing LT Teacher: ${teacherKey}`);
-        
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: ltTeacher.trim(),
-            subject: 'LT (Local Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-        console.log(`Added ${row[1]} to ${teacherKey} class ${englishClass}`);
-      }
-      
-      // Process IT Teacher
-      if (itTeacher && itTeacher.trim()) {
-        const teacherKey = `${itTeacher.trim()}_IT`;
-        console.log(`Processing IT Teacher: ${teacherKey}`);
-        
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: itTeacher.trim(),
-            subject: 'IT (International Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-        console.log(`Added ${row[1]} to ${teacherKey} class ${englishClass}`);
-      }
-    }
-    
-    // Show results
-    const result = [];
-    teacherDetails.forEach((teacherInfo, teacherKey) => {
-      teacherInfo.classes.forEach((students, className) => {
-        result.push({
-          teacher: teacherInfo.name,
-          subject: teacherInfo.subject,
-          class: className,
-          studentCount: students.length,
-          students: students.map(s => s[1])
-        });
-      });
-    });
-    
-    console.log('Final assignment result:', result);
-    return result;
-    
-  } catch (error) {
-    console.error('Test error:', error.message);
-    return { error: error.message };
-  }
-}
-
-function systemMaintenance() {
-  showMessage('🔧 Maintenance | 系統維護', 'System maintenance feature coming soon | 系統維護功能即將推出');
-}
-
-/**
- * Check actual column headers in master data | 檢查主控資料表中的實際欄位標題
- */
-function checkColumnHeaders() {
-  try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    
-    if (!masterFiles.hasNext()) {
-      return { error: 'Master data sheet not found' };
-    }
-    
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    const studentsSheet = masterSheet.getSheetByName('Students');
-    const data = studentsSheet.getDataRange().getValues();
-    const headers = data[0];
-    
-    const result = {
-      headers: headers,
-      columnCount: headers.length,
-      dataRows: data.length - 1,
-      sampleRow: data.length > 1 ? data[1] : null
-    };
-    
-    // Find specific columns
-    const searchColumns = [
-      'English Class | 英文班級',
-      'English Class',
-      '英文班級',
-      'LT Teacher | LT老師',
-      'IT Teacher | IT老師',
-      'Status | 狀態'
-    ];
-    
-    result.columnIndices = {};
-    searchColumns.forEach(col => {
-      const index = headers.indexOf(col);
-      result.columnIndices[col] = index;
-    });
-    
-    console.log('Header check result:', result);
-    return result;
-    
-  } catch (error) {
-    console.error('Header check error:', error.message);
-    return { error: error.message };
+    showError('❌ Error | 錯誤', `Failed to open system folder: ${error.message} | 無法開啟系統資料夾: ${error.message}`);
   }
 }
 
 /**
- * Debug gradebook creation process | 調試成績簿建立流程
+ * Open master data sheet | 開啟主控資料表
  */
-function debugGradebookCreation() {
+function openMasterDataSheet() {
   try {
-    console.log('=== DEBUG GRADEBOOK CREATION ===');
+    const masterData = getMasterDataSheet();
+    const url = masterData.getUrl();
     
-    // First, test the student extraction
-    const teacherData = updateAutoGeneratedTeachers();
-    console.log('Teachers extracted:', teacherData.length);
+    showMessage('📋 Opening Master Data | 正在開啟主控資料表', 
+      `Master Data sheet is opening in a new tab | 主控資料表將在新分頁中開啟\n\nURL: ${url}`);
     
-    if (teacherData.length === 0) {
-      console.log('No teachers found - checking student data...');
-      const debug = debugSystemStatus();
-      console.log('Debug result:', debug);
-      return debug;
+    // Try to open URL
+    try {
+      const htmlOutput = HtmlService.createHtmlOutput(`
+        <script>
+          window.open('${url}', '_blank');
+          google.script.host.close();
+        </script>
+        <p>Opening Master Data sheet... | 正在開啟主控資料表...</p>
+      `).setWidth(400).setHeight(200);
+      
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Opening Master Data | 開啟主控資料表');
+    } catch (e) {
+      console.log('Direct URL opening not available, showing URL instead');
     }
     
-    // Then test creating one gradebook
-    console.log('Creating test gradebook...');
-    const results = createGradebooksForAllTeachers(teacherData.slice(0, 1)); // Only first teacher
-    console.log('Creation results:', results);
-    
-    return {
-      teachersFound: teacherData.length,
-      creationResults: results,
-      success: true
-    };
-    
   } catch (error) {
-    console.error('Debug error:', error.message);
-    return { error: error.message };
+    showError('❌ Error | 錯誤', `Failed to open master data sheet: ${error.message} | 無法開啟主控資料表: ${error.message}`);
   }
 }
 
 /**
- * Test gradebook creation with detailed logging | 測試成績簿建立並詳細記錄
+ * Show system settings | 顯示系統設定
  */
-function testGradebookCreation() {
+function openSystemSettings() {
   try {
-    console.log('Starting test gradebook creation...');
-    
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA);
-    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-    
-    if (!masterFiles.hasNext()) {
-      return { error: 'Master data sheet not found' };
-    }
-    
-    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-    const studentsSheet = masterSheet.getSheetByName('Students');
-    const studentData = studentsSheet.getDataRange().getValues();
-    const headers = studentData[0];
-    
-    console.log('Headers:', headers);
-    
-    // Find column indices
-    const ltTeacherCol = headers.indexOf('LT Teacher | LT老師');
-    const itTeacherCol = headers.indexOf('IT Teacher | IT老師');
-    const englishClassCol = headers.indexOf('English Class | 英文班級');
-    const statusCol = headers.indexOf('Status | 狀態');
-    
-    console.log('Column indices:', { ltTeacherCol, itTeacherCol, englishClassCol, statusCol });
-    
-    // Extract detailed teacher information with students
-    const teacherDetails = new Map();
-    
-    for (let i = 1; i < studentData.length; i++) {
-      const row = studentData[i];
-      const ltTeacher = row[ltTeacherCol];
-      const itTeacher = row[itTeacherCol];
-      const englishClass = row[englishClassCol];
-      const status = statusCol !== -1 ? row[statusCol] : '';
-      
-      console.log(`Processing row ${i}:`, {
-        studentName: row[1],
-        ltTeacher,
-        itTeacher,
-        englishClass,
-        status
-      });
-      
-      // Only process students with "在學" status
-      if (status !== '在學') {
-        console.log(`Skipping ${row[1]} - status: ${status}`);
-        continue;
-      }
-      
-      // Process LT Teacher
-      if (ltTeacher && ltTeacher.trim()) {
-        const teacherKey = `${ltTeacher.trim()}_LT`;
-        console.log(`Processing LT teacher: ${teacherKey}`);
-        
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: ltTeacher.trim(),
-            subject: 'LT (Local Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-        console.log(`Added ${row[1]} to ${teacherKey} class ${englishClass}`);
-      }
-      
-      // Process IT Teacher
-      if (itTeacher && itTeacher.trim()) {
-        const teacherKey = `${itTeacher.trim()}_IT`;
-        console.log(`Processing IT teacher: ${teacherKey}`);
-        
-        if (!teacherDetails.has(teacherKey)) {
-          teacherDetails.set(teacherKey, {
-            name: itTeacher.trim(),
-            subject: 'IT (International Teacher)',
-            classes: new Map()
-          });
-        }
-        
-        if (!teacherDetails.get(teacherKey).classes.has(englishClass)) {
-          teacherDetails.get(teacherKey).classes.set(englishClass, []);
-        }
-        teacherDetails.get(teacherKey).classes.get(englishClass).push(row);
-        console.log(`Added ${row[1]} to ${teacherKey} class ${englishClass}`);
-      }
-    }
-    
-    // Show final teacher assignments
-    const result = [];
-    teacherDetails.forEach((teacherInfo, teacherKey) => {
-      teacherInfo.classes.forEach((students, className) => {
-        result.push({
-          teacher: teacherInfo.name,
-          subject: teacherInfo.subject,
-          class: className,
-          studentCount: students.length,
-          studentNames: students.map(s => s[1]) // Student names
-        });
-        console.log(`Final assignment: ${teacherInfo.name} (${teacherInfo.subject}) - Class: ${className} - Students: ${students.length}`);
-      });
-    });
-    
-    console.log('Test result:', result);
-    return result;
-    
-  } catch (error) {
-    console.error('Test error:', error.message);
-    return { error: error.message };
-  }
-}
+    const settings = `
+⚙️ SYSTEM SETTINGS | 系統設定
 
-function showUserGuide() {
-  const guide = `
-📖 User Guide | 使用說明
+📊 Basic Configuration | 基本配置:
+• Semester | 學期: ${SYSTEM_CONFIG.SEMESTER}
+• System Name | 系統名稱: ${SYSTEM_CONFIG.SYSTEM_NAME}
+• Main Folder ID | 主資料夾ID: ${SYSTEM_CONFIG.MAIN_FOLDER_ID}
 
-🚀 Quick Start | 快速開始:
-1. Initialize system | 初始化系統
-2. Fill master data | 填入主控資料  
-3. Batch create gradebooks | 批量建立成績簿
-4. Monitor progress | 監控進度
+📝 Assessment Settings | 評量設定:
+• Formative Count | 平時評量數量: ${SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT}
+• Summative Count | 總結評量數量: ${SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT}
+• Include Final Exam | 包含期末考: ${SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL}
 
-🏠 Dashboard | 控制台:
-• Central control panel | 中央控制面板
-• Real-time statistics | 即時統計數據
-• Progress overview | 進度總覽
-• Quick actions | 快速操作
+⚖️ Grade Weights | 成績權重:
+• Formative | 平時評量: ${SYSTEM_CONFIG.WEIGHTS.FORMATIVE * 100}%
+• Summative | 總結評量: ${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE * 100}%
+• Final Exam | 期末考: ${SYSTEM_CONFIG.WEIGHTS.FINAL * 100}%
 
-📋 For detailed instructions, see README.md
-詳細說明請參閱 README.md 文件
-  `;
-  
-  showMessage('📖 User Guide | 使用說明', guide);
-}
+📈 Progress Thresholds | 進度閾值:
+• Excellent | 優秀: ≥${SYSTEM_CONFIG.PROGRESS.EXCELLENT}%
+• Good | 良好: ${SYSTEM_CONFIG.PROGRESS.GOOD}-${SYSTEM_CONFIG.PROGRESS.EXCELLENT-1}%
+• Normal | 普通: ${SYSTEM_CONFIG.PROGRESS.NORMAL}-${SYSTEM_CONFIG.PROGRESS.GOOD-1}%
+• Behind | 落後: <${SYSTEM_CONFIG.PROGRESS.NORMAL}%
 
-function checkSystemStatus() {
-  try {
-    const stats = getSystemStatistics();
-    const status = `
-🔍 System Status Check | 系統狀態檢查
-
-📊 Statistics | 統計數據:
-• Teachers | 老師數量: ${stats.totalTeachers}
-• Students | 學生數量: ${stats.totalStudents}  
-• Gradebooks | 成績簿數量: ${stats.activeGradebooks}
-• System Files | 系統檔案: ${stats.systemFiles}
-
-🟢 System Health: Excellent | 系統健康度：優秀
-🕒 Last Check: ${new Date().toLocaleString()}
+ℹ️ To modify these settings, edit the SYSTEM_CONFIG object in Code.gs
+要修改這些設定，請編輯Code.gs中的SYSTEM_CONFIG物件
     `;
     
-    showMessage('🔍 System Status | 系統狀態', status);
+    showMessage('⚙️ System Settings | 系統設定', settings);
+    
   } catch (error) {
-    showError('❌ Status Check Error | 狀態檢查錯誤', `Cannot check system status | 無法檢查系統狀態: ${error.message}`);
+    showError('❌ Error | 錯誤', `Failed to show system settings: ${error.message} | 無法顯示系統設定: ${error.message}`);
   }
 }
 
-function showSystemInfo() {
-  const info = `
-ℹ️ System Information | 系統資訊
-
-📊 Gradebook Management System | 成績簿管理系統
-🏠 Dashboard Version | 控制台版本: v3.1
-
-🎯 Features | 功能特色:
-• 100% Google Ecosystem | 純 Google 生態系統
-• Bilingual Interface | 雙語介面
-• Dashboard Control Panel | 控制台儀表板
-• Batch Operations | 批量操作
-• Progress Tracking | 進度追蹤
-• Dynamic Assessment Titles | 動態評量標題
-
-⚙️ Configuration | 配置:
-• Semester | 學期: ${SYSTEM_CONFIG.SEMESTER}
-• F.A. Count | 平時評量次數: ${SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE_COUNT}
-• S.A. Count | 總結評量次數: ${SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE_COUNT}
-• Include Final | 包含期末考: ${SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL ? 'Yes' : 'No'}
-
-🏷️ Assessment Title Configurations | 評量標題配置:
-• Available: ${Object.keys(SYSTEM_CONFIG.ASSESSMENT_TITLES).join(', ')}
-
-🔧 Support | 技術支援:
-Contact system administrator | 聯繫系統管理員
-  `;
-  
-  showMessage('ℹ️ System Info | 系統資訊', info);
-}
-
 /**
- * Test assessment title system | 測試評量標題系統
+ * Backup system data | 備份系統資料
  */
-function testAssessmentTitles() {
+function backupSystem() {
   try {
-    console.log('=== TESTING ASSESSMENT TITLE SYSTEM ===');
+    showMessage('🔄 System Backup | 系統備份', 
+      `Starting system backup... | 正在開始系統備份...\n\nThis may take a few minutes | 這可能需要幾分鐘時間`);
     
-    // Test different class scenarios | 測試不同班級情境
-    const testClasses = ['G3 Achievers', 'G2 Advanced', 'G1 Basic', 'Unknown Class'];
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const backupFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.BACKUP);
     
-    testClasses.forEach(className => {
-      console.log(`\n--- Testing ${className} ---`);
-      const titles = getAssessmentTitles(className);
-      console.log('Formative titles:', titles.formative);
-      console.log('Summative titles:', titles.summative);
-    });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupName = `System_Backup_${timestamp}`;
+    const dailyBackupFolder = backupFolder.createFolder(backupName);
     
-    // Test updating titles | 測試更新標題
-    console.log('\n--- Testing Title Updates ---');
-    const testFormative = ['Custom 1', 'Custom 2', 'Custom 3', 'Custom 4', 'Custom 5', 'Custom 6', 'Custom 7', 'Custom 8'];
-    const testSummative = ['Test A', 'Test B', 'Test C', 'Test D'];
+    let backupCount = 0;
     
-    const updateResult = updateAssessmentTitles('Test Class', testFormative, testSummative);
-    console.log('Update result:', updateResult);
-    
-    if (updateResult) {
-      const newTitles = getAssessmentTitles('Test Class');
-      console.log('New titles for Test Class:', newTitles);
+    // Backup Master Data
+    try {
+      const masterData = getMasterDataSheet();
+      const masterBackup = masterData.copy(`MasterData_Backup_${timestamp}`);
+      DriveApp.getFileById(masterBackup.getId()).moveTo(dailyBackupFolder);
+      backupCount++;
+    } catch (e) {
+      console.warn('Master Data backup failed:', e);
     }
     
-    // Test reset | 測試重設
-    console.log('\n--- Testing Reset ---');
-    const resetResult = resetAssessmentTitles('Test Class');
-    console.log('Reset result:', resetResult);
+    // Backup key system files
+    const importantFolders = [
+      SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS,
+      SYSTEM_CONFIG.FOLDERS.TEMPLATES,
+      SYSTEM_CONFIG.FOLDERS.REPORTS
+    ];
     
-    console.log('\n=== TEST COMPLETE ===');
-    return true;
-    
-  } catch (error) {
-    console.error('Test error:', error.message);
-    return false;
-  }
-}
-
-function weeklyProgressCheck() {
-  console.log('📅 Weekly progress check triggered | 每週進度檢查已觸發');
-  // This function will be called weekly by the trigger
-  // 此函數將由觸發器每週調用
-}
-
-
-// ===== HTML DASHBOARD API FUNCTIONS | HTML 控制台 API 函數 =====
-
-/**
- * Get system folder URL for HTML dashboard | 為 HTML 控制台取得系統資料夾 URL
- */
-function getSystemFolderUrl() {
-  try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    return systemFolder.getUrl();
-  } catch (error) {
-    throw new Error(`Cannot get system folder URL: ${error.message}`);
-  }
-}
-
-/**
- * Get master data sheet URL for HTML dashboard | 為 HTML 控制台取得主控資料表 URL
- */
-function getMasterDataUrl() {
-  try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const masterDataFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.MASTER_DATA, false);
-    
-    if (masterDataFolder) {
-      const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
-      if (masterFiles.hasNext()) {
-        const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
-        return masterSheet.getUrl();
-      } else {
-        throw new Error('Master data sheet not found. Please initialize system first.');
+    for (const folderName of importantFolders) {
+      try {
+        const folder = getSubFolder(systemFolder, folderName, false);
+        if (folder) {
+          const folderBackup = dailyBackupFolder.createFolder(`${folderName}_Backup`);
+          const files = folder.getFiles();
+          while (files.hasNext()) {
+            const file = files.next();
+            file.makeCopy(`${file.getName()}_backup_${timestamp}`, folderBackup);
+            backupCount++;
+          }
+        }
+      } catch (e) {
+        console.warn(`Backup failed for folder ${folderName}:`, e);
       }
-    } else {
-      throw new Error('Master data folder not found. Please initialize system first.');
     }
+    
+    showMessage('✅ Backup Complete | 備份完成', 
+      `System backup completed successfully! | 系統備份成功完成！\n\n` +
+      `📁 Backup Location | 備份位置: ${dailyBackupFolder.getName()}\n` +
+      `📊 Files Backed Up | 備份檔案數: ${backupCount}\n` +
+      `⏰ Backup Time | 備份時間: ${new Date().toLocaleString()}`);
+    
   } catch (error) {
-    throw new Error(`Cannot get master data URL: ${error.message}`);
+    showError('❌ Backup Failed | 備份失敗', `System backup failed: ${error.message} | 系統備份失敗: ${error.message}`);
   }
 }
 
 /**
- * Include HTML file for dashboard | 為控制台包含 HTML 檔案
+ * System maintenance and cleanup | 系統維護和清理
+ */
+function systemMaintenance() {
+  try {
+    showMessage('🔧 System Maintenance | 系統維護', 
+      `Starting system maintenance... | 正在開始系統維護...\n\nChecking system health | 檢查系統健康狀態`);
+    
+    let issues = [];
+    let fixes = [];
+    
+    // Check system folder structure
+    try {
+      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+      for (const folderName of Object.values(SYSTEM_CONFIG.FOLDERS)) {
+        const subFolder = getSubFolder(systemFolder, folderName, false);
+        if (!subFolder) {
+          issues.push(`Missing folder: ${folderName}`);
+          // Auto-fix: create missing folder
+          systemFolder.createFolder(folderName);
+          fixes.push(`Created missing folder: ${folderName}`);
+        }
+      }
+    } catch (e) {
+      issues.push(`System folder access error: ${e.message}`);
+    }
+    
+    // Check Master Data
+    try {
+      const masterData = getMasterDataSheet();
+      const studentsSheet = masterData.getSheetByName('Students');
+      if (!studentsSheet) {
+        issues.push('Students sheet missing in Master Data');
+      }
+    } catch (e) {
+      issues.push(`Master Data access error: ${e.message}`);
+    }
+    
+    // Generate maintenance report
+    const report = `
+🔧 SYSTEM MAINTENANCE REPORT | 系統維護報告
+
+⏰ Maintenance Time | 維護時間: ${new Date().toLocaleString()}
+
+${issues.length > 0 ? `❌ Issues Found | 發現問題 (${issues.length}):\n${issues.map(issue => `• ${issue}`).join('\n')}\n` : '✅ No Issues Found | 未發現問題\n'}
+
+${fixes.length > 0 ? `🔧 Auto-Fixes Applied | 自動修復 (${fixes.length}):\n${fixes.map(fix => `• ${fix}`).join('\n')}\n` : ''}
+
+💡 Recommendations | 建議:
+• Regular backup system data | 定期備份系統資料
+• Monitor system performance | 監控系統效能
+• Keep Google Drive organized | 保持Google Drive整潔
+• Check user permissions regularly | 定期檢查使用者權限
+
+✅ Maintenance Complete | 維護完成
+    `;
+    
+    showMessage('✅ Maintenance Complete | 維護完成', report);
+    
+  } catch (error) {
+    showError('❌ Maintenance Failed | 維護失敗', `System maintenance failed: ${error.message} | 系統維護失敗: ${error.message}`);
+  }
+}
+
+// ===== WEB APP FUNCTIONS | Web App 函數 =====
+
+/**
+ * Main entry point for Web App | Web App 主要入口點
+ */
+function doGet(e) {
+  try {
+    console.log('Web App accessed with parameters:', e.parameters);
+    
+    // Check if this is HT Dashboard request
+    if (e.parameter.page === 'ht' || e.parameter.app === 'ht') {
+      return getHTDashboardWebApp();
+    }
+    
+    // Default to main dashboard
+    return getMainDashboardWebApp();
+    
+  } catch (error) {
+    console.error('Web App error:', error);
+    return HtmlService.createHtmlOutput(`
+      <div style="text-align: center; padding: 50px; font-family: Arial;">
+        <h2>❌ Web App Error</h2>
+        <p>Failed to load application: ${error.message}</p>
+        <p>Please contact the administrator.</p>
+      </div>
+    `);
+  }
+}
+
+/**
+ * Get HT Dashboard for Web App | 取得 Web App 版本的 HT 控制台
+ */
+function getHTDashboardWebApp() {
+  try {
+    console.log('Loading HT Dashboard Web App...');
+    
+    const html = HtmlService.createTemplateFromFile('dashboard_for_HT');
+    
+    // Pass system configuration to the template
+    html.isWebApp = true;
+    html.systemConfig = {
+      mainFolderId: SYSTEM_CONFIG.MAIN_FOLDER_ID,
+      folders: SYSTEM_CONFIG.FOLDERS
+    };
+    
+    const htmlOutput = html.evaluate()
+      .setTitle('HT Dashboard | 學年主任控制台')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    
+    console.log('✅ HT Dashboard Web App loaded successfully');
+    return htmlOutput;
+    
+  } catch (error) {
+    console.error('❌ Failed to load HT Dashboard Web App:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get Main Dashboard for Web App | 取得 Web App 版本的主控制台
+ */
+function getMainDashboardWebApp() {
+  try {
+    console.log('Loading Main Dashboard Web App...');
+    
+    const html = HtmlService.createTemplateFromFile('dashboard');
+    
+    // Pass system configuration to the template
+    html.isWebApp = true;
+    html.systemConfig = {
+      mainFolderId: SYSTEM_CONFIG.MAIN_FOLDER_ID,
+      folders: SYSTEM_CONFIG.FOLDERS
+    };
+    
+    const htmlOutput = html.evaluate()
+      .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    
+    console.log('✅ Main Dashboard Web App loaded successfully');
+    return htmlOutput;
+    
+  } catch (error) {
+    console.error('❌ Failed to load Main Dashboard Web App:', error);
+    throw error;
+  }
+}
+
+/**
+ * Include CSS/JS files for Web App | 為 Web App 包含 CSS/JS 檔案
  */
 function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  try {
+    return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  } catch (error) {
+    console.error(`Failed to include file: ${filename}`, error);
+    return `<!-- Failed to include ${filename} -->`;
+  }
 }
