@@ -24,10 +24,24 @@ This is a Google Apps Script-based gradebook management system that provides a c
 
 ## Development Commands
 
-### Auto Deployment (一鍵部署)
+### Deployment Scripts (部署腳本)
+
+#### Test Deployment (測試部署)
+```bash
+# 🧪 用於開發和測試，不影響生產環境
+./scripts/deploy-test.sh
+```
+
+#### Production Deployment (生產部署)
+```bash
+# 🚀 部署到生產環境（需要確認）
+./scripts/deploy-production.sh
+```
+
+#### Legacy Auto Deployment (舊版自動部署)
 ```bash
 # 自動推送到 GitHub 和 Google Apps Script
-./deploy.sh
+./scripts/deploy.sh
 ```
 
 ### Claude Code Slash Commands (Claude Code 專用指令)
@@ -393,13 +407,13 @@ applyAssessmentTitlesToGradebook()      // Write to teacher gradebooks
 3. Permission system automatically restricts HT access to their grade groups only
 
 #### **For Development | 開發環境**
-1. See `HT_DEVELOPMENT_STATUS.md` for detailed implementation status
-2. Test permission system with actual HT gradebook files
-3. Sync functions currently return placeholder responses
+1. See `docs/HT_DEVELOPMENT_STATUS.md` for detailed implementation status
+2. HT Dashboard fully functional via Web App deployment
+3. All sync functions implemented and operational
 
 ### Next Development Priority | 下一步開發優先級
-1. **CRITICAL**: Implement sync function core operations (Google Sheets I/O)
-2. **HIGH**: HT dashboard integration with real data
-3. **MEDIUM**: Assessment title change auditing and rollback
+1. **MEDIUM**: Resolve Web App console warnings (cosmetic only)
+2. **LOW**: Performance optimization for large-scale operations
+3. **LOW**: Enhanced audit logging and reporting features
 
-**Note**: HT system architecture is complete but sync operations need implementation to be fully functional.
+**Note**: HT system is now fully functional in production with complete sync operations and Web App integration. Console warnings are cosmetic and do not affect functionality.
