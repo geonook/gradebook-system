@@ -92,7 +92,7 @@ logs
 *.tmp
 *.temp
 
-# Nested git repositories
-gradebook-system/ 
+# Nested git repositories (excluding gradebook-system to track our updates)
+# gradebook-system/ 
 node_modules
 >>>>>>> origin/main

@@ -208,7 +208,7 @@ npx playwright test --debug
 - No traditional build/test commands - development happens in the Google Apps Script editor
 - Deploy as web app: Deploy → New deployment → Web app
 - Test functions: Use Apps Script editor's built-in function runner
-- Manual clasp push: `cd gradebook-system/google-apps-script && clasp push`
+- Manual clasp push: `cd google-apps-script && clasp push`
 
 ### 🔄 **System Initialization**
 ```javascript
