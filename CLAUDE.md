@@ -34,7 +34,8 @@ This file provides essential guidance to Claude Code (claude.ai/code) when worki
 
 ### 📝 MANDATORY REQUIREMENTS
 - **COMMIT** after every completed task/phase - no exceptions
-- **GITHUB BACKUP** - Push to GitHub after every commit to maintain backup: `git push origin main`
+- **GITHUB AUTO-BACKUP** - Auto-push enabled via git hooks: commits automatically backup to GitHub
+- **VERSION CONTROL** - Use `./scripts/git-workflow.sh` for complete git+GitHub workflow management
 - **USE TASK AGENTS** for all long-running operations (>30 seconds) - Bash commands stop when context switches
 - **TODOWRITE** for complex tasks (3+ steps) → parallel agents → git checkpoints → test validation
 - **READ FILES FIRST** before editing - Edit/Write tools will fail if you didn't read the file first
@@ -106,6 +107,101 @@ This is a Google Apps Script-based gradebook management system that provides a c
 - **Testing**: ✅ Playwright MCP automated testing configured
 - **Documentation**: ✅ Comprehensive with deployment guidance
 - **HT System**: ✅ Full production ready with sync operations
+
+## 🐙 GITHUB VERSION CONTROL SYSTEM
+
+### 🎯 **AUTOMATED BACKUP SYSTEM** (Based on HC AI Template)
+
+#### Auto-Push Configuration ✅ ENABLED
+```bash
+# Post-commit hook automatically pushes every commit to GitHub
+# Location: .git/hooks/post-commit
+# Status: ✅ Active - Automatic backup after every commit
+```
+
+#### Version Control Commands
+```bash
+# Complete git workflow management
+./scripts/git-workflow.sh status          # Check git status
+./scripts/git-workflow.sh check           # Verify GitHub connection  
+./scripts/git-workflow.sh backup          # Create backup tag
+./scripts/git-workflow.sh commit "msg"    # Full commit workflow
+./scripts/git-workflow.sh log             # Show recent commits
+./scripts/git-workflow.sh tags            # List all backup tags
+
+# Quick backup tag creation
+./scripts/create-backup-tag.sh "description"
+```
+
+#### GitHub CLI Commands
+```bash
+# Check GitHub connection status
+gh auth status && git remote -v
+
+# View repository information  
+gh repo view
+
+# Check repository status
+gh repo view --json name,owner,updatedAt
+```
+
+### 🛡️ **BACKUP STRATEGY** (Following Template Standards)
+
+#### Automatic Backup Tags
+- **Before major changes**: Automatic tagged backups
+- **Naming convention**: `backup_YYYYMMDD_HHMMSS`
+- **Storage**: GitHub repository tags
+- **Retention**: Permanent (unless manually deleted)
+
+#### Git Hooks System
+- **post-commit**: Auto-push to GitHub after every commit
+- **pre-commit**: (Available for future linting/testing)
+- **Status**: ✅ Active and working
+
+#### Manual Backup Commands
+```bash
+# Create backup before risky changes
+./scripts/git-workflow.sh backup
+
+# Full commit with auto-backup
+./scripts/git-workflow.sh commit "Major feature implementation"
+
+# Emergency backup tag
+git tag -a emergency_$(date +%Y%m%d_%H%M%S) -m "Emergency backup: $(date)"
+git push origin --tags
+```
+
+### 📋 **VERSION CONTROL WORKFLOW** (Mandatory)
+
+#### Before ANY Changes
+1. **Check Status**: `./scripts/git-workflow.sh status`
+2. **Create Backup**: `./scripts/git-workflow.sh backup`  
+3. **Verify Connection**: `./scripts/git-workflow.sh check`
+
+#### During Development
+1. **Regular Commits**: Use descriptive commit messages
+2. **Auto-Push**: Happens automatically via git hooks
+3. **Progress Tracking**: Use todo list system
+
+#### After Completion
+1. **Final Commit**: `./scripts/git-workflow.sh commit "Feature complete"`
+2. **Verification**: Check GitHub repository for backup
+3. **Documentation**: Update relevant MD files
+
+### 🔄 **GITHUB INTEGRATION STATUS**
+
+#### Current Configuration ✅
+- **Repository**: Connected to `https://github.com/geonook/gradebook-system.git`
+- **Branch**: `main` (modern standard)
+- **Auto-push**: ✅ Enabled via git hooks
+- **GitHub CLI**: ✅ Installed and ready
+- **Backup System**: ✅ Fully operational
+
+#### Repository Settings
+- **Visibility**: Public (can be changed if needed)
+- **Default Branch**: `main`
+- **Issues & Wiki**: Available for project management
+- **Collaboration**: Ready for team development
 
 ## 🚀 DEVELOPMENT COMMANDS
 
