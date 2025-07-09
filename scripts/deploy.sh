@@ -37,11 +37,26 @@ fi
 
 # 2. Clasp 推送到 Google Apps Script
 echo "📤 推送到 Google Apps Script..."
-cd "gradebook-system/google-apps-script"
+cd "google-apps-script"
+
+# Check if configuration is properly loaded
+echo "🔧 檢查配置檔案..."
+if [ -f "config-loader.gs" ]; then
+    echo "✅ 配置載入器已找到"
+else
+    echo "❌ 配置載入器遺失，請確認檔案結構"
+    exit 1
+fi
 
 if [ -f ".clasp.json" ]; then
     clasp push
     echo "✅ Google Apps Script 推送完成"
+    echo "📋 已推送檔案："
+    echo "   - Code.gs (主要程式碼)"
+    echo "   - CodeExtensions.gs (HT 擴展)"
+    echo "   - config-loader.gs (配置載入器)"
+    echo "   - dashboard.html (主控制台)"
+    echo "   - dashboard_for_HT.html (HT 控制台)"
 else
     echo "❌ 找不到 .clasp.json，請確認 clasp 設定"
     exit 1

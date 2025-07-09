@@ -330,9 +330,14 @@ initializeSystem()
 
 ## ⚙️ CONFIGURATION
 
-### 🔧 **Essential Configuration (Code.gs line 21)**
+### 🔧 **Essential Configuration (config/environment.js)**
 ```javascript
-MAIN_FOLDER_ID: 'YOUR_GOOGLE_DRIVE_FOLDER_ID'
+// All configuration is now centralized in config/environment.js
+// 所有配置現在都集中在 config/environment.js 中
+
+// Must be configured before deployment | 部署前必須配置
+CONFIG.GOOGLE_DRIVE.MAIN_FOLDER_ID = 'YOUR_GOOGLE_DRIVE_FOLDER_ID';
+CONFIG.WEB_APP.BASE_URL = 'YOUR_WEBAPP_URL';
 ```
 
 ### 🛠️ **System Settings (SYSTEM_CONFIG object)**

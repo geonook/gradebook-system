@@ -25,9 +25,29 @@
 ```
 gradebook-system/
 ├── README.md                    # Complete documentation | 完整說明文件
-└── google-apps-script/
-    ├── Code.gs                  # Complete system logic | 完整系統邏輯
-    └── dashboard.html           # Modern HTML dashboard | 現代化 HTML 控制台
+├── CLAUDE.md                    # Claude Code development guide | Claude Code 開發指南
+├── FILE_GUIDE.md               # File navigation guide | 檔案導覽指南
+├── config/                     # Configuration management | 配置管理
+│   ├── environment.js          # Centralized configuration | 集中化配置
+│   └── README.md               # Configuration documentation | 配置文檔
+├── google-apps-script/         # Google Apps Script files | Google Apps Script 檔案
+│   ├── Code.gs                 # Complete system logic | 完整系統邏輯
+│   ├── CodeExtensions.gs       # HT system extensions | HT 系統擴展
+│   ├── config-loader.gs        # Configuration loader | 配置載入器
+│   ├── dashboard.html          # Modern HTML dashboard | 現代化 HTML 控制台
+│   └── dashboard_for_HT.html   # HT Dashboard | HT 控制台
+├── scripts/                    # Deployment scripts | 部署腳本
+│   ├── deploy.sh               # Main deployment script | 主要部署腳本
+│   ├── deploy-production.sh    # Production deployment | 生產環境部署
+│   ├── deploy-test.sh          # Test deployment | 測試環境部署
+│   └── git-workflow.sh         # Git workflow management | Git 工作流程管理
+├── tests/                      # Test files | 測試檔案
+│   ├── dashboard.spec.js       # Dashboard tests | 控制台測試
+│   └── ai-generated/           # AI-generated tests | AI 生成測試
+├── docs/                       # Documentation | 文檔
+│   ├── HT_DEVELOPMENT_STATUS.md # HT system status | HT 系統狀態
+│   └── WEB_APP_DEPLOYMENT_GUIDE.md # Deployment guide | 部署指南
+└── backups/                    # Code backups | 代碼備份
 ```
 
 **That's it! Only 3 files needed. | 就這樣！只需要 3 個檔案。**

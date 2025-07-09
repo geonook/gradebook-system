@@ -22,8 +22,13 @@
 ### 🔧 **google-apps-script/** - 核心代碼
 - **Code.gs** - 主要系統邏輯
 - **CodeExtensions.gs** - 擴展功能
+- **config-loader.gs** - 配置載入器 (新增)
 - **dashboard.html** - 主控台界面
 - **dashboard_for_HT.html** - HT 專用控台
+
+### ⚙️ **config/** - 配置管理 (新增)
+- **environment.js** - 集中化配置管理
+- **README.md** - 配置說明文檔
 
 ### 🧪 **tests/** - 測試檔案
 - **ai-generated/** - AI 生成的測試
@@ -60,7 +65,8 @@
 ### 🔥 **必讀 | Must Read**
 1. **CLAUDE.md** - 開發規則和命令 (最重要!)
 2. **README.md** - 專案基本資訊
-3. **google-apps-script/Code.gs** - 核心程式碼
+3. **config/environment.js** - 集中化配置 (新增)
+4. **google-apps-script/Code.gs** - 核心程式碼
 
 ### ⚡ **常用 | Frequently Used**
 1. **scripts/deploy.sh** - 部署腳本

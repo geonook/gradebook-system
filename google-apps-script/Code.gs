@@ -12,64 +12,17 @@
  */
 
 // ===== SYSTEM CONFIGURATION | 系統配置 =====
-const SYSTEM_CONFIG = {
-  // Basic Settings | 基本設定
-  SEMESTER: '2425S2',
-  SYSTEM_NAME: 'Gradebook Management System | 成績簿管理系統',
-  
-  // Main Folder ID (User specified) | 主要資料夾 ID (使用者指定)
-  MAIN_FOLDER_ID: '1w_UJnNthBkcP8wgyrF3rz2St0jZTPZzB',
-  
-  // Folder Structure | 資料夾結構
-  FOLDERS: {
-    MAIN: 'Gradebook System | 成績簿系統',
-    TEACHER_SHEETS: 'Teacher Gradebooks | 老師成績簿',
-    TEMPLATES: 'Templates | 範本檔案',
-    REPORTS: 'Progress Reports | 進度報告',
-    BACKUP: 'System Backup | 系統備份',
-    MASTER_DATA: 'Master Data | 主控資料'
-  },
-  
-  // Assessment Settings | 評量設定
-  ASSESSMENTS: {
-    FORMATIVE_COUNT: 8,      // F.A.1 to F.A.8 | 平時評量 1-8
-    SUMMATIVE_COUNT: 4,      // S.A.1 to S.A.4 | 總結評量 1-4
-    INCLUDE_FINAL: true      // Include final exam | 包含期末考
-  },
-  
-  // Assessment Title Configuration | 評量標題配置
-  // Unified assessment titles for all teachers and levels | 統一所有教師和級別的評量標題
-  ASSESSMENT_TITLES: {
-    // Default titles for all grades | 所有年級的預設標題
-    DEFAULT: {
-      FORMATIVE: ['F.A.1', 'F.A.2', 'F.A.3', 'F.A.4', 'F.A.5', 'F.A.6', 'F.A.7', 'F.A.8'],
-      SUMMATIVE: ['S.A.1', 'S.A.2', 'S.A.3', 'S.A.4']
-    }
-  },
-  
-  // Grade Weights | 成績權重
-  WEIGHTS: {
-    FORMATIVE: 0.15,         // Formative assessment 15% | 平時評量 15%
-    SUMMATIVE: 0.2,          // Summative assessment 20% | 總結評量 20%
-    FINAL: 0.1               // Final exam 10% | 期末考 10%
-  },
-  
-  // Progress Thresholds | 進度閾值
-  PROGRESS: {
-    EXCELLENT: 90,           // Excellent ≥90% | 優秀 ≥90%
-    GOOD: 80,               // Good 80-89% | 良好 80-89%
-    NORMAL: 60              // Normal 60-79% | 普通 60-79%
-  },
-  
-  // Admin Configuration | 管理員配置
-  ADMIN: {
-    // Admin Google accounts that can access any HT role | 可以存取任何HT角色的管理員Google帳號
-    ACCOUNTS: [
-      'tsehungchen@kcislk.ntpc.edu.tw'  // Admin account | 管理員帳號
-    ],
-    ENABLED: true                    // Enable admin override | 啟用管理員覆蓋功能
-  }
-};
+// Configuration is now loaded from config-loader.gs | 配置現在從 config-loader.gs 載入
+// This ensures centralized configuration management | 這確保了集中化的配置管理
+
+/**
+ * IMPORTANT NOTE | 重要說明:
+ * The SYSTEM_CONFIG is now loaded from config-loader.gs file
+ * All configuration changes should be made in config/environment.js
+ * 
+ * SYSTEM_CONFIG 現在從 config-loader.gs 檔案載入
+ * 所有配置變更都應在 config/environment.js 中進行
+ */
 
 // ===== WEB APP DEPLOYMENT | 網頁應用程式部署 =====
 
