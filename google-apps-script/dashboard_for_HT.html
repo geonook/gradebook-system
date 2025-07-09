@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HT Dashboard | 學年主任控制台</title>
+    <title>HT Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -223,12 +223,12 @@
         }
 
         .teacher-list {
-            max-height: 400px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
         .teacher-item {
-            padding: 10px;
+            padding: 8px 10px;
             border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
@@ -300,28 +300,28 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #4CAF50;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #666;
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
         /* Modern Assessment Editor Styles */
@@ -634,18 +634,18 @@
 </head>
 <body>
     <button class="back-btn" onclick="window.history.back()">
-        <i class="fas fa-arrow-left"></i> 返回
+        <i class="fas fa-arrow-left"></i> Back
     </button>
 
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
-            <p>學年主任控制台 | Head Teacher Control Panel</p>
+            <p>Head Teacher Control Panel</p>
         </div>
 
         <!-- HT Identity Section -->
         <div class="ht-identity">
-            <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> 正在檢測 HT 身份... | Detecting HT identity...</span>
+            <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> Detecting HT identity...</span>
         </div>
 
         <!-- Main Sections -->
@@ -654,15 +654,15 @@
             <div class="sync-panel">
                 <h3>
                     <i class="fas fa-sync-alt"></i>
-                    評量標題同步管理 | Assessment Title Sync Management
+                    Assessment Title Management
                 </h3>
                 
                 <!-- Assessment Editor -->
                 <div class="assessment-editor">
-                    <h4>✏️ 編輯評量標題 | Edit Assessment Titles</h4>
+                    <h4>✏️ Edit Assessment Titles</h4>
                     <div id="assessmentForm">
                         <div class="alert alert-info">
-                            正在載入評量標題編輯器... | Loading assessment title editor...
+                            Loading assessment title editor...
                         </div>
                     </div>
                 </div>
@@ -670,10 +670,10 @@
                 <!-- Sync Control Buttons -->
                 <div class="sync-buttons">
                     <button id="syncAllBtn" class="btn-primary" onclick="syncAllGrades()" disabled>
-                        <i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades
+                        <i class="fas fa-sync-alt"></i> Sync All Grades
                     </button>
                     <button id="previewBtn" class="btn-secondary" onclick="previewChanges()" disabled>
-                        <i class="fas fa-eye"></i> 預覽變更 | Preview Changes
+                        <i class="fas fa-eye"></i> Preview Changes
                     </button>
                 </div>
                 
@@ -688,29 +688,29 @@
             <div class="teacher-overview">
                 <h3>
                     <i class="fas fa-users"></i>
-                    教師總覽 | Teacher Overview
+                    Teacher Overview
                 </h3>
                 
                 <!-- Statistics -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="totalTeachers">-</div>
-                        <div class="stat-label">總教師數</div>
+                        <div class="stat-label">Total Teachers</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="gradeGroup">-</div>
-                        <div class="stat-label">年段組</div>
+                        <div class="stat-label">Grade Group</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="teacherType">-</div>
-                        <div class="stat-label">教師類型</div>
+                        <div class="stat-label">Teacher Type</div>
                     </div>
                 </div>
                 
                 <!-- Teacher List -->
                 <div class="teacher-list" id="teacherList">
                     <div class="alert alert-info">
-                        正在載入教師資料... | Loading teacher data...
+                        Loading teacher data...
                     </div>
                 </div>
             </div>
@@ -719,7 +719,7 @@
         <!-- Loading Overlay -->
         <div id="loading" class="loading" style="display: none;">
             <div class="spinner"></div>
-            <p>處理中... | Processing...</p>
+            <p>Processing...</p>
         </div>
     </div>
 
@@ -748,38 +748,37 @@
             container.innerHTML = `
                 <div class="header">
                     <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
-                    <p>學年主任控制台 | Head Teacher Control Panel</p>
+                    <p>Head Teacher Control Panel</p>
                 </div>
                 
                 <div class="sync-panel" style="max-width: 600px; margin: 0 auto;">
                     <h3>
                         <i class="fas fa-sign-in-alt"></i>
-                        HT 身份驗證 | HT Identity Verification
+                        HT Identity Verification
                     </h3>
                     
                     <div id="loginForm">
                         <div class="alert alert-info">
-                            請選擇您的 HT 身份以存取評量標題管理功能<br>
                             Please select your HT identity to access assessment title management
                         </div>
                         
                         <div style="margin: 20px 0;">
                             <label for="htSelect" style="display: block; margin-bottom: 10px; font-weight: 600;">
-                                選擇 HT 身份 | Select HT Identity:
+                                Select HT Identity:
                             </label>
                             <select id="htSelect" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
-                                <option value="">正在載入 HT 選項... | Loading HT options...</option>
+                                <option value="">Loading HT options...</option>
                             </select>
                         </div>
                         
                         <button id="loginBtn" class="btn-primary" onclick="performHTLogin()" disabled style="width: 100%; margin-top: 20px;">
-                            <i class="fas fa-sign-in-alt"></i> 登入 HT Dashboard | Login to HT Dashboard
+                            <i class="fas fa-sign-in-alt"></i> Login to HT Dashboard
                         </button>
                     </div>
                     
                     <div id="loginProgress" style="display: none; text-align: center; padding: 20px;">
                         <div class="spinner"></div>
-                        <p>正在驗證身份... | Verifying identity...</p>
+                        <p>Verifying identity...</p>
                     </div>
                 </div>
             `;
@@ -805,7 +804,7 @@
             const select = document.getElementById('htSelect');
             
             if (data.success && data.htOptions.length > 0) {
-                select.innerHTML = '<option value="">請選擇您的身份 | Please select your identity</option>';
+                select.innerHTML = '<option value="">Please select your identity</option>';
                 
                 data.htOptions.forEach(option => {
                     const optionElement = document.createElement('option');
@@ -824,8 +823,8 @@
                 });
                 
             } else {
-                select.innerHTML = '<option value="">無可用的 HT 選項 | No available HT options</option>';
-                showAlert('無法載入 HT 選項 | Cannot load HT options', 'error');
+                select.innerHTML = '<option value="">No available HT options</option>';
+                showAlert('Cannot load HT options', 'error');
             }
         }
         
@@ -835,8 +834,8 @@
         function onHTOptionsError(error) {
             console.error('Failed to load HT options:', error);
             document.getElementById('htSelect').innerHTML = 
-                '<option value="">載入失敗 | Loading failed</option>';
-            showAlert('載入 HT 選項失敗 | Failed to load HT options', 'error');
+                '<option value="">Loading failed</option>';
+            showAlert('Failed to load HT options', 'error');
         }
         
         /**
@@ -847,7 +846,7 @@
             const selectedValue = select.value;
             
             if (!selectedValue) {
-                showAlert('請選擇您的 HT 身份 | Please select your HT identity', 'error');
+                showAlert('Please select your HT identity', 'error');
                 return;
             }
             
@@ -866,7 +865,7 @@
                 
             } catch (error) {
                 console.error('Login error:', error);
-                showAlert('登入失敗 | Login failed', 'error');
+                showAlert('Login failed', 'error');
             }
         }
         
@@ -897,7 +896,7 @@
             console.error('HT login error:', error);
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('loginProgress').style.display = 'none';
-            showAlert('登入失敗 | Login failed: ' + error.message, 'error');
+            showAlert('Login failed: ' + error.message, 'error');
         }
         
         /**
@@ -908,12 +907,12 @@
             container.innerHTML = `
                 <div class="header">
                     <h1><i class="fas fa-user-tie"></i> HT Dashboard</h1>
-                    <p>學年主任控制台 | Head Teacher Control Panel</p>
+                    <p>Head Teacher Control Panel</p>
                 </div>
 
                 <!-- HT Identity Section -->
                 <div class="ht-identity">
-                    <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> 正在載入... | Loading...</span>
+                    <span id="htInfo"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
                 </div>
 
                 <!-- Main Sections -->
@@ -922,15 +921,15 @@
                     <div class="sync-panel">
                         <h3>
                             <i class="fas fa-sync-alt"></i>
-                            評量標題同步管理 | Assessment Title Sync Management
+                            Assessment Title Management
                         </h3>
                         
                         <!-- Assessment Editor -->
                         <div class="assessment-editor">
-                            <h4>✏️ 編輯評量標題 | Edit Assessment Titles</h4>
+                            <h4>✏️ Edit Assessment Titles</h4>
                             <div id="assessmentForm">
                                 <div class="alert alert-info">
-                                    正在載入評量標題編輯器... | Loading assessment title editor...
+                                    Loading assessment title editor...
                                 </div>
                             </div>
                         </div>
@@ -938,10 +937,10 @@
                         <!-- Sync Control Buttons -->
                         <div class="sync-buttons">
                             <button id="syncAllBtn" class="btn-primary" onclick="syncAllGrades()" disabled>
-                                <i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades
+                                <i class="fas fa-sync-alt"></i> Sync All Grades
                             </button>
                             <button id="previewBtn" class="btn-secondary" onclick="previewChanges()" disabled>
-                                <i class="fas fa-eye"></i> 預覽變更 | Preview Changes
+                                <i class="fas fa-eye"></i> Preview Changes
                             </button>
                         </div>
                         
@@ -956,36 +955,49 @@
                     <div class="teacher-overview">
                         <h3>
                             <i class="fas fa-users"></i>
-                            教師總覽 | Teacher Overview
+                            Teacher Overview
                         </h3>
                         
                         <!-- Statistics -->
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-number" id="totalTeachers">-</div>
-                                <div class="stat-label">總教師數</div>
+                                <div class="stat-label">Total Teachers</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-number" id="gradeGroup">-</div>
-                                <div class="stat-label">年段組</div>
+                                <div class="stat-label">Grade Group</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-number" id="teacherType">-</div>
-                                <div class="stat-label">教師類型</div>
+                                <div class="stat-label">Teacher Type</div>
                             </div>
                         </div>
                         
                         <!-- Teacher List -->
                         <div class="teacher-list" id="teacherList">
                             <div class="alert alert-info">
-                                正在載入教師資料... | Loading teacher data...
+                                Loading teacher data...
                             </div>
                         </div>
                         
+                        <!-- Debug Buttons -->
+                        <div style="margin-top: 15px; text-align: center;">
+                            <button class="btn-warning" onclick="debugTeacherCount()" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-bug"></i> Debug Teacher Count
+                            </button>
+                            <button class="btn-danger" onclick="debugSyncProcess()" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-sync"></i> Debug Sync Process
+                            </button>
+                            <button class="btn-success" onclick="testSimpleSync()" style="width: 100%; margin-bottom: 10px;">
+                                <i class="fas fa-check"></i> 直接同步測試
+                            </button>
+                        </div>
+                        
                         <!-- Logout Button -->
-                        <div style="margin-top: 20px; text-align: center;">
+                        <div style="text-align: center;">
                             <button class="btn-secondary" onclick="logout()" style="width: 100%;">
-                                <i class="fas fa-sign-out-alt"></i> 登出 | Logout
+                                <i class="fas fa-sign-out-alt"></i> Logout
                             </button>
                         </div>
                     </div>
@@ -994,7 +1006,7 @@
                 <!-- Loading Overlay -->
                 <div id="loading" class="loading" style="display: none;">
                     <div class="spinner"></div>
-                    <p>處理中... | Processing...</p>
+                    <p>Processing...</p>
                 </div>
             `;
             
@@ -1008,10 +1020,136 @@
         }
         
         /**
+         * Debug teacher count issue
+         */
+        function testSimpleSync() {
+            console.log('Simple Sync Test button clicked');
+            
+            if (!confirm('這將直接同步測試數據到 Ms. Johnson 的成績簿。繼續？')) {
+                return;
+            }
+            
+            showLoading(true);
+            showAlert('正在執行同步測試...', 'info');
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    showLoading(false);
+                    console.log('Simple sync result:', result);
+                    
+                    if (result && result.success) {
+                        showAlert('✅ 同步測試成功完成！', 'success');
+                    } else {
+                        showAlert('❌ 同步失敗: ' + (result?.error || 'Unknown error'), 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showLoading(false);
+                    console.error('Simple sync failed:', error);
+                    showAlert('❌ 同步失敗: ' + error.message, 'error');
+                })
+                .testSyncNow();
+        }
+
+        function debugSyncProcess() {
+            console.log('Debug Sync button clicked');
+            
+            if (!confirm('This will test the complete sync process with sample data. Continue?')) {
+                console.log('User cancelled sync debug');
+                return;
+            }
+            
+            console.log('Starting sync debug process...');
+            showLoading(true);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    showLoading(false);
+                    console.log('Sync Debug completed:', result);
+                    
+                    if (result && result.success) {
+                        showAlert('Sync Debug completed successfully! Check browser console for details.', 'info');
+                        console.log('=== SYNC DEBUG RESULTS ===');
+                        console.log('HT Context:', result.htContext);
+                        console.log('Teachers Found:', result.teachersFound);
+                        console.log('Test Teacher:', result.testTeacher);
+                        console.log('Mock Data:', result.mockData);
+                        console.log('Sync Result:', result.syncResult);
+                    } else {
+                        showAlert('Sync Debug failed: ' + (result?.error || 'Unknown error'), 'error');
+                        console.error('=== SYNC DEBUG ERROR DETAILS ===');
+                        console.error('Full result object:', result);
+                        console.error('Error message:', result?.error);
+                        console.error('Error stack:', result?.stack);
+                        console.error('HT Context:', result?.htContext);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showLoading(false);
+                    console.error('Sync Debug failed:', error);
+                    showAlert('Sync Debug failed: ' + error.message, 'error');
+                })
+                .debugSyncProcess();
+        }
+
+        function debugTeacherCount() {
+            console.log('Debug button clicked');
+            
+            if (!confirm('This will run diagnostic tests to identify why teacher count is 0. Continue?')) {
+                console.log('User cancelled debug');
+                return;
+            }
+            
+            console.log('Starting debug process...');
+            showLoading(true);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    console.log('Debug success:', result);
+                    showLoading(false);
+                    
+                    if (result.success) {
+                        let debugInfo = `🔍 Debug Results:\n\n`;
+                        debugInfo += `📁 Total files in folder: ${result.totalFiles}\n\n`;
+                        debugInfo += `📋 Sample files:\n${result.filesSample.map(f => `  - ${f}`).join('\n')}\n\n`;
+                        debugInfo += `🧪 Test results by configuration:\n`;
+                        
+                        result.testResults.forEach(test => {
+                            debugInfo += `  - ${test.gradeGroup} ${test.htType}: ${test.teacherCount} teachers\n`;
+                        });
+                        
+                        debugInfo += `\n👨‍🏫 HT Data: ${JSON.stringify(result.htData, null, 2)}`;
+                        
+                        console.log(debugInfo);
+                        alert(debugInfo);
+                        
+                        // Also update the display if we found teachers
+                        const totalFound = result.testResults.reduce((sum, test) => sum + test.teacherCount, 0);
+                        if (totalFound > 0) {
+                            showAlert(`Debug found ${totalFound} total teachers across all configurations. Check console for details.`, 'info');
+                        } else {
+                            showAlert('Debug found 0 teachers. This confirms the issue. Check console for file listing.', 'error');
+                        }
+                        
+                    } else {
+                        showAlert('Debug failed: ' + result.error, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Debug failed:', error);
+                    showLoading(false);
+                    showAlert('Debug failed: ' + error.message, 'error');
+                })
+                .debugHTTeacherCount();
+                
+            console.log('Google Script call initiated');
+        }
+        
+        /**
          * Logout function
          */
         function logout() {
-            if (confirm('確定要登出嗎？ | Are you sure you want to logout?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 location.reload();
             }
         }
@@ -1048,7 +1186,7 @@
             
             // Update HT identity display
             document.getElementById('htInfo').innerHTML = 
-                `<i class="fas fa-check-circle"></i> HT 身份確認：${htContext.htName} (${htContext.htGradeGroup} ${htContext.htType})`;
+                `<i class="fas fa-check-circle"></i> HT Identity Confirmed: ${htContext.htName} (${htContext.htGradeGroup} ${htContext.htType})`;
             
             // Generate assessment editor
             generateAssessmentEditor();
@@ -1068,9 +1206,9 @@
             const grades = htContext.htGrades;
             const levels = ['E1', 'E2', 'E3'];
             const assessmentTypes = [
-                { group: 'formative', types: ['FA1', 'FA2', 'FA3', 'FA4', 'FA5', 'FA6', 'FA7', 'FA8'], label: '平時評量 | Formative Assessments', color: '#2196F3' },
-                { group: 'summative', types: ['SA1', 'SA2', 'SA3', 'SA4'], label: '總結評量 | Summative Assessments', color: '#4CAF50' },
-                { group: 'final', types: ['Final'], label: '期末考 | Final Exam', color: '#FF9800' }
+                { group: 'formative', types: ['FA1', 'FA2', 'FA3', 'FA4', 'FA5', 'FA6', 'FA7', 'FA8'], label: 'Formative Assessments', color: '#2196F3' },
+                { group: 'summative', types: ['SA1', 'SA2', 'SA3', 'SA4'], label: 'Summative Assessments', color: '#4CAF50' },
+                { group: 'final', types: ['Final'], label: 'Final Exam', color: '#FF9800' }
             ];
             
             let html = `
@@ -1087,7 +1225,7 @@
                             <div class="card-header">
                                 <h4>${grade}${level}</h4>
                                 <button class="btn-mini" onclick="resetLevel('${grade}${level}')">
-                                    <i class="fas fa-undo"></i> 重置
+                                    <i class="fas fa-undo"></i> Reset
                                 </button>
                             </div>
                             <div class="card-content">
@@ -1162,31 +1300,51 @@
             // Enable preview button to show changes
             document.getElementById('previewBtn').style.background = '#FF9800';
             document.getElementById('previewBtn').innerHTML = 
-                '<i class="fas fa-eye"></i> 有變更 | Changes Made';
+                '<i class="fas fa-eye"></i> Changes Made';
         }
 
         /**
          * Update teacher overview
          */
         function updateTeacherOverview() {
-            // Update statistics
-            document.getElementById('totalTeachers').textContent = targetTeachers.length;
-            document.getElementById('gradeGroup').textContent = htContext.htGradeGroup;
-            document.getElementById('teacherType').textContent = htContext.htType;
+            // Debug logging
+            console.log('updateTeacherOverview called');
+            console.log('targetTeachers:', targetTeachers);
+            console.log('htContext:', htContext);
             
-            // Update teacher list
+            // Update statistics with fallback values
+            const teacherCount = targetTeachers ? targetTeachers.length : 0;
+            const gradeGroup = htContext && htContext.htGradeGroup ? htContext.htGradeGroup : 'Unknown';
+            const teacherType = htContext && htContext.htType ? htContext.htType : 'Unknown';
+            
+            document.getElementById('totalTeachers').textContent = teacherCount;
+            document.getElementById('gradeGroup').textContent = gradeGroup;
+            document.getElementById('teacherType').textContent = teacherType;
+            
+            // Update teacher list - only show first 5 teachers to avoid lengthy list
             let html = '';
-            if (targetTeachers.length === 0) {
-                html = '<div class="alert alert-info">目前沒有發現相關教師成績簿</div>';
+            if (!targetTeachers || targetTeachers.length === 0) {
+                html = '<div class="alert alert-info">No teacher gradebooks found</div>';
             } else {
-                targetTeachers.forEach(teacher => {
+                const teachersToShow = targetTeachers.slice(0, 5); // Limit to first 5 teachers
+                teachersToShow.forEach(teacher => {
                     html += `
                         <div class="teacher-item">
                             <div class="teacher-name">${extractTeacherName(teacher)}</div>
-                            <div class="teacher-status status-active">就緒</div>
+                            <div class="teacher-status status-active">Ready</div>
                         </div>
                     `;
                 });
+                
+                // Show summary if there are more teachers
+                if (targetTeachers && targetTeachers.length > 5) {
+                    html += `
+                        <div class="teacher-item" style="border-top: 2px solid #ddd; background: #f8f9fa;">
+                            <div class="teacher-name"><strong>... and ${targetTeachers.length - 5} more teachers</strong></div>
+                            <div class="teacher-status status-active">Ready</div>
+                        </div>
+                    `;
+                }
             }
             
             document.getElementById('teacherList').innerHTML = html;
@@ -1216,19 +1374,19 @@
             });
             
             if (changedTitles.length === 0) {
-                showAlert('沒有發現變更的評量標題', 'info');
+                showAlert('No assessment title changes found', 'info');
                 return;
             }
             
             const previewHTML = `
                 <div class="alert alert-info">
-                    <h4>📋 變更預覽 | Change Preview</h4>
-                    <p><strong>將要更新 ${targetTeachers.length} 個教師成績簿</strong></p>
-                    <p><strong>變更的評量標題：</strong></p>
+                    <h4>📋 Change Preview</h4>
+                    <p><strong>Will update ${targetTeachers.length} teacher gradebooks</strong></p>
+                    <p><strong>Changed assessment titles:</strong></p>
                     <ul style="margin: 10px 0; padding-left: 20px;">
                         ${changedTitles.map(title => `<li>${title}</li>`).join('')}
                     </ul>
-                    <p><em>點擊「同步所有級別」按鈕執行變更</em></p>
+                    <p><em>Click "Sync All Grades" button to execute changes</em></p>
                 </div>
             `;
             
@@ -1237,7 +1395,7 @@
             // Reset preview button
             document.getElementById('previewBtn').style.background = '#2196F3';
             document.getElementById('previewBtn').innerHTML = 
-                '<i class="fas fa-eye"></i> 預覽變更 | Preview Changes';
+                '<i class="fas fa-eye"></i> Preview Changes';
         }
 
         /**
@@ -1250,16 +1408,16 @@
             // Disable buttons
             syncButton.disabled = true;
             previewButton.disabled = true;
-            syncButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 同步中... | Syncing...';
+            syncButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
             
             // Show progress
-            showProgress(20, '正在收集評量標題資料... | Collecting assessment title data...');
+            showProgress(20, 'Collecting assessment title data...');
             
             try {
                 // Collect form data
                 const formData = collectAssessmentFormData();
                 
-                showProgress(50, '正在儲存到 HT 成績簿... | Saving to HT gradebook...');
+                showProgress(50, 'Saving to HT gradebook...');
                 
                 // Execute sync
                 google.script.run
@@ -1296,23 +1454,23 @@
             // Restore buttons
             syncButton.disabled = false;
             previewButton.disabled = false;
-            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades';
+            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> Sync All Grades';
             
             if (result.success) {
-                showProgress(100, '同步完成！ | Sync Complete!');
+                showProgress(100, 'Sync Complete!');
                 
                 const successHTML = `
                     <div class="alert alert-success">
-                        <h4>✅ 同步完成 | Sync Complete</h4>
+                        <h4>✅ Sync Complete</h4>
                         <p>${result.message}</p>
                         <ul style="margin: 10px 0; padding-left: 20px;">
-                            <li>同步成功：${result.syncResult.syncedCount} 個教師成績簿</li>
-                            <li>目標總數：${result.syncResult.targetCount} 個教師成績簿</li>
+                            <li>Successfully synced: ${result.syncResult.syncedCount} teacher gradebooks</li>
+                            <li>Total targets: ${result.syncResult.targetCount} teacher gradebooks</li>
                             ${result.syncResult.errors.length > 0 ? 
-                                `<li class="error">錯誤：${result.syncResult.errors.join(', ')}</li>` : ''
+                                `<li class="error">Errors: ${result.syncResult.errors.join(', ')}</li>` : ''
                             }
                         </ul>
-                        <p><em>所有教師成績簿的評量標題已更新</em></p>
+                        <p><em>All teacher gradebook assessment titles have been updated</em></p>
                     </div>
                 `;
                 
@@ -1336,15 +1494,15 @@
             // Restore buttons
             syncButton.disabled = false;
             previewButton.disabled = false;
-            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> 同步所有級別 | Sync All Grades';
+            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i> Sync All Grades';
             
             showProgress(0, '');
             
             const errorHTML = `
                 <div class="alert alert-error">
-                    <h4>❌ 同步失敗 | Sync Failed</h4>
+                    <h4>❌ Sync Failed</h4>
                     <p>${error.message}</p>
-                    <p><em>請檢查錯誤訊息並重試</em></p>
+                    <p><em>Please check the error message and try again</em></p>
                 </div>
             `;
             
@@ -1398,10 +1556,10 @@
             console.error('Error:', error);
             
             document.getElementById('htInfo').innerHTML = 
-                `<i class="fas fa-exclamation-triangle"></i> 載入失敗：${error.message}`;
+                `<i class="fas fa-exclamation-triangle"></i> Loading failed: ${error.message}`;
             
             document.getElementById('assessmentForm').innerHTML = 
-                `<div class="alert alert-error">載入失敗：${error.message}</div>`;
+                `<div class="alert alert-error">Loading failed: ${error.message}</div>`;
         }
 
         // Tab and sync functions removed - only card view now
@@ -1410,7 +1568,7 @@
          * Reset a specific level to default values
          */
         function resetLevel(levelCode) {
-            if (!confirm(`確定要重置 ${levelCode} 的所有評量標題為預設值嗎？`)) {
+            if (!confirm(`Are you sure you want to reset all assessment titles for ${levelCode} to default values?`)) {
                 return;
             }
             

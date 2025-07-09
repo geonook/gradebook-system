@@ -1,0 +1,46 @@
+{
+  "baseUrl": "https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec",
+  "browser": "chromium",
+  "headless": false,
+  "timeout": 30000,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "capabilities": [
+    "screenshot",
+    "pdf",
+    "accessibility",
+    "files",
+    "history",
+    "wait",
+    "tabs"
+  ],
+  "ignoreHTTPSErrors": true,
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 GradebookSystem/1.0",
+  "outputDir": "test-results/mcp-output",
+  "saveTrace": true,
+  "gradebookSystem": {
+    "testData": {
+      "testTeacher": "Test Teacher",
+      "testClass": "G1A",
+      "testStudent": "Test Student",
+      "semester": "2425S2"
+    },
+    "waitForLoading": 5000,
+    "retryAttempts": 3,
+    "languages": ["en", "zh-TW"],
+    "testModes": {
+      "dashboard": true,
+      "htSystem": true,
+      "assessmentManagement": true,
+      "progressTracking": true,
+      "bilingual": true
+    }
+  },
+  "debugging": {
+    "slowMo": 100,
+    "devtools": false,
+    "verbose": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "playwright-gradebook": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--config",
+        "./mcp-config.json",
+        "--browser",
+        "chromium",
+        "--viewport-size",
+        "1280,720",
+        "--output-dir",
+        "test-results/mcp-output",
+        "--save-trace",
+        "--caps",
+        "tabs,pdf,history,wait,files"
+      ],
+      "env": {
+        "GRADEBOOK_BASE_URL": "https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec",
+        "GRADEBOOK_SEMESTER": "2425S2",
+        "GRADEBOOK_TEST_MODE": "true"
+      }
+    }
+  }
+}

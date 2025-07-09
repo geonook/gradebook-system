@@ -1,0 +1,122 @@
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="17.294943000000004">
+<testsuite name="ai-generated/connection-test.spec.js" timestamp="2025-07-09T04:10:46.406Z" hostname="chromium" tests="3" failures="0" skipped="0" time="38.055" errors="0">
+<testcase name="Gradebook System Connection Test › Should connect to gradebook system and analyze response" classname="ai-generated/connection-test.spec.js" time="9.765">
+<system-out>
+<![CDATA[Testing connection to gradebook system...
+Page Title: Apps Script  |  Google for Developers
+Page URL: https://developers.google.com/apps-script/
+Body content length: [33m38078[39m
+Found h1 elements: [33m1[39m
+H1 1: 
+    Google
+    
+  Workspace
+Found dashboard-related elements: [33m0[39m
+Found buttons: [33m16[39m
+Button 1: 
+        
+Button 2: 
+Button 3: 
+Button 4: More
+Button 5: 
+Found gradebook indicators: [33m0[39m
+Final content length: [33m38078[39m
+]]>
+</system-out>
+</testcase>
+<testcase name="Gradebook System Connection Test › Should test direct gradebook URL access" classname="ai-generated/connection-test.spec.js" time="13.399">
+<system-out>
+<![CDATA[Testing direct gradebook URL access...
+Direct URL Page Title: Sign in - Google Accounts
+Direct URL Page URL: https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&followup=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&ifkv=AdBytiNOcuJFrQSyllgg8-QSVFZePWnwYGyT9JN2Xqa4rsSqMJAEVRUtjynsOTszGG2_IgmcFU2gfw&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-432706780%3A1752034250554854
+URL was redirected from: https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec
+URL redirected to: https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&followup=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&ifkv=AdBytiNOcuJFrQSyllgg8-QSVFZePWnwYGyT9JN2Xqa4rsSqMJAEVRUtjynsOTszGG2_IgmcFU2gfw&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-432706780%3A1752034250554854
+Found error messages: [33m0[39m
+Found loading indicators: [33m0[39m
+]]>
+</system-out>
+</testcase>
+<testcase name="Gradebook System Connection Test › Should analyze page structure for gradebook elements" classname="ai-generated/connection-test.spec.js" time="14.891">
+<system-out>
+<![CDATA[Analyzing page structure...
+
+h1 elements (1):
+  1. Text: "
+    Google
+    
+  Workspace" | Class: "devsite-product-name"
+
+h2 elements (1):
+  1. Text: "
+      
+    
+        Develop high quality solution" | Class: "N/A"
+
+h3: Found 11 elements (showing first 3):
+  1. "
+      
+    
+        Automate & extend Google Work"
+  2. "
+      
+  
+    
+        Automations
+      
+  
+  
+ "
+  3. "
+      
+  
+    
+        Custom functions
+      
+  "
+
+button: Found 16 elements (showing first 3):
+  1. "
+        "
+  2. "N/A"
+  3. "N/A"
+
+input elements (2):
+  1. Text: "N/A" | Class: "devsite-search-field devsite-search-query"
+  2. Text: "N/A" | Class: "N/A"
+
+form elements (1):
+  1. Text: "
+    
+      
+      
+        
+          
+          " | Class: "devsite-search-form"
+
+table elements (1):
+  1. Text: "
+      
+      
+      
+        Want to see Apps Scr" | Class: "N/A"
+
+=== ELEMENT ANALYSIS SUMMARY ===
+h1: 1 elements
+h2: 1 elements
+h3: 11 elements
+button: 16 elements
+input: 2 elements
+select: 0 elements
+form: 1 elements
+table: 1 elements
+div[class*="card"]: 0 elements
+div[class*="dashboard"]: 0 elements
+div[class*="system"]: 0 elements
+div[class*="gradebook"]: 0 elements
+span[class*="status"]: 0 elements
+span[class*="indicator"]: 0 elements
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

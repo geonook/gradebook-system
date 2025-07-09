@@ -1,0 +1,34 @@
+
+=== GOOGLE APPS SCRIPT PUBLIC DEPLOYMENT GUIDANCE ===
+
+To make your Google Apps Script app publicly accessible for testing:
+
+1. 📝 In Google Apps Script Editor:
+   - Go to Deploy > New deployment
+   - Type: Web app
+   - Execute as: Me (your-email@gmail.com)
+   - Who has access: Anyone (or Anyone, even anonymous)
+   - Click Deploy
+
+2. 🔧 Alternative Method:
+   - In the script editor, go to Resources > Cloud Platform project
+   - Set up OAuth consent screen
+   - Add test users if needed
+
+3. 🚀 For Testing with Playwright:
+   - Use the deployment URL from step 1
+   - Or implement OAuth2 authentication flow
+   - Or use a service account
+
+4. 🛠️ Current Status Analysis:
+   - Your app is deployed but requires authentication
+   - The URL redirects to Google sign-in
+   - This is the default security behavior
+
+5. 📋 Recommended Actions:
+   - Redeploy with "Anyone" access if safe for testing
+   - Or implement authentication flow in tests
+   - Or use environment-specific test endpoints
+
+=== END GUIDANCE ===
+    

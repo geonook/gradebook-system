@@ -1,0 +1,11 @@
+# Ignore backup files to prevent SYSTEM_CONFIG conflicts
+*_backup_*.gs
+*_backup.gs
+Code_backup*.gs
+CodeExtensions_backup*.gs
+
+# Ignore other non-essential files
+*.md
+*.txt
+*.log
+.DS_Store

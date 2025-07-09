@@ -11,5 +11,34 @@
     "prisma": "^6.9.0",
     "tailwind-merge": "^3.3.0",
     "zustand": "^5.0.5"
+  },
+  "name": "gradebook-system",
+  "version": "1.0.0",
+  "description": "*Complete Google-based gradebook solution with dashboard and bilingual support*   *完全基於 Google 的成績管理解決方案，含控制台和雙語支援*",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:mcp": "npx @playwright/mcp@latest --config ./mcp-config.json",
+    "test:mcp:headless": "npx @playwright/mcp@latest --config ./mcp-config.json --headless",
+    "test:dashboard": "npx playwright test tests/dashboard.spec.js",
+    "test:ai": "npx playwright test tests/ai-generated/",
+    "playwright:install": "npx playwright install",
+    "mcp:start": "npx @playwright/mcp@latest --config ./mcp-config.json --browser chromium --output-dir test-results/mcp-output",
+    "mcp:version": "npx @playwright/mcp@latest --version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geonook/gradebook-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geonook/gradebook-system/issues"
+  },
+  "homepage": "https://github.com/geonook/gradebook-system#readme",
+  "devDependencies": {
+    "@playwright/mcp": "^0.0.29",
+    "@playwright/test": "^1.53.2"
   }
 }
