@@ -4590,6 +4590,289 @@ function generateRecommendation(sheetAnalysis, classMappingCandidates) {
 }
 
 /**
+ * Analyze Students sheet class structure and create Level mapping | 分析學生工作表班級結構並建立Level對應
+ */
+function analyzeStudentsClassStructure() {
+  console.log('🔍 Analyzing Students sheet class structure | 分析學生工作表班級結構...');
+  
+  try {
+    // Get Master Data file | 取得主控資料檔案
+    const masterDataFile = getMasterDataFile();
+    if (!masterDataFile) {
+      throw new Error('Master Data file not found | 找不到主控資料檔案');
+    }
+    
+    // Get Students sheet | 取得學生工作表
+    const studentsSheet = masterDataFile.getSheetByName('Students');
+    if (!studentsSheet) {
+      throw new Error('Students sheet not found | 找不到學生工作表');
+    }
+    
+    console.log('✅ Found Students sheet | 找到學生工作表');
+    
+    // Get headers and data | 取得標題和資料
+    const lastRow = studentsSheet.getLastRow();
+    const lastColumn = studentsSheet.getLastColumn();
+    
+    if (lastRow < 2) {
+      throw new Error('No student data found | 找不到學生資料');
+    }
+    
+    const headers = studentsSheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+    console.log('📋 Headers found:', headers.join(', '));
+    
+    // Find relevant column indices | 找到相關欄位索引
+    const gradeIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('grade') || String(h).includes('年級')
+    );
+    const englishClassIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('english class') || String(h).includes('英文班級')
+    );
+    const levelIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('level') || String(h).includes('等級')
+    );
+    
+    console.log(`📍 Column indices - Grade: ${gradeIndex}, English Class: ${englishClassIndex}, Level: ${levelIndex}`);
+    
+    if (gradeIndex === -1) {
+      throw new Error('Grade column not found | 找不到年級欄位');
+    }
+    if (englishClassIndex === -1) {
+      throw new Error('English Class column not found | 找不到英文班級欄位');
+    }
+    
+    // Read all student data | 讀取所有學生資料
+    const dataRange = studentsSheet.getRange(2, 1, lastRow - 1, lastColumn);
+    const studentData = dataRange.getValues();
+    
+    console.log(`📊 Found ${studentData.length} student records | 找到 ${studentData.length} 筆學生記錄`);
+    
+    // Analyze class structure | 分析班級結構
+    const classAnalysis = {};
+    const gradeGroups = {};
+    
+    studentData.forEach((row, index) => {
+      const grade = String(row[gradeIndex]).trim();
+      const englishClass = String(row[englishClassIndex]).trim();
+      const currentLevel = levelIndex !== -1 ? String(row[levelIndex]).trim() : '';
+      
+      if (englishClass && grade) {
+        if (!classAnalysis[englishClass]) {
+          classAnalysis[englishClass] = {
+            grade: grade,
+            studentCount: 0,
+            currentLevels: new Set(),
+            sampleRowIndex: index + 2
+          };
+        }
+        
+        classAnalysis[englishClass].studentCount++;
+        if (currentLevel) {
+          classAnalysis[englishClass].currentLevels.add(currentLevel);
+        }
+        
+        // Group by grade | 按年級分組
+        if (!gradeGroups[grade]) {
+          gradeGroups[grade] = [];
+        }
+        if (!gradeGroups[grade].includes(englishClass)) {
+          gradeGroups[grade].push(englishClass);
+        }
+      }
+    });
+    
+    // Log class analysis | 記錄班級分析
+    console.log('\n📋 CLASS ANALYSIS | 班級分析');
+    console.log('='.repeat(50));
+    
+    Object.keys(classAnalysis).forEach(className => {
+      const classInfo = classAnalysis[className];
+      const hasLevel = classInfo.currentLevels.size > 0;
+      const levelConsistent = classInfo.currentLevels.size <= 1;
+      
+      console.log(`📚 ${className}:`);
+      console.log(`   年級: ${classInfo.grade}`);
+      console.log(`   學生數: ${classInfo.studentCount}`);
+      console.log(`   現有Level: ${hasLevel ? Array.from(classInfo.currentLevels).join(', ') : '無'}`);
+      console.log(`   Level一致性: ${levelConsistent ? '✅' : '❌'}`);
+    });
+    
+    // Generate Level mapping suggestions | 產生Level對應建議
+    console.log('\n🎯 SUGGESTED LEVEL MAPPING | 建議的Level對應');
+    console.log('='.repeat(50));
+    
+    const suggestedMapping = {};
+    Object.keys(gradeGroups).sort().forEach(grade => {
+      const classes = gradeGroups[grade].sort();
+      console.log(`\n${grade} Classes:`);
+      
+      classes.forEach((className, index) => {
+        const suggestedLevel = `${grade}E${index + 1}`;
+        suggestedMapping[className] = suggestedLevel;
+        console.log(`   ${className} → ${suggestedLevel}`);
+      });
+    });
+    
+    return {
+      success: true,
+      hasLevelColumn: levelIndex !== -1,
+      levelColumnIndex: levelIndex,
+      classAnalysis: classAnalysis,
+      gradeGroups: gradeGroups,
+      suggestedMapping: suggestedMapping,
+      totalClasses: Object.keys(classAnalysis).length,
+      totalStudents: studentData.length,
+      studentsSheet: studentsSheet,
+      headers: headers
+    };
+    
+  } catch (error) {
+    console.error('❌ Class structure analysis failed | 班級結構分析失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Add Level column to Students sheet with consistent mapping | 為學生工作表添加Level欄位並建立一致對應
+ */
+function addLevelColumnToStudents() {
+  console.log('📝 Adding Level column to Students sheet | 為學生工作表添加Level欄位...');
+  
+  try {
+    // First analyze current structure | 首先分析當前結構
+    const analysis = analyzeStudentsClassStructure();
+    if (!analysis.success) {
+      throw new Error(`Analysis failed: ${analysis.error}`);
+    }
+    
+    const { studentsSheet, headers, suggestedMapping, classAnalysis, hasLevelColumn, levelColumnIndex } = analysis;
+    
+    // Find column indices | 找到欄位索引
+    const gradeIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('grade') || String(h).includes('年級')
+    );
+    const englishClassIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('english class') || String(h).includes('英文班級')
+    );
+    
+    let targetLevelIndex;
+    
+    if (hasLevelColumn) {
+      console.log('✅ Level column already exists | Level欄位已存在');
+      targetLevelIndex = levelColumnIndex;
+    } else {
+      // Insert new Level column after English Class | 在英文班級欄位後插入新的Level欄位
+      targetLevelIndex = englishClassIndex + 1;
+      studentsSheet.insertColumnAfter(englishClassIndex);
+      
+      // Add header | 添加標題
+      studentsSheet.getRange(1, targetLevelIndex + 1).setValue('Level | 等級');
+      console.log(`✅ Inserted new Level column at position ${targetLevelIndex + 1} | 在位置 ${targetLevelIndex + 1} 插入新的Level欄位`);
+    }
+    
+    // Update Level values for all students | 為所有學生更新Level值
+    const lastRow = studentsSheet.getLastRow();
+    let updatedCount = 0;
+    let errorCount = 0;
+    
+    console.log('\n📝 Updating Level values | 更新Level值...');
+    
+    for (let row = 2; row <= lastRow; row++) {
+      try {
+        const englishClass = String(studentsSheet.getRange(row, englishClassIndex + 1).getValue()).trim();
+        
+        if (englishClass && suggestedMapping[englishClass]) {
+          const suggestedLevel = suggestedMapping[englishClass];
+          studentsSheet.getRange(row, targetLevelIndex + 1).setValue(suggestedLevel);
+          updatedCount++;
+          
+          if (updatedCount <= 5) { // Log first 5 updates
+            console.log(`   Row ${row}: ${englishClass} → ${suggestedLevel}`);
+          }
+        } else if (englishClass) {
+          console.log(`⚠️  Row ${row}: No mapping found for class "${englishClass}"`);
+          errorCount++;
+        }
+      } catch (rowError) {
+        console.error(`❌ Error updating row ${row}:`, rowError.message);
+        errorCount++;
+      }
+    }
+    
+    console.log(`\n📊 Update Summary | 更新總結:`);
+    console.log(`   ✅ Successfully updated: ${updatedCount} students`);
+    console.log(`   ⚠️  Errors or missing mappings: ${errorCount} students`);
+    
+    // Validate consistency | 驗證一致性
+    console.log('\n🔍 Validating Level consistency | 驗證Level一致性...');
+    const validationResult = validateLevelConsistency(studentsSheet, englishClassIndex, targetLevelIndex);
+    
+    return {
+      success: true,
+      updatedCount: updatedCount,
+      errorCount: errorCount,
+      levelColumnIndex: targetLevelIndex,
+      suggestedMapping: suggestedMapping,
+      validationResult: validationResult
+    };
+    
+  } catch (error) {
+    console.error('❌ Failed to add Level column | 添加Level欄位失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Validate Level consistency within each class | 驗證每個班級內的Level一致性
+ */
+function validateLevelConsistency(studentsSheet, englishClassIndex, levelIndex) {
+  console.log('🔍 Validating Level consistency within classes | 驗證班級內Level一致性...');
+  
+  const lastRow = studentsSheet.getLastRow();
+  const classLevelMap = {};
+  const inconsistencies = [];
+  
+  // Collect class-level data | 收集班級-等級資料
+  for (let row = 2; row <= lastRow; row++) {
+    const englishClass = String(studentsSheet.getRange(row, englishClassIndex + 1).getValue()).trim();
+    const level = String(studentsSheet.getRange(row, levelIndex + 1).getValue()).trim();
+    
+    if (englishClass && level) {
+      if (!classLevelMap[englishClass]) {
+        classLevelMap[englishClass] = new Set();
+      }
+      classLevelMap[englishClass].add(level);
+    }
+  }
+  
+  // Check for inconsistencies | 檢查不一致性
+  Object.keys(classLevelMap).forEach(className => {
+    const levels = Array.from(classLevelMap[className]);
+    if (levels.length > 1) {
+      inconsistencies.push({
+        className: className,
+        levels: levels
+      });
+      console.log(`❌ Inconsistency in ${className}: ${levels.join(', ')}`);
+    } else {
+      console.log(`✅ ${className}: ${levels[0]} (consistent)`);
+    }
+  });
+  
+  return {
+    isConsistent: inconsistencies.length === 0,
+    inconsistencies: inconsistencies,
+    totalClasses: Object.keys(classLevelMap).length
+  };
+}
+
+/**
  * Investigate current system issues | 調查當前系統問題
  */
 function investigateSystemIssues() {
