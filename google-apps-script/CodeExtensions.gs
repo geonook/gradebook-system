@@ -4406,6 +4406,190 @@ function validateLevelAndPermissions(level, teacherType) {
 // ===== TESTING FUNCTIONS | 測試函數 =====
 
 /**
+ * Comprehensive Master Data file structure diagnostic | 完整的主控資料檔案結構診斷
+ */
+function diagnoseMasterDataStructure() {
+  console.log('🏥 Starting comprehensive Master Data structure diagnosis | 開始完整的主控資料結構診斷...');
+  
+  try {
+    // Get Master Data file | 取得主控資料檔案
+    const masterDataFile = getMasterDataFile();
+    if (!masterDataFile) {
+      throw new Error('Master Data file not found | 找不到主控資料檔案');
+    }
+    
+    console.log(`📋 Found Master Data file: ${masterDataFile.getName()}`);
+    console.log(`🔗 Master Data URL: ${masterDataFile.getUrl()}`);
+    
+    // Get all sheets | 取得所有工作表
+    const sheets = masterDataFile.getSheets();
+    console.log(`📊 Total sheets found: ${sheets.length}`);
+    
+    const sheetAnalysis = {};
+    
+    // Analyze each sheet | 分析每個工作表
+    sheets.forEach((sheet, index) => {
+      const sheetName = sheet.getName();
+      console.log(`\n📋 Analyzing sheet ${index + 1}: "${sheetName}"`);
+      
+      try {
+        // Get sheet dimensions | 取得工作表尺寸
+        const lastRow = sheet.getLastRow();
+        const lastColumn = sheet.getLastColumn();
+        console.log(`   📏 Dimensions: ${lastRow} rows × ${lastColumn} columns`);
+        
+        if (lastRow === 0 || lastColumn === 0) {
+          console.log('   ⚠️  Empty sheet');
+          sheetAnalysis[sheetName] = { empty: true };
+          return;
+        }
+        
+        // Get headers (first row) | 取得標題列（第一行）
+        const headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+        console.log(`   📋 Headers: ${headers.map(h => `"${h}"`).join(', ')}`);
+        
+        // Store analysis | 儲存分析
+        sheetAnalysis[sheetName] = {
+          rows: lastRow,
+          columns: lastColumn,
+          headers: headers,
+          empty: false
+        };
+        
+        // Check for class-level related columns | 檢查班級-等級相關欄位
+        const classRelatedColumns = [];
+        const levelRelatedColumns = [];
+        
+        headers.forEach((header, colIndex) => {
+          const headerStr = String(header).toLowerCase();
+          
+          // Check for class-related columns | 檢查班級相關欄位
+          if (headerStr.includes('class') || headerStr.includes('班') || headerStr.includes('班級')) {
+            classRelatedColumns.push({ name: header, index: colIndex });
+          }
+          
+          // Check for level-related columns | 檢查等級相關欄位
+          if (headerStr.includes('level') || headerStr.includes('等級') || headerStr.includes('年級')) {
+            levelRelatedColumns.push({ name: header, index: colIndex });
+          }
+        });
+        
+        if (classRelatedColumns.length > 0) {
+          console.log(`   🎯 Class-related columns: ${classRelatedColumns.map(c => c.name).join(', ')}`);
+          sheetAnalysis[sheetName].classColumns = classRelatedColumns;
+        }
+        
+        if (levelRelatedColumns.length > 0) {
+          console.log(`   📊 Level-related columns: ${levelRelatedColumns.map(c => c.name).join(', ')}`);
+          sheetAnalysis[sheetName].levelColumns = levelRelatedColumns;
+        }
+        
+        // Check if this might be the class mapping sheet | 檢查這是否可能是班級對應工作表
+        const hasClassData = classRelatedColumns.length > 0 && levelRelatedColumns.length > 0;
+        if (hasClassData) {
+          console.log(`   🎯 POTENTIAL CLASS MAPPING SHEET FOUND! | 發現可能的班級對應工作表!`);
+          sheetAnalysis[sheetName].isClassMappingCandidate = true;
+          
+          // Sample some data | 取樣一些資料
+          if (lastRow > 1) {
+            const sampleRows = Math.min(5, lastRow - 1);
+            const sampleData = sheet.getRange(2, 1, sampleRows, lastColumn).getValues();
+            console.log(`   📋 Sample data (first ${sampleRows} rows):`);
+            sampleData.forEach((row, rowIndex) => {
+              console.log(`      Row ${rowIndex + 2}: ${row.map(cell => `"${cell}"`).join(', ')}`);
+            });
+          }
+        }
+        
+      } catch (sheetError) {
+        console.error(`   ❌ Error analyzing sheet "${sheetName}":`, sheetError.message);
+        sheetAnalysis[sheetName] = { error: sheetError.message };
+      }
+    });
+    
+    // Summary analysis | 總結分析
+    console.log('\n📊 SUMMARY ANALYSIS | 總結分析');
+    console.log('=====================================');
+    
+    const classMappingCandidates = Object.keys(sheetAnalysis).filter(
+      sheetName => sheetAnalysis[sheetName].isClassMappingCandidate
+    );
+    
+    console.log(`🎯 Class mapping candidates: ${classMappingCandidates.length}`);
+    if (classMappingCandidates.length > 0) {
+      console.log(`   📋 Candidates: ${classMappingCandidates.join(', ')}`);
+    } else {
+      console.log('   ⚠️  No clear class mapping sheets found');
+    }
+    
+    // Check for Students sheet specifically | 特別檢查學生工作表
+    const studentsSheetVariants = ['Students', 'Student', '學生', '學生資料', 'Student Data'];
+    const studentsSheet = studentsSheetVariants.find(variant => sheetAnalysis[variant]);
+    
+    if (studentsSheet) {
+      console.log(`\n👥 Students sheet found: "${studentsSheet}"`);
+      const studentsData = sheetAnalysis[studentsSheet];
+      if (studentsData.headers) {
+        console.log(`   📋 Headers: ${studentsData.headers.join(', ')}`);
+        
+        // Check for critical columns | 檢查關鍵欄位
+        const hasClassColumn = studentsData.headers.some(h => 
+          String(h).toLowerCase().includes('class') || String(h).includes('班')
+        );
+        const hasLevelColumn = studentsData.headers.some(h => 
+          String(h).toLowerCase().includes('level') || String(h).includes('等級')
+        );
+        
+        console.log(`   🎯 Has Class column: ${hasClassColumn ? '✅' : '❌'}`);
+        console.log(`   📊 Has Level column: ${hasLevelColumn ? '✅' : '❌'}`);
+      }
+    } else {
+      console.log('\n❌ No Students sheet found with standard names');
+    }
+    
+    return {
+      success: true,
+      masterDataFile: {
+        name: masterDataFile.getName(),
+        url: masterDataFile.getUrl(),
+        sheetCount: sheets.length
+      },
+      sheetAnalysis: sheetAnalysis,
+      classMappingCandidates: classMappingCandidates,
+      studentsSheet: studentsSheet,
+      recommendation: generateRecommendation(sheetAnalysis, classMappingCandidates)
+    };
+    
+  } catch (error) {
+    console.error('❌ Master Data structure diagnosis failed | 主控資料結構診斷失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Generate recommendation based on structure analysis | 根據結構分析產生建議
+ */
+function generateRecommendation(sheetAnalysis, classMappingCandidates) {
+  const recommendations = [];
+  
+  if (classMappingCandidates.length === 0) {
+    recommendations.push('❌ No class mapping sheet found. Need to create or identify sheet with Class Name and Level columns.');
+    recommendations.push('💡 Suggest creating a "Classes" or "Class Data" sheet with columns: Class Name, Level, Grade, etc.');
+  } else if (classMappingCandidates.length === 1) {
+    recommendations.push(`✅ Found potential class mapping sheet: "${classMappingCandidates[0]}"`);
+    recommendations.push('🔧 Update getClassLevelMapping() function to use this sheet name.');
+  } else {
+    recommendations.push(`⚠️  Multiple class mapping candidates found: ${classMappingCandidates.join(', ')}`);
+    recommendations.push('🔧 Need to determine which sheet is the authoritative source for class-level mapping.');
+  }
+  
+  return recommendations;
+}
+
+/**
  * 測試 LEVEL-特定同步功能的完整工作流程
  * Test complete workflow for LEVEL-specific sync functionality
  */
