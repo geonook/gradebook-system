@@ -51,19 +51,10 @@ function getMasterDataFile() {
       console.log(`   - ${file.name} (${file.type})`);
     });
     
-    // Try to find ANY Google Sheets file as fallback | 嘗試找到任何 Google Sheets 檔案作為備選
-    const sheetsFiles = allFiles.filter(file => file.type === 'application/vnd.google-apps.spreadsheet');
-    if (sheetsFiles.length > 0) {
-      console.log(`⚠️ Using first available Google Sheets file as fallback: ${sheetsFiles[0].name}`);
-      // Re-iterate to get the actual file object
-      const filesAgain = systemFolder.getFiles();
-      while (filesAgain.hasNext()) {
-        const file = filesAgain.next();
-        if (file.getName() === sheetsFiles[0].name) {
-          return SpreadsheetApp.openById(file.getId());
-        }
-      }
-    }
+    // REMOVED FALLBACK MECHANISM | 移除備用機制
+    // The fallback was incorrectly selecting Dashboard files
+    // 備用機制錯誤地選擇了 Dashboard 檔案
+    console.log('❌ No Master Data file found with expected patterns | 找不到符合預期模式的主控資料檔案');
     
     return null;
     
@@ -2976,18 +2967,21 @@ function getMasterDataUrl() {
       };
     }
     
-    // If not found, provide detailed error info | 如果找不到，提供詳細錯誤信息
+    // If not found, provide detailed error info with initialization suggestion | 如果找不到，提供詳細錯誤信息和初始化建議
     const sheetsFiles = allFiles.filter(f => f.type === 'application/vnd.google-apps.spreadsheet');
     
     return {
       success: false,
-      error: `Master Data file not found in system folder | 在系統資料夾中找不到主控資料檔案`,
+      error: `Master Data file not found | 找不到主控資料檔案`,
       step: 'file_search',
       filesInFolder: allFiles.map(f => f.name),
       sheetsCount: sheetsFiles.length,
-      suggestion: sheetsFiles.length > 0 ? 
-        `Found ${sheetsFiles.length} Google Sheets files, but none match expected patterns | 找到 ${sheetsFiles.length} 個 Google Sheets 檔案，但都不符合預期模式` :
-        'No Google Sheets files found in system folder | 系統資料夾中沒有找到 Google Sheets 檔案'
+      needInitialization: true,
+      suggestion: allFiles.length === 0 ? 
+        'System folder is empty. Please run "Initialize System" first | 系統資料夾為空，請先執行「初始化系統」' :
+        sheetsFiles.length > 0 ? 
+          `Found ${sheetsFiles.length} Google Sheets files, but none match Master Data patterns. You may need to rename or recreate the Master Data file | 找到 ${sheetsFiles.length} 個 Google Sheets 檔案，但都不符合主控資料模式。您可能需要重新命名或重新建立主控資料檔案` :
+          'No Google Sheets files found. Please run "Initialize System" to create Master Data file | 沒有找到 Google Sheets 檔案，請執行「初始化系統」來建立主控資料檔案'
     };
     
   } catch (error) {
