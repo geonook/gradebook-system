@@ -2848,11 +2848,43 @@ function showSystemInfo() {
 
 function getSystemFolderUrl() {
   try {
+    // Configuration validation | 配置驗證
+    if (!SYSTEM_CONFIG || !SYSTEM_CONFIG.MAIN_FOLDER_ID) {
+      console.error('SYSTEM_CONFIG.MAIN_FOLDER_ID is not configured | SYSTEM_CONFIG.MAIN_FOLDER_ID 未配置');
+      return {
+        success: false,
+        error: 'System configuration error: MAIN_FOLDER_ID not found | 系統配置錯誤：找不到 MAIN_FOLDER_ID'
+      };
+    }
+
+    console.log('Accessing system folder with ID:', SYSTEM_CONFIG.MAIN_FOLDER_ID);
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    return systemFolder.getUrl();
+    const url = systemFolder.getUrl();
+    
+    console.log('Successfully retrieved system folder URL | 成功取得系統資料夾 URL');
+    return {
+      success: true,
+      url: url
+    };
+    
   } catch (error) {
-    console.error('Error getting system folder URL:', error);
-    return '#';
+    console.error('Error getting system folder URL | 取得系統資料夾 URL 時發生錯誤:', error);
+    
+    // Enhanced error reporting | 增強錯誤報告
+    let errorMessage = `Failed to access system folder | 無法存取系統資料夾`;
+    
+    if (error.message.includes('not found')) {
+      errorMessage += `: Folder ID "${SYSTEM_CONFIG.MAIN_FOLDER_ID}" not found | 找不到資料夾 ID "${SYSTEM_CONFIG.MAIN_FOLDER_ID}"`;
+    } else if (error.message.includes('permission')) {
+      errorMessage += `: Permission denied for folder "${SYSTEM_CONFIG.MAIN_FOLDER_ID}" | 資料夾 "${SYSTEM_CONFIG.MAIN_FOLDER_ID}" 存取權限被拒絕`;
+    } else {
+      errorMessage += `: ${error.message}`;
+    }
+    
+    return {
+      success: false,
+      error: errorMessage
+    };
   }
 }
 
@@ -2860,12 +2892,23 @@ function getMasterDataUrl() {
   try {
     const masterData = getMasterDataFile();
     if (masterData) {
-      return masterData.getUrl();
+      return {
+        success: true,
+        url: masterData.getUrl()
+      };
     }
-    return '#';
+    
+    return {
+      success: false,
+      error: 'Master Data file not found | 找不到主控資料檔案'
+    };
+    
   } catch (error) {
-    console.error('Error getting master data URL:', error);
-    return '#';
+    console.error('Error getting master data URL | 取得主控資料 URL 時發生錯誤:', error);
+    return {
+      success: false,
+      error: `Failed to access Master Data file: ${error.message} | 無法存取主控資料檔案: ${error.message}`
+    };
   }
 }
 

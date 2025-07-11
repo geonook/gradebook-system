@@ -180,6 +180,15 @@ function validateConfiguration() {
   // Validate required fields | 驗證必要欄位
   if (!config.GOOGLE_DRIVE.MAIN_FOLDER_ID) {
     errors.push('MAIN_FOLDER_ID is required | MAIN_FOLDER_ID 為必填');
+  } else {
+    // Test Google Drive folder access | 測試 Google Drive 文件夾存取
+    try {
+      const testFolder = DriveApp.getFolderById(config.GOOGLE_DRIVE.MAIN_FOLDER_ID);
+      console.log('✅ Successfully validated Google Drive folder access | 成功驗證 Google Drive 文件夾存取:', testFolder.getName());
+    } catch (folderError) {
+      console.error('❌ Cannot access MAIN_FOLDER_ID | 無法存取 MAIN_FOLDER_ID:', folderError);
+      errors.push(`Cannot access MAIN_FOLDER_ID "${config.GOOGLE_DRIVE.MAIN_FOLDER_ID}": ${folderError.message} | 無法存取 MAIN_FOLDER_ID "${config.GOOGLE_DRIVE.MAIN_FOLDER_ID}": ${folderError.message}`);
+    }
   }
   
   if (!config.WEB_APP.BASE_URL) {
@@ -220,6 +229,55 @@ function initializeConfiguration() {
   } catch (error) {
     console.error('❌ Configuration initialization failed | 配置初始化失敗:', error);
     throw error;
+  }
+}
+
+// ===== CONFIGURATION DIAGNOSTICS | 配置診斷 =====
+function diagnoseConfiguration() {
+  try {
+    console.log('🔍 Starting configuration diagnosis | 開始配置診斷...');
+    
+    // Test basic configuration loading | 測試基本配置載入
+    const config = loadExternalConfig();
+    console.log('✅ Configuration loaded | 配置載入成功');
+    console.log('📋 System Name:', config.SYSTEM.NAME);
+    console.log('🗂️  Main Folder ID:', config.GOOGLE_DRIVE.MAIN_FOLDER_ID);
+    
+    // Test Google Drive access | 測試 Google Drive 存取
+    if (config.GOOGLE_DRIVE.MAIN_FOLDER_ID) {
+      try {
+        const folder = DriveApp.getFolderById(config.GOOGLE_DRIVE.MAIN_FOLDER_ID);
+        console.log('✅ Google Drive folder accessible | Google Drive 文件夾可存取:', folder.getName());
+        console.log('🔗 Folder URL:', folder.getUrl());
+      } catch (driveError) {
+        console.error('❌ Google Drive folder access failed | Google Drive 文件夾存取失敗:', driveError.message);
+      }
+    }
+    
+    // Test legacy config mapping | 測試舊版配置映射
+    const legacyConfig = createLegacyConfig();
+    console.log('✅ Legacy configuration mapping successful | 舊版配置映射成功');
+    
+    // Test validation | 測試驗證
+    try {
+      validateConfiguration();
+      console.log('✅ Configuration validation passed | 配置驗證通過');
+    } catch (validationError) {
+      console.error('❌ Configuration validation failed | 配置驗證失敗:', validationError.message);
+    }
+    
+    return {
+      success: true,
+      message: 'Configuration diagnosis completed | 配置診斷完成',
+      config: config
+    };
+    
+  } catch (error) {
+    console.error('❌ Configuration diagnosis failed | 配置診斷失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
   }
 }
 
