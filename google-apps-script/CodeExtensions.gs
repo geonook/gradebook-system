@@ -4590,6 +4590,129 @@ function generateRecommendation(sheetAnalysis, classMappingCandidates) {
 }
 
 /**
+ * Investigate current system issues | 調查當前系統問題
+ */
+function investigateSystemIssues() {
+  console.log('🔍 Starting comprehensive system investigation | 開始全面系統調查...');
+  
+  const results = {
+    timestamp: new Date().toISOString(),
+    currentUser: Session.getActiveUser().getEmail(),
+    issues: [],
+    findings: []
+  };
+  
+  try {
+    // 1. Run Master Data structure diagnosis | 執行主控資料結構診斷
+    console.log('\n📋 1. MASTER DATA STRUCTURE DIAGNOSIS | 主控資料結構診斷');
+    console.log('='.repeat(60));
+    
+    const masterDataDiagnosis = diagnoseMasterDataStructure();
+    results.masterDataDiagnosis = masterDataDiagnosis;
+    
+    if (!masterDataDiagnosis.success) {
+      results.issues.push(`Master Data diagnosis failed: ${masterDataDiagnosis.error}`);
+    } else {
+      results.findings.push(`Found ${masterDataDiagnosis.masterDataFile.sheetCount} sheets in Master Data`);
+      results.findings.push(`Class mapping candidates: ${masterDataDiagnosis.classMappingCandidates.length}`);
+    }
+    
+    // 2. Test HT context detection | 測試 HT 上下文檢測
+    console.log('\n🎯 2. HT CONTEXT DETECTION | HT 上下文檢測');
+    console.log('='.repeat(60));
+    
+    try {
+      const htContext = getCurrentHTContextEnhanced();
+      results.htContext = htContext;
+      
+      if (htContext.success) {
+        console.log(`✅ HT Context successful. Options: ${htContext.data.options.length}`);
+        results.findings.push(`HT options available: ${htContext.data.options.length}`);
+        
+        if (htContext.data.options.length === 0) {
+          results.issues.push('No HT options available for current user');
+        }
+      } else {
+        console.log(`❌ HT Context failed: ${htContext.error}`);
+        results.issues.push(`HT context detection failed: ${htContext.error}`);
+      }
+    } catch (htError) {
+      console.error('❌ HT context detection error:', htError.message);
+      results.issues.push(`HT context error: ${htError.message}`);
+    }
+    
+    // 3. Test class level mapping | 測試班級等級對應
+    console.log('\n🗺️  3. CLASS LEVEL MAPPING TEST | 班級等級對應測試');
+    console.log('='.repeat(60));
+    
+    try {
+      const classMapping = getClassLevelMapping();
+      results.classMapping = classMapping;
+      
+      if (classMapping.success) {
+        console.log(`✅ Class mapping successful. Classes found: ${Object.keys(classMapping.data).length}`);
+        results.findings.push(`Classes in mapping: ${Object.keys(classMapping.data).length}`);
+      } else {
+        console.log(`❌ Class mapping failed: ${classMapping.error}`);
+        results.issues.push(`Class mapping failed: ${classMapping.error}`);
+      }
+    } catch (mappingError) {
+      console.error('❌ Class mapping error:', mappingError.message);
+      results.issues.push(`Class mapping error: ${mappingError.message}`);
+    }
+    
+    // 4. Check system configuration | 檢查系統配置
+    console.log('\n⚙️  4. SYSTEM CONFIGURATION CHECK | 系統配置檢查');
+    console.log('='.repeat(60));
+    
+    try {
+      // Check if SYSTEM_CONFIG is available | 檢查 SYSTEM_CONFIG 是否可用
+      const configAvailable = typeof SYSTEM_CONFIG !== 'undefined';
+      console.log(`📋 SYSTEM_CONFIG available: ${configAvailable ? '✅' : '❌'}`);
+      
+      if (configAvailable) {
+        console.log(`📁 Main Folder ID: ${SYSTEM_CONFIG.MAIN_FOLDER_ID}`);
+        console.log(`📅 Semester: ${SYSTEM_CONFIG.SEMESTER}`);
+        results.findings.push('System configuration loaded successfully');
+      } else {
+        results.issues.push('SYSTEM_CONFIG not available');
+      }
+    } catch (configError) {
+      console.error('❌ Configuration check error:', configError.message);
+      results.issues.push(`Configuration error: ${configError.message}`);
+    }
+    
+    // 5. Summary | 總結
+    console.log('\n📊 INVESTIGATION SUMMARY | 調查總結');
+    console.log('='.repeat(60));
+    console.log(`👤 Current User: ${results.currentUser}`);
+    console.log(`🔍 Issues Found: ${results.issues.length}`);
+    console.log(`✅ Findings: ${results.findings.length}`);
+    
+    if (results.issues.length > 0) {
+      console.log('\n❌ ISSUES TO RESOLVE:');
+      results.issues.forEach((issue, index) => {
+        console.log(`   ${index + 1}. ${issue}`);
+      });
+    }
+    
+    if (results.findings.length > 0) {
+      console.log('\n✅ POSITIVE FINDINGS:');
+      results.findings.forEach((finding, index) => {
+        console.log(`   ${index + 1}. ${finding}`);
+      });
+    }
+    
+    return results;
+    
+  } catch (error) {
+    console.error('❌ System investigation failed | 系統調查失敗:', error);
+    results.issues.push(`Investigation failed: ${error.message}`);
+    return results;
+  }
+}
+
+/**
  * 測試 LEVEL-特定同步功能的完整工作流程
  * Test complete workflow for LEVEL-specific sync functionality
  */
