@@ -735,190 +735,190 @@ function createMasterDataSheet(systemFolder) {
   const sampleStudents = [
     // Grade 1 Students - G1-G2 Teacher Group
     // G1 Achievers (LT: Ms. Johnson HT, IT: Mr. Smith)
-    ['LE11001', 'Emily Chen', 'Emily', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'emily.chen@school.edu', '在學'],
-    ['LE11002', 'Ryan Lee', 'Ryan', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'ryan.lee@school.edu', '在學'],
-    ['LE11003', 'Sarah Kim', 'Sarah', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'sarah.kim@school.edu', '在學'],
-    ['LE11004', 'David Wang', 'David', 'G1', '101', 'G1 Achievers', 'Ms. Johnson', 'Mr. Smith', 'david.wang@school.edu', '在學'],
+    ['LE11001', 'Emily Chen', 'Emily', 'G1', '101', 'G1 Achievers', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'emily.chen@school.edu', '在學'],
+    ['LE11002', 'Ryan Lee', 'Ryan', 'G1', '101', 'G1 Achievers', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'ryan.lee@school.edu', '在學'],
+    ['LE11003', 'Sarah Kim', 'Sarah', 'G1', '101', 'G1 Achievers', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'sarah.kim@school.edu', '在學'],
+    ['LE11004', 'David Wang', 'David', 'G1', '101', 'G1 Achievers', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'david.wang@school.edu', '在學'],
     
     // G1 Builders (LT: Ms. Johnson HT, IT: Mr. Smith) - Same teacher, different class
-    ['LE11005', 'Lisa Zhang', 'Lisa', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'lisa.zhang@school.edu', '在學'],
-    ['LE11006', 'Alex Wu', 'Alex', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'alex.wu@school.edu', '在學'],
-    ['LE11007', 'Maya Patel', 'Maya', 'G1', '102', 'G1 Builders', 'Ms. Johnson', 'Mr. Smith', 'maya.patel@school.edu', '在學'],
+    ['LE11005', 'Lisa Zhang', 'Lisa', 'G1', '102', 'G1 Builders', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'lisa.zhang@school.edu', '在學'],
+    ['LE11006', 'Alex Wu', 'Alex', 'G1', '102', 'G1 Builders', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'alex.wu@school.edu', '在學'],
+    ['LE11007', 'Maya Patel', 'Maya', 'G1', '102', 'G1 Builders', 'G1E1', 'Ms. Johnson', 'Mr. Smith', 'maya.patel@school.edu', '在學'],
     
     // G1 Creators (LT: Ms. Davis, IT: Mr. Brown)
-    ['LE11008', 'Kevin Liu', 'Kevin', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'kevin.liu@school.edu', '在學'],
-    ['LE11009', 'Emma Yang', 'Emma', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'emma.yang@school.edu', '在學'],
-    ['LE11010', 'Jason Ho', 'Jason', 'G1', '103', 'G1 Creators', 'Ms. Davis', 'Mr. Brown', 'jason.ho@school.edu', '在學'],
+    ['LE11008', 'Kevin Liu', 'Kevin', 'G1', '103', 'G1 Creators', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'kevin.liu@school.edu', '在學'],
+    ['LE11009', 'Emma Yang', 'Emma', 'G1', '103', 'G1 Creators', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'emma.yang@school.edu', '在學'],
+    ['LE11010', 'Jason Ho', 'Jason', 'G1', '103', 'G1 Creators', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'jason.ho@school.edu', '在學'],
     
     // G1 Dreamers (LT: Ms. Davis, IT: Mr. Brown) - Same teacher, different class
-    ['LE11011', 'Sophie Chen', 'Sophie', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'sophie.chen@school.edu', '在學'],
-    ['LE11012', 'Lucas Kim', 'Lucas', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'lucas.kim@school.edu', '在學'],
-    ['LE11013', 'Zoe Wang', 'Zoe', 'G1', '104', 'G1 Dreamers', 'Ms. Davis', 'Mr. Brown', 'zoe.wang@school.edu', '在學'],
+    ['LE11011', 'Sophie Chen', 'Sophie', 'G1', '104', 'G1 Dreamers', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'sophie.chen@school.edu', '在學'],
+    ['LE11012', 'Lucas Kim', 'Lucas', 'G1', '104', 'G1 Dreamers', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'lucas.kim@school.edu', '在學'],
+    ['LE11013', 'Zoe Wang', 'Zoe', 'G1', '104', 'G1 Dreamers', 'G1E2', 'Ms. Davis', 'Mr. Brown', 'zoe.wang@school.edu', '在學'],
     
     // G1 Explorers (LT: Ms. Wilson, IT: Mr. Garcia HT)
-    ['LE11014', 'Max Zhang', 'Max', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'max.zhang@school.edu', '在學'],
-    ['LE11015', 'Chloe Liu', 'Chloe', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'chloe.liu@school.edu', '在學'],
-    ['LE11016', 'Oscar Wu', 'Oscar', 'G1', '105', 'G1 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'oscar.wu@school.edu', '在學'],
+    ['LE11014', 'Max Zhang', 'Max', 'G1', '105', 'G1 Explorers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'max.zhang@school.edu', '在學'],
+    ['LE11015', 'Chloe Liu', 'Chloe', 'G1', '105', 'G1 Explorers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'chloe.liu@school.edu', '在學'],
+    ['LE11016', 'Oscar Wu', 'Oscar', 'G1', '105', 'G1 Explorers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'oscar.wu@school.edu', '在學'],
     
     // G1 Pioneers (LT: Ms. Wilson, IT: Mr. Garcia HT) - Same teacher, different class
-    ['LE11017', 'Luna Yang', 'Luna', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'luna.yang@school.edu', '在學'],
-    ['LE11018', 'Noah Chen', 'Noah', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'noah.chen@school.edu', '在學'],
-    ['LE11019', 'Ivy Kim', 'Ivy', 'G1', '106', 'G1 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'ivy.kim@school.edu', '在學'],
+    ['LE11017', 'Luna Yang', 'Luna', 'G1', '106', 'G1 Pioneers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'luna.yang@school.edu', '在學'],
+    ['LE11018', 'Noah Chen', 'Noah', 'G1', '106', 'G1 Pioneers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'noah.chen@school.edu', '在學'],
+    ['LE11019', 'Ivy Kim', 'Ivy', 'G1', '106', 'G1 Pioneers', 'G1E3', 'Ms. Wilson', 'Mr. Garcia', 'ivy.kim@school.edu', '在學'],
     
     // Grade 2 Students - Same G1-G2 Teacher Group
     // G2 Achievers (LT: Ms. Johnson HT, IT: Mr. Smith)
-    ['LE11020', 'Ethan Wang', 'Ethan', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'ethan.wang@school.edu', '在學'],
-    ['LE11021', 'Mia Zhang', 'Mia', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'mia.zhang@school.edu', '在學'],
-    ['LE11022', 'Leo Wu', 'Leo', 'G2', '201', 'G2 Achievers', 'Ms. Johnson', 'Mr. Smith', 'leo.wu@school.edu', '在學'],
+    ['LE11020', 'Ethan Wang', 'Ethan', 'G2', '201', 'G2 Achievers', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'ethan.wang@school.edu', '在學'],
+    ['LE11021', 'Mia Zhang', 'Mia', 'G2', '201', 'G2 Achievers', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'mia.zhang@school.edu', '在學'],
+    ['LE11022', 'Leo Wu', 'Leo', 'G2', '201', 'G2 Achievers', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'leo.wu@school.edu', '在學'],
     
     // G2 Builders (LT: Ms. Johnson HT, IT: Mr. Smith)
-    ['LE11023', 'Aria Liu', 'Aria', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'aria.liu@school.edu', '在學'],
-    ['LE11024', 'Kai Yang', 'Kai', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'kai.yang@school.edu', '在學'],
-    ['LE11025', 'Nora Chen', 'Nora', 'G2', '202', 'G2 Builders', 'Ms. Johnson', 'Mr. Smith', 'nora.chen@school.edu', '在學'],
+    ['LE11023', 'Aria Liu', 'Aria', 'G2', '202', 'G2 Builders', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'aria.liu@school.edu', '在學'],
+    ['LE11024', 'Kai Yang', 'Kai', 'G2', '202', 'G2 Builders', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'kai.yang@school.edu', '在學'],
+    ['LE11025', 'Nora Chen', 'Nora', 'G2', '202', 'G2 Builders', 'G2E1', 'Ms. Johnson', 'Mr. Smith', 'nora.chen@school.edu', '在學'],
     
     // G2 Creators (LT: Ms. Davis, IT: Mr. Brown)
-    ['LE11026', 'Felix Kim', 'Felix', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'felix.kim@school.edu', '在學'],
-    ['LE11027', 'Ruby Wang', 'Ruby', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'ruby.wang@school.edu', '在學'],
-    ['LE11028', 'Owen Zhang', 'Owen', 'G2', '203', 'G2 Creators', 'Ms. Davis', 'Mr. Brown', 'owen.zhang@school.edu', '在學'],
+    ['LE11026', 'Felix Kim', 'Felix', 'G2', '203', 'G2 Creators', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'felix.kim@school.edu', '在學'],
+    ['LE11027', 'Ruby Wang', 'Ruby', 'G2', '203', 'G2 Creators', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'ruby.wang@school.edu', '在學'],
+    ['LE11028', 'Owen Zhang', 'Owen', 'G2', '203', 'G2 Creators', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'owen.zhang@school.edu', '在學'],
     
     // G2 Dreamers (LT: Ms. Davis, IT: Mr. Brown)
-    ['LE11029', 'Hazel Wu', 'Hazel', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'hazel.wu@school.edu', '在學'],
-    ['LE11030', 'Isaac Liu', 'Isaac', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'isaac.liu@school.edu', '在學'],
-    ['LE11031', 'Violet Yang', 'Violet', 'G2', '204', 'G2 Dreamers', 'Ms. Davis', 'Mr. Brown', 'violet.yang@school.edu', '在學'],
+    ['LE11029', 'Hazel Wu', 'Hazel', 'G2', '204', 'G2 Dreamers', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'hazel.wu@school.edu', '在學'],
+    ['LE11030', 'Isaac Liu', 'Isaac', 'G2', '204', 'G2 Dreamers', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'isaac.liu@school.edu', '在學'],
+    ['LE11031', 'Violet Yang', 'Violet', 'G2', '204', 'G2 Dreamers', 'G2E2', 'Ms. Davis', 'Mr. Brown', 'violet.yang@school.edu', '在學'],
     
     // G2 Explorers (LT: Ms. Wilson, IT: Mr. Garcia HT)
-    ['LE11032', 'Miles Chen', 'Miles', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'miles.chen@school.edu', '在學'],
-    ['LE11033', 'Stella Kim', 'Stella', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'stella.kim@school.edu', '在學'],
-    ['LE11034', 'River Wang', 'River', 'G2', '205', 'G2 Explorers', 'Ms. Wilson', 'Mr. Garcia', 'river.wang@school.edu', '在學'],
+    ['LE11032', 'Miles Chen', 'Miles', 'G2', '205', 'G2 Explorers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'miles.chen@school.edu', '在學'],
+    ['LE11033', 'Stella Kim', 'Stella', 'G2', '205', 'G2 Explorers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'stella.kim@school.edu', '在學'],
+    ['LE11034', 'River Wang', 'River', 'G2', '205', 'G2 Explorers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'river.wang@school.edu', '在學'],
     
     // G2 Pioneers (LT: Ms. Wilson, IT: Mr. Garcia HT)
-    ['LE11035', 'Aurora Zhang', 'Aurora', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'aurora.zhang@school.edu', '在學'],
-    ['LE11036', 'Phoenix Wu', 'Phoenix', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'phoenix.wu@school.edu', '在學'],
-    ['LE11037', 'Sage Liu', 'Sage', 'G2', '206', 'G2 Pioneers', 'Ms. Wilson', 'Mr. Garcia', 'sage.liu@school.edu', '在學'],
+    ['LE11035', 'Aurora Zhang', 'Aurora', 'G2', '206', 'G2 Pioneers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'aurora.zhang@school.edu', '在學'],
+    ['LE11036', 'Phoenix Wu', 'Phoenix', 'G2', '206', 'G2 Pioneers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'phoenix.wu@school.edu', '在學'],
+    ['LE11037', 'Sage Liu', 'Sage', 'G2', '206', 'G2 Pioneers', 'G2E3', 'Ms. Wilson', 'Mr. Garcia', 'sage.liu@school.edu', '在學'],
     
     // Grade 3 Students - G3-G4 Teacher Group
     // G3 Achievers (LT: Ms. Taylor HT, IT: Mr. Anderson)
-    ['LE11038', 'Blake Yang', 'Blake', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'blake.yang@school.edu', '在學'],
-    ['LE11039', 'Nova Chen', 'Nova', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'nova.chen@school.edu', '在學'],
-    ['LE11040', 'Atlas Kim', 'Atlas', 'G3', '301', 'G3 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'atlas.kim@school.edu', '在學'],
+    ['LE11038', 'Blake Yang', 'Blake', 'G3', '301', 'G3 Achievers', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'blake.yang@school.edu', '在學'],
+    ['LE11039', 'Nova Chen', 'Nova', 'G3', '301', 'G3 Achievers', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'nova.chen@school.edu', '在學'],
+    ['LE11040', 'Atlas Kim', 'Atlas', 'G3', '301', 'G3 Achievers', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'atlas.kim@school.edu', '在學'],
     
     // G3 Builders (LT: Ms. Taylor HT, IT: Mr. Anderson)
-    ['LE11041', 'Luna Wang', 'Luna', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'luna.wang@school.edu', '在學'],
-    ['LE11042', 'Orion Zhang', 'Orion', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'orion.zhang@school.edu', '在學'],
-    ['LE11043', 'Iris Wu', 'Iris', 'G3', '302', 'G3 Builders', 'Ms. Taylor', 'Mr. Anderson', 'iris.wu@school.edu', '在學'],
+    ['LE11041', 'Luna Wang', 'Luna', 'G3', '302', 'G3 Builders', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'luna.wang@school.edu', '在學'],
+    ['LE11042', 'Orion Zhang', 'Orion', 'G3', '302', 'G3 Builders', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'orion.zhang@school.edu', '在學'],
+    ['LE11043', 'Iris Wu', 'Iris', 'G3', '302', 'G3 Builders', 'G3E1', 'Ms. Taylor', 'Mr. Anderson', 'iris.wu@school.edu', '在學'],
     
     // G3 Creators (LT: Ms. Martinez, IT: Mr. Thompson)
-    ['LE11044', 'Zara Liu', 'Zara', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'zara.liu@school.edu', '在學'],
-    ['LE11045', 'Finn Yang', 'Finn', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'finn.yang@school.edu', '在學'],
-    ['LE11046', 'Rose Chen', 'Rose', 'G3', '303', 'G3 Creators', 'Ms. Martinez', 'Mr. Thompson', 'rose.chen@school.edu', '在學'],
+    ['LE11044', 'Zara Liu', 'Zara', 'G3', '303', 'G3 Creators', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'zara.liu@school.edu', '在學'],
+    ['LE11045', 'Finn Yang', 'Finn', 'G3', '303', 'G3 Creators', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'finn.yang@school.edu', '在學'],
+    ['LE11046', 'Rose Chen', 'Rose', 'G3', '303', 'G3 Creators', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'rose.chen@school.edu', '在學'],
     
     // G3 Dreamers (LT: Ms. Martinez, IT: Mr. Thompson)
-    ['LE11047', 'Jude Kim', 'Jude', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'jude.kim@school.edu', '在學'],
-    ['LE11048', 'Wren Wang', 'Wren', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'wren.wang@school.edu', '在學'],
-    ['LE11049', 'Cole Zhang', 'Cole', 'G3', '304', 'G3 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'cole.zhang@school.edu', '在學'],
+    ['LE11047', 'Jude Kim', 'Jude', 'G3', '304', 'G3 Dreamers', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'jude.kim@school.edu', '在學'],
+    ['LE11048', 'Wren Wang', 'Wren', 'G3', '304', 'G3 Dreamers', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'wren.wang@school.edu', '在學'],
+    ['LE11049', 'Cole Zhang', 'Cole', 'G3', '304', 'G3 Dreamers', 'G3E2', 'Ms. Martinez', 'Mr. Thompson', 'cole.zhang@school.edu', '在學'],
     
     // G3 Explorers (LT: Ms. Robinson, IT: Mr. Lee HT)
-    ['LE11050', 'Jade Wu', 'Jade', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'jade.wu@school.edu', '在學'],
-    ['LE11051', 'Neo Liu', 'Neo', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'neo.liu@school.edu', '在學'],
-    ['LE11052', 'Sky Yang', 'Sky', 'G3', '305', 'G3 Explorers', 'Ms. Robinson', 'Mr. Lee', 'sky.yang@school.edu', '在學'],
+    ['LE11050', 'Jade Wu', 'Jade', 'G3', '305', 'G3 Explorers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'jade.wu@school.edu', '在學'],
+    ['LE11051', 'Neo Liu', 'Neo', 'G3', '305', 'G3 Explorers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'neo.liu@school.edu', '在學'],
+    ['LE11052', 'Sky Yang', 'Sky', 'G3', '305', 'G3 Explorers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'sky.yang@school.edu', '在學'],
     
     // G3 Pioneers (LT: Ms. Robinson, IT: Mr. Lee HT)
-    ['LE11053', 'Dawn Chen', 'Dawn', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'dawn.chen@school.edu', '在學'],
-    ['LE11054', 'Storm Kim', 'Storm', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'storm.kim@school.edu', '在學'],
-    ['LE11055', 'Rain Wang', 'Rain', 'G3', '306', 'G3 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'rain.wang@school.edu', '在學'],
+    ['LE11053', 'Dawn Chen', 'Dawn', 'G3', '306', 'G3 Pioneers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'dawn.chen@school.edu', '在學'],
+    ['LE11054', 'Storm Kim', 'Storm', 'G3', '306', 'G3 Pioneers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'storm.kim@school.edu', '在學'],
+    ['LE11055', 'Rain Wang', 'Rain', 'G3', '306', 'G3 Pioneers', 'G3E3', 'Ms. Robinson', 'Mr. Lee', 'rain.wang@school.edu', '在學'],
     
     // Grade 4 Students - Same G3-G4 Teacher Group
     // G4 Achievers (LT: Ms. Taylor HT, IT: Mr. Anderson)
-    ['LE11056', 'Echo Zhang', 'Echo', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'echo.zhang@school.edu', '在學'],
-    ['LE11057', 'Blaze Wu', 'Blaze', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'blaze.wu@school.edu', '在學'],
-    ['LE11058', 'Vale Liu', 'Vale', 'G4', '401', 'G4 Achievers', 'Ms. Taylor', 'Mr. Anderson', 'vale.liu@school.edu', '在學'],
+    ['LE11056', 'Echo Zhang', 'Echo', 'G4', '401', 'G4 Achievers', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'echo.zhang@school.edu', '在學'],
+    ['LE11057', 'Blaze Wu', 'Blaze', 'G4', '401', 'G4 Achievers', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'blaze.wu@school.edu', '在學'],
+    ['LE11058', 'Vale Liu', 'Vale', 'G4', '401', 'G4 Achievers', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'vale.liu@school.edu', '在學'],
     
     // G4 Builders (LT: Ms. Taylor HT, IT: Mr. Anderson)
-    ['LE11059', 'Cruz Yang', 'Cruz', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'cruz.yang@school.edu', '在學'],
-    ['LE11060', 'Lane Chen', 'Lane', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'lane.chen@school.edu', '在學'],
-    ['LE11061', 'Sage Kim', 'Sage', 'G4', '402', 'G4 Builders', 'Ms. Taylor', 'Mr. Anderson', 'sage.kim@school.edu', '在學'],
+    ['LE11059', 'Cruz Yang', 'Cruz', 'G4', '402', 'G4 Builders', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'cruz.yang@school.edu', '在學'],
+    ['LE11060', 'Lane Chen', 'Lane', 'G4', '402', 'G4 Builders', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'lane.chen@school.edu', '在學'],
+    ['LE11061', 'Sage Kim', 'Sage', 'G4', '402', 'G4 Builders', 'G4E1', 'Ms. Taylor', 'Mr. Anderson', 'sage.kim@school.edu', '在學'],
     
     // G4 Creators (LT: Ms. Martinez, IT: Mr. Thompson)
-    ['LE11062', 'Reed Wang', 'Reed', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'reed.wang@school.edu', '在學'],
-    ['LE11063', 'Bay Zhang', 'Bay', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'bay.zhang@school.edu', '在學'],
-    ['LE11064', 'Roe Wu', 'Roe', 'G4', '403', 'G4 Creators', 'Ms. Martinez', 'Mr. Thompson', 'roe.wu@school.edu', '在學'],
+    ['LE11062', 'Reed Wang', 'Reed', 'G4', '403', 'G4 Creators', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'reed.wang@school.edu', '在學'],
+    ['LE11063', 'Bay Zhang', 'Bay', 'G4', '403', 'G4 Creators', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'bay.zhang@school.edu', '在學'],
+    ['LE11064', 'Roe Wu', 'Roe', 'G4', '403', 'G4 Creators', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'roe.wu@school.edu', '在學'],
     
     // G4 Dreamers (LT: Ms. Martinez, IT: Mr. Thompson)
-    ['LE11065', 'Dune Liu', 'Dune', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'dune.liu@school.edu', '在學'],
-    ['LE11066', 'Vale Yang', 'Vale', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'vale.yang@school.edu', '在學'],
-    ['LE11067', 'Fox Chen', 'Fox', 'G4', '404', 'G4 Dreamers', 'Ms. Martinez', 'Mr. Thompson', 'fox.chen@school.edu', '在學'],
+    ['LE11065', 'Dune Liu', 'Dune', 'G4', '404', 'G4 Dreamers', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'dune.liu@school.edu', '在學'],
+    ['LE11066', 'Vale Yang', 'Vale', 'G4', '404', 'G4 Dreamers', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'vale.yang@school.edu', '在學'],
+    ['LE11067', 'Fox Chen', 'Fox', 'G4', '404', 'G4 Dreamers', 'G4E2', 'Ms. Martinez', 'Mr. Thompson', 'fox.chen@school.edu', '在學'],
     
     // G4 Explorers (LT: Ms. Robinson, IT: Mr. Lee HT)
-    ['LE11068', 'Sage Kim', 'Sage', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'sage.kim2@school.edu', '在學'],
-    ['LE11069', 'West Wang', 'West', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'west.wang@school.edu', '在學'],
-    ['LE11070', 'True Zhang', 'True', 'G4', '405', 'G4 Explorers', 'Ms. Robinson', 'Mr. Lee', 'true.zhang@school.edu', '在學'],
+    ['LE11068', 'Sage Kim', 'Sage', 'G4', '405', 'G4 Explorers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'sage.kim2@school.edu', '在學'],
+    ['LE11069', 'West Wang', 'West', 'G4', '405', 'G4 Explorers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'west.wang@school.edu', '在學'],
+    ['LE11070', 'True Zhang', 'True', 'G4', '405', 'G4 Explorers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'true.zhang@school.edu', '在學'],
     
     // G4 Pioneers (LT: Ms. Robinson, IT: Mr. Lee HT)
-    ['LE11071', 'Blue Wu', 'Blue', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'blue.wu@school.edu', '在學'],
-    ['LE11072', 'Hope Liu', 'Hope', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'hope.liu@school.edu', '在學'],
-    ['LE11073', 'Joy Yang', 'Joy', 'G4', '406', 'G4 Pioneers', 'Ms. Robinson', 'Mr. Lee', 'joy.yang@school.edu', '在學'],
+    ['LE11071', 'Blue Wu', 'Blue', 'G4', '406', 'G4 Pioneers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'blue.wu@school.edu', '在學'],
+    ['LE11072', 'Hope Liu', 'Hope', 'G4', '406', 'G4 Pioneers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'hope.liu@school.edu', '在學'],
+    ['LE11073', 'Joy Yang', 'Joy', 'G4', '406', 'G4 Pioneers', 'G4E3', 'Ms. Robinson', 'Mr. Lee', 'joy.yang@school.edu', '在學'],
     
     // Grade 5 Students - G5-G6 Teacher Group
     // G5 Achievers (LT: Ms. White HT, IT: Mr. Clark)
-    ['LE11074', 'Peace Chen', 'Peace', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'peace.chen@school.edu', '在學'],
-    ['LE11075', 'Grace Kim', 'Grace', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'grace.kim@school.edu', '在學'],
-    ['LE11076', 'Faith Wang', 'Faith', 'G5', '501', 'G5 Achievers', 'Ms. White', 'Mr. Clark', 'faith.wang@school.edu', '在學'],
+    ['LE11074', 'Peace Chen', 'Peace', 'G5', '501', 'G5 Achievers', 'G5E1', 'Ms. White', 'Mr. Clark', 'peace.chen@school.edu', '在學'],
+    ['LE11075', 'Grace Kim', 'Grace', 'G5', '501', 'G5 Achievers', 'G5E1', 'Ms. White', 'Mr. Clark', 'grace.kim@school.edu', '在學'],
+    ['LE11076', 'Faith Wang', 'Faith', 'G5', '501', 'G5 Achievers', 'G5E1', 'Ms. White', 'Mr. Clark', 'faith.wang@school.edu', '在學'],
     
     // G5 Builders (LT: Ms. White HT, IT: Mr. Clark)
-    ['LE11077', 'Honor Zhang', 'Honor', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'honor.zhang@school.edu', '在學'],
-    ['LE11078', 'Noble Wu', 'Noble', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'noble.wu@school.edu', '在學'],
-    ['LE11079', 'Brave Liu', 'Brave', 'G5', '502', 'G5 Builders', 'Ms. White', 'Mr. Clark', 'brave.liu@school.edu', '在學'],
+    ['LE11077', 'Honor Zhang', 'Honor', 'G5', '502', 'G5 Builders', 'G5E1', 'Ms. White', 'Mr. Clark', 'honor.zhang@school.edu', '在學'],
+    ['LE11078', 'Noble Wu', 'Noble', 'G5', '502', 'G5 Builders', 'G5E1', 'Ms. White', 'Mr. Clark', 'noble.wu@school.edu', '在學'],
+    ['LE11079', 'Brave Liu', 'Brave', 'G5', '502', 'G5 Builders', 'G5E1', 'Ms. White', 'Mr. Clark', 'brave.liu@school.edu', '在學'],
     
     // G5 Creators (LT: Ms. Kumar, IT: Mr. Patel)
-    ['LE11080', 'Truth Yang', 'Truth', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'truth.yang@school.edu', '在學'],
-    ['LE11081', 'Wisdom Chen', 'Wisdom', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'wisdom.chen@school.edu', '在學'],
-    ['LE11082', 'Justice Kim', 'Justice', 'G5', '503', 'G5 Creators', 'Ms. Kumar', 'Mr. Patel', 'justice.kim@school.edu', '在學'],
+    ['LE11080', 'Truth Yang', 'Truth', 'G5', '503', 'G5 Creators', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'truth.yang@school.edu', '在學'],
+    ['LE11081', 'Wisdom Chen', 'Wisdom', 'G5', '503', 'G5 Creators', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'wisdom.chen@school.edu', '在學'],
+    ['LE11082', 'Justice Kim', 'Justice', 'G5', '503', 'G5 Creators', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'justice.kim@school.edu', '在學'],
     
     // G5 Dreamers (LT: Ms. Kumar, IT: Mr. Patel)
-    ['LE11083', 'Freedom Wang', 'Freedom', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'freedom.wang@school.edu', '在學'],
-    ['LE11084', 'Liberty Zhang', 'Liberty', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'liberty.zhang@school.edu', '在學'],
-    ['LE11085', 'Unity Wu', 'Unity', 'G5', '504', 'G5 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'unity.wu@school.edu', '在學'],
+    ['LE11083', 'Freedom Wang', 'Freedom', 'G5', '504', 'G5 Dreamers', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'freedom.wang@school.edu', '在學'],
+    ['LE11084', 'Liberty Zhang', 'Liberty', 'G5', '504', 'G5 Dreamers', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'liberty.zhang@school.edu', '在學'],
+    ['LE11085', 'Unity Wu', 'Unity', 'G5', '504', 'G5 Dreamers', 'G5E2', 'Ms. Kumar', 'Mr. Patel', 'unity.wu@school.edu', '在學'],
     
     // G5 Explorers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
-    ['LE11086', 'Harmony Liu', 'Harmony', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'harmony.liu@school.edu', '在學'],
-    ['LE11087', 'Serenity Yang', 'Serenity', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'serenity.yang@school.edu', '在學'],
-    ['LE11088', 'Destiny Chen', 'Destiny', 'G5', '505', 'G5 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'destiny.chen@school.edu', '在學'],
+    ['LE11086', 'Harmony Liu', 'Harmony', 'G5', '505', 'G5 Explorers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'harmony.liu@school.edu', '在學'],
+    ['LE11087', 'Serenity Yang', 'Serenity', 'G5', '505', 'G5 Explorers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'serenity.yang@school.edu', '在學'],
+    ['LE11088', 'Destiny Chen', 'Destiny', 'G5', '505', 'G5 Explorers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'destiny.chen@school.edu', '在學'],
     
     // G5 Pioneers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
-    ['LE11089', 'Journey Kim', 'Journey', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'journey.kim@school.edu', '在學'],
-    ['LE11090', 'Victory Wang', 'Victory', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'victory.wang@school.edu', '在學'],
-    ['LE11091', 'Triumph Zhang', 'Triumph', 'G5', '506', 'G5 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'triumph.zhang@school.edu', '在學'],
+    ['LE11089', 'Journey Kim', 'Journey', 'G5', '506', 'G5 Pioneers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'journey.kim@school.edu', '在學'],
+    ['LE11090', 'Victory Wang', 'Victory', 'G5', '506', 'G5 Pioneers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'victory.wang@school.edu', '在學'],
+    ['LE11091', 'Triumph Zhang', 'Triumph', 'G5', '506', 'G5 Pioneers', 'G5E3', 'Ms. Rodriguez', 'Mr. Collins', 'triumph.zhang@school.edu', '在學'],
     
     // Grade 6 Students - Same G5-G6 Teacher Group
     // G6 Achievers (LT: Ms. White HT, IT: Mr. Clark)
-    ['LE11092', 'Legacy Wu', 'Legacy', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'legacy.wu@school.edu', '在學'],
-    ['LE11093', 'Champion Liu', 'Champion', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'champion.liu@school.edu', '在學'],
-    ['LE11094', 'Marvel Yang', 'Marvel', 'G6', '601', 'G6 Achievers', 'Ms. White', 'Mr. Clark', 'marvel.yang@school.edu', '在學'],
+    ['LE11092', 'Legacy Wu', 'Legacy', 'G6', '601', 'G6 Achievers', 'G6E1', 'Ms. White', 'Mr. Clark', 'legacy.wu@school.edu', '在學'],
+    ['LE11093', 'Champion Liu', 'Champion', 'G6', '601', 'G6 Achievers', 'G6E1', 'Ms. White', 'Mr. Clark', 'champion.liu@school.edu', '在學'],
+    ['LE11094', 'Marvel Yang', 'Marvel', 'G6', '601', 'G6 Achievers', 'G6E1', 'Ms. White', 'Mr. Clark', 'marvel.yang@school.edu', '在學'],
     
     // G6 Builders (LT: Ms. White HT, IT: Mr. Clark)
-    ['LE11095', 'Miracle Chen', 'Miracle', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'miracle.chen@school.edu', '在學'],
-    ['LE11096', 'Wonder Kim', 'Wonder', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'wonder.kim@school.edu', '在學'],
-    ['LE11097', 'Magic Wang', 'Magic', 'G6', '602', 'G6 Builders', 'Ms. White', 'Mr. Clark', 'magic.wang@school.edu', '在學'],
+    ['LE11095', 'Miracle Chen', 'Miracle', 'G6', '602', 'G6 Builders', 'G6E1', 'Ms. White', 'Mr. Clark', 'miracle.chen@school.edu', '在學'],
+    ['LE11096', 'Wonder Kim', 'Wonder', 'G6', '602', 'G6 Builders', 'G6E1', 'Ms. White', 'Mr. Clark', 'wonder.kim@school.edu', '在學'],
+    ['LE11097', 'Magic Wang', 'Magic', 'G6', '602', 'G6 Builders', 'G6E1', 'Ms. White', 'Mr. Clark', 'magic.wang@school.edu', '在學'],
     
     // G6 Creators (LT: Ms. Kumar, IT: Mr. Patel)
-    ['LE11098', 'Dream Zhang', 'Dream', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'dream.zhang@school.edu', '在學'],
-    ['LE11099', 'Vision Wu', 'Vision', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'vision.wu@school.edu', '在學'],
-    ['LE11100', 'Future Liu', 'Future', 'G6', '603', 'G6 Creators', 'Ms. Kumar', 'Mr. Patel', 'future.liu@school.edu', '在學'],
+    ['LE11098', 'Dream Zhang', 'Dream', 'G6', '603', 'G6 Creators', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'dream.zhang@school.edu', '在學'],
+    ['LE11099', 'Vision Wu', 'Vision', 'G6', '603', 'G6 Creators', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'vision.wu@school.edu', '在學'],
+    ['LE11100', 'Future Liu', 'Future', 'G6', '603', 'G6 Creators', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'future.liu@school.edu', '在學'],
     
     // G6 Dreamers (LT: Ms. Kumar, IT: Mr. Patel)
-    ['LE11101', 'Promise Yang', 'Promise', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'promise.yang@school.edu', '在學'],
-    ['LE11102', 'Bright Chen', 'Bright', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'bright.chen@school.edu', '在學'],
-    ['LE11103', 'Shine Kim', 'Shine', 'G6', '604', 'G6 Dreamers', 'Ms. Kumar', 'Mr. Patel', 'shine.kim@school.edu', '在學'],
+    ['LE11101', 'Promise Yang', 'Promise', 'G6', '604', 'G6 Dreamers', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'promise.yang@school.edu', '在學'],
+    ['LE11102', 'Bright Chen', 'Bright', 'G6', '604', 'G6 Dreamers', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'bright.chen@school.edu', '在學'],
+    ['LE11103', 'Shine Kim', 'Shine', 'G6', '604', 'G6 Dreamers', 'G6E2', 'Ms. Kumar', 'Mr. Patel', 'shine.kim@school.edu', '在學'],
     
     // G6 Explorers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
-    ['LE11104', 'Radiant Wang', 'Radiant', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'radiant.wang@school.edu', '在學'],
-    ['LE11105', 'Glorious Zhang', 'Glorious', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'glorious.zhang@school.edu', '在學'],
-    ['LE11106', 'Brilliant Wu', 'Brilliant', 'G6', '605', 'G6 Explorers', 'Ms. Rodriguez', 'Mr. Collins', 'brilliant.wu@school.edu', '在學'],
+    ['LE11104', 'Radiant Wang', 'Radiant', 'G6', '605', 'G6 Explorers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'radiant.wang@school.edu', '在學'],
+    ['LE11105', 'Glorious Zhang', 'Glorious', 'G6', '605', 'G6 Explorers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'glorious.zhang@school.edu', '在學'],
+    ['LE11106', 'Brilliant Wu', 'Brilliant', 'G6', '605', 'G6 Explorers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'brilliant.wu@school.edu', '在學'],
     
     // G6 Pioneers (LT: Ms. Rodriguez, IT: Mr. Collins HT)
-    ['LE11107', 'Stellar Liu', 'Stellar', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'stellar.liu@school.edu', '在學'],
-    ['LE11108', 'Cosmic Yang', 'Cosmic', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'cosmic.yang@school.edu', '在學'],
-    ['LE11109', 'Infinite Chen', 'Infinite', 'G6', '606', 'G6 Pioneers', 'Ms. Rodriguez', 'Mr. Collins', 'infinite.chen@school.edu', '在學']
+    ['LE11107', 'Stellar Liu', 'Stellar', 'G6', '606', 'G6 Pioneers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'stellar.liu@school.edu', '在學'],
+    ['LE11108', 'Cosmic Yang', 'Cosmic', 'G6', '606', 'G6 Pioneers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'cosmic.yang@school.edu', '在學'],
+    ['LE11109', 'Infinite Chen', 'Infinite', 'G6', '606', 'G6 Pioneers', 'G6E3', 'Ms. Rodriguez', 'Mr. Collins', 'infinite.chen@school.edu', '在學']
   ];
   
   studentsSheet.getRange(2, 1, sampleStudents.length, studentHeaders.length).setValues(sampleStudents);
