@@ -5136,22 +5136,46 @@ function updateStudentsLevelFromClassesData() {
     const lastColumn = studentsSheet.getLastColumn();
     const headers = studentsSheet.getRange(1, 1, 1, lastColumn).getValues()[0];
     
-    // Find column indices | 找到欄位索引
-    const englishClassIndex = headers.findIndex(h => 
-      String(h).toLowerCase().includes('english class') || String(h).includes('英文班級')
-    );
-    const levelIndex = headers.findIndex(h => 
-      String(h).toLowerCase().includes('level') || String(h).includes('等級')
-    );
+    // Find column indices with enhanced recognition | 找到欄位索引（增強識別）
+    console.log('📋 Students sheet headers:', headers.map((h, i) => `${i + 1}: "${h}"`).join(', '));
+    
+    // Enhanced English Class column recognition | 增強英文班級欄位識別
+    const englishClassIndex = headers.findIndex(h => {
+      const headerStr = String(h).toLowerCase().trim();
+      return headerStr.includes('english class') || 
+             headerStr.includes('英文班級') ||
+             headerStr === 'english class' ||
+             headerStr === '英文班級';
+    });
+    
+    // Enhanced Level column recognition | 增強等級欄位識別  
+    const levelIndex = headers.findIndex(h => {
+      const headerStr = String(h).toLowerCase().trim();
+      return headerStr.includes('level') || 
+             headerStr.includes('等級') ||
+             headerStr === 'level' ||
+             headerStr === '等級';
+    });
     
     if (englishClassIndex === -1) {
-      throw new Error('English Class column not found in Students sheet');
-    }
-    if (levelIndex === -1) {
-      throw new Error('Level column not found in Students sheet. Please add it first.');
+      console.log('\n❌ ENGLISH CLASS COLUMN NOT FOUND | 找不到英文班級欄位');
+      console.log('📋 Available headers:');
+      headers.forEach((header, index) => {
+        console.log(`   ${index + 1}: "${header}" (${typeof header})`);
+      });
+      throw new Error(`English Class column not found in Students sheet. Available headers: ${headers.map(h => `"${h}"`).join(', ')} | 在學生工作表中找不到英文班級欄位。可用標題: ${headers.map(h => `"${h}"`).join(', ')}`);
     }
     
-    console.log(`📍 Column indices - English Class: ${englishClassIndex + 1}, Level: ${levelIndex + 1}`);
+    if (levelIndex === -1) {
+      console.log('\n❌ LEVEL COLUMN NOT FOUND | 找不到等級欄位');
+      console.log('📋 Available headers:');
+      headers.forEach((header, index) => {
+        console.log(`   ${index + 1}: "${header}" (${typeof header})`);
+      });
+      throw new Error(`Level column not found in Students sheet. Available headers: ${headers.map(h => `"${h}"`).join(', ')} | 在學生工作表中找不到等級欄位。可用標題: ${headers.map(h => `"${h}"`).join(', ')}`);
+    }
+    
+    console.log(`✅ Found columns - English Class: ${englishClassIndex + 1} ("${headers[englishClassIndex]}"), Level: ${levelIndex + 1} ("${headers[levelIndex]}")`);
     
     // Update Level values | 更新Level值
     let updatedCount = 0;
