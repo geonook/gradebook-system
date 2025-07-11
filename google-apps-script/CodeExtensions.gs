@@ -4873,6 +4873,274 @@ function validateLevelConsistency(studentsSheet, englishClassIndex, levelIndex) 
 }
 
 /**
+ * Analyze "Classes | 班級資料" sheet content | 分析班級資料工作表內容
+ */
+function analyzeClassesDataSheet() {
+  console.log('🔍 Analyzing "Classes | 班級資料" sheet content | 分析班級資料工作表內容...');
+  
+  try {
+    // Get Master Data file | 取得主控資料檔案
+    const masterDataFile = getMasterDataFile();
+    if (!masterDataFile) {
+      throw new Error('Master Data file not found | 找不到主控資料檔案');
+    }
+    
+    // Try to find Classes sheet with various names | 嘗試找到班級資料工作表
+    const possibleNames = ['Classes | 班級資料', 'Classes', 'Class Data', '班級資料', '班級'];
+    let classesSheet = null;
+    let foundSheetName = '';
+    
+    for (const name of possibleNames) {
+      classesSheet = masterDataFile.getSheetByName(name);
+      if (classesSheet) {
+        foundSheetName = name;
+        break;
+      }
+    }
+    
+    if (!classesSheet) {
+      throw new Error(`Classes sheet not found. Tried: ${possibleNames.join(', ')}`);
+    }
+    
+    console.log(`✅ Found Classes sheet: "${foundSheetName}"`);
+    
+    // Get sheet dimensions | 取得工作表尺寸
+    const lastRow = classesSheet.getLastRow();
+    const lastColumn = classesSheet.getLastColumn();
+    
+    console.log(`📏 Sheet dimensions: ${lastRow} rows × ${lastColumn} columns`);
+    
+    if (lastRow < 2 || lastColumn < 2) {
+      console.log('⚠️  Sheet appears to be empty or has minimal data');
+      return {
+        success: true,
+        isEmpty: true,
+        sheetName: foundSheetName,
+        message: 'Sheet found but appears empty'
+      };
+    }
+    
+    // Read all data | 讀取所有資料
+    const allData = classesSheet.getRange(1, 1, lastRow, lastColumn).getValues();
+    
+    console.log('\n📋 SHEET CONTENT ANALYSIS | 工作表內容分析');
+    console.log('='.repeat(50));
+    
+    // Analyze first few rows to understand structure | 分析前幾行以了解結構
+    for (let i = 0; i < Math.min(10, allData.length); i++) {
+      const row = allData[i];
+      const rowData = row.map(cell => String(cell).trim()).filter(cell => cell);
+      if (rowData.length > 0) {
+        console.log(`Row ${i + 1}: ${rowData.map(cell => `"${cell}"`).join(', ')}`);
+      }
+    }
+    
+    // Look for class-level mapping data | 尋找班級-等級對應資料
+    let classLevelMapping = {};
+    let dataStartRow = -1;
+    let classColIndex = -1;
+    let levelColIndex = -1;
+    
+    // Try to identify data structure | 嘗試識別資料結構
+    for (let row = 0; row < Math.min(5, allData.length); row++) {
+      const rowData = allData[row];
+      
+      // Look for headers that might indicate class names and levels | 尋找可能指示班級名稱和等級的標題
+      for (let col = 0; col < rowData.length; col++) {
+        const cellValue = String(rowData[col]).toLowerCase().trim();
+        
+        if (cellValue.includes('class') || cellValue.includes('班') || cellValue.includes('班級')) {
+          classColIndex = col;
+          console.log(`🎯 Potential class column found at col ${col + 1}: "${rowData[col]}"`);
+        }
+        
+        if (cellValue.includes('level') || cellValue.includes('等級') || cellValue.includes('level')) {
+          levelColIndex = col;
+          console.log(`📊 Potential level column found at col ${col + 1}: "${rowData[col]}"`);
+        }
+      }
+      
+      // If we found both class and level columns, this might be the header row | 如果找到班級和等級欄位，這可能是標題行
+      if (classColIndex !== -1 && levelColIndex !== -1) {
+        dataStartRow = row + 1;
+        console.log(`✅ Found potential header row at row ${row + 1}, data starts at row ${dataStartRow + 1}`);
+        break;
+      }
+    }
+    
+    // If we found structured data, extract class-level mapping | 如果找到結構化資料，提取班級-等級對應
+    if (dataStartRow !== -1 && classColIndex !== -1 && levelColIndex !== -1) {
+      console.log('\n🎯 EXTRACTING CLASS-LEVEL MAPPING | 提取班級-等級對應');
+      console.log('='.repeat(50));
+      
+      for (let row = dataStartRow; row < allData.length; row++) {
+        const className = String(allData[row][classColIndex]).trim();
+        const level = String(allData[row][levelColIndex]).trim();
+        
+        if (className && level) {
+          classLevelMapping[className] = level;
+          console.log(`📚 ${className} → ${level}`);
+        }
+      }
+      
+      console.log(`\n📊 Total class mappings found: ${Object.keys(classLevelMapping).length}`);
+      
+    } else {
+      console.log('\n⚠️  Could not identify structured class-level mapping data');
+      console.log('   The sheet might use a different format or need manual configuration');
+    }
+    
+    // Analyze level distribution | 分析等級分佈
+    if (Object.keys(classLevelMapping).length > 0) {
+      const levelDistribution = {};
+      Object.values(classLevelMapping).forEach(level => {
+        levelDistribution[level] = (levelDistribution[level] || 0) + 1;
+      });
+      
+      console.log('\n📊 LEVEL DISTRIBUTION | 等級分佈');
+      console.log('='.repeat(30));
+      Object.keys(levelDistribution).sort().forEach(level => {
+        console.log(`${level}: ${levelDistribution[level]} classes`);
+      });
+    }
+    
+    return {
+      success: true,
+      isEmpty: false,
+      sheetName: foundSheetName,
+      lastRow: lastRow,
+      lastColumn: lastColumn,
+      classColIndex: classColIndex,
+      levelColIndex: levelColIndex,
+      dataStartRow: dataStartRow,
+      classLevelMapping: classLevelMapping,
+      allData: allData,
+      hasStructuredData: Object.keys(classLevelMapping).length > 0
+    };
+    
+  } catch (error) {
+    console.error('❌ Failed to analyze Classes sheet | 分析班級資料工作表失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Update Students sheet Level values based on Classes sheet data | 根據班級資料工作表更新學生工作表的Level值
+ */
+function updateStudentsLevelFromClassesData() {
+  console.log('🔄 Updating Students Level values from Classes data | 根據班級資料更新學生Level值...');
+  
+  try {
+    // First analyze Classes sheet | 首先分析班級資料工作表
+    const classesAnalysis = analyzeClassesDataSheet();
+    if (!classesAnalysis.success) {
+      throw new Error(`Classes sheet analysis failed: ${classesAnalysis.error}`);
+    }
+    
+    if (classesAnalysis.isEmpty || !classesAnalysis.hasStructuredData) {
+      throw new Error('Classes sheet is empty or does not contain structured class-level mapping data');
+    }
+    
+    const { classLevelMapping } = classesAnalysis;
+    console.log(`✅ Found ${Object.keys(classLevelMapping).length} class-level mappings from Classes sheet`);
+    
+    // Get Students sheet | 取得學生工作表
+    const masterDataFile = getMasterDataFile();
+    const studentsSheet = masterDataFile.getSheetByName('Students');
+    if (!studentsSheet) {
+      throw new Error('Students sheet not found');
+    }
+    
+    // Get Students sheet structure | 取得學生工作表結構
+    const lastRow = studentsSheet.getLastRow();
+    const lastColumn = studentsSheet.getLastColumn();
+    const headers = studentsSheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+    
+    // Find column indices | 找到欄位索引
+    const englishClassIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('english class') || String(h).includes('英文班級')
+    );
+    const levelIndex = headers.findIndex(h => 
+      String(h).toLowerCase().includes('level') || String(h).includes('等級')
+    );
+    
+    if (englishClassIndex === -1) {
+      throw new Error('English Class column not found in Students sheet');
+    }
+    if (levelIndex === -1) {
+      throw new Error('Level column not found in Students sheet. Please add it first.');
+    }
+    
+    console.log(`📍 Column indices - English Class: ${englishClassIndex + 1}, Level: ${levelIndex + 1}`);
+    
+    // Update Level values | 更新Level值
+    let updatedCount = 0;
+    let errorCount = 0;
+    let missingMappings = new Set();
+    
+    console.log('\n📝 Updating Level values | 更新Level值...');
+    
+    for (let row = 2; row <= lastRow; row++) {
+      try {
+        const englishClass = String(studentsSheet.getRange(row, englishClassIndex + 1).getValue()).trim();
+        
+        if (englishClass) {
+          if (classLevelMapping[englishClass]) {
+            const correctLevel = classLevelMapping[englishClass];
+            studentsSheet.getRange(row, levelIndex + 1).setValue(correctLevel);
+            updatedCount++;
+            
+            if (updatedCount <= 5) { // Log first 5 updates
+              console.log(`   Row ${row}: ${englishClass} → ${correctLevel}`);
+            }
+          } else {
+            missingMappings.add(englishClass);
+            errorCount++;
+          }
+        }
+      } catch (rowError) {
+        console.error(`❌ Error updating row ${row}:`, rowError.message);
+        errorCount++;
+      }
+    }
+    
+    console.log(`\n📊 Update Summary | 更新總結:`);
+    console.log(`   ✅ Successfully updated: ${updatedCount} students`);
+    console.log(`   ⚠️  Errors or missing mappings: ${errorCount} students`);
+    
+    if (missingMappings.size > 0) {
+      console.log('\n⚠️  Classes without mapping in Classes sheet:');
+      Array.from(missingMappings).forEach(className => {
+        console.log(`   - ${className}`);
+      });
+    }
+    
+    // Validate consistency | 驗證一致性
+    console.log('\n🔍 Validating Level consistency | 驗證Level一致性...');
+    const validationResult = validateLevelConsistency(studentsSheet, englishClassIndex, levelIndex);
+    
+    return {
+      success: true,
+      updatedCount: updatedCount,
+      errorCount: errorCount,
+      missingMappings: Array.from(missingMappings),
+      classLevelMapping: classLevelMapping,
+      validationResult: validationResult
+    };
+    
+  } catch (error) {
+    console.error('❌ Failed to update Students Level values | 更新學生Level值失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
  * Investigate current system issues | 調查當前系統問題
  */
 function investigateSystemIssues() {
