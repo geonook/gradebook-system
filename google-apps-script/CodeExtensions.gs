@@ -4402,3 +4402,190 @@ function validateLevelAndPermissions(level, teacherType) {
     };
   }
 }
+
+// ===== TESTING FUNCTIONS | 測試函數 =====
+
+/**
+ * 測試 LEVEL-特定同步功能的完整工作流程
+ * Test complete workflow for LEVEL-specific sync functionality
+ */
+function testLevelSpecificSyncWorkflow() {
+  try {
+    console.log('🧪 Starting LEVEL-specific sync workflow test | 開始 LEVEL-特定同步工作流程測試...');
+    
+    const testResults = {
+      success: true,
+      timestamp: new Date().toISOString(),
+      tests: [],
+      errors: []
+    };
+    
+    // Test 1: 資料一致性檢查
+    console.log('📋 Test 1: Data consistency check | 測試 1: 資料一致性檢查');
+    try {
+      const preflightResult = preflightDataConsistencyCheck();
+      testResults.tests.push({
+        name: 'Preflight Data Consistency Check | 執行前資料一致性檢查',
+        status: preflightResult.success ? '✅ PASS' : '⚠️ WARNING',
+        details: preflightResult.success ? 
+          'Data consistency verified | 資料一致性已驗證' : 
+          `Issues found: ${preflightResult.error} | 發現問題: ${preflightResult.error}`,
+        result: preflightResult
+      });
+    } catch (error) {
+      testResults.tests.push({
+        name: 'Preflight Data Consistency Check | 執行前資料一致性檢查',
+        status: '❌ FAIL',
+        details: error.message
+      });
+      testResults.errors.push(`Preflight check failed: ${error.message}`);
+    }
+    
+    // Test 2: 班級-LEVEL對應表測試
+    console.log('📋 Test 2: Class-LEVEL mapping | 測試 2: 班級-LEVEL對應表');
+    try {
+      const mappingResult = getClassLevelMapping();
+      testResults.tests.push({
+        name: 'Class-LEVEL Mapping | 班級-LEVEL對應表',
+        status: mappingResult.success ? '✅ PASS' : '❌ FAIL',
+        details: mappingResult.success ? 
+          `Successfully mapped ${Object.keys(mappingResult.data).length} classes | 成功對應 ${Object.keys(mappingResult.data).length} 個班級` : 
+          mappingResult.error,
+        result: mappingResult
+      });
+      
+      // 顯示找到的班級和對應的 LEVEL
+      if (mappingResult.success) {
+        console.log('📊 Found class-level mappings | 找到的班級-LEVEL對應:');
+        Object.entries(mappingResult.data).forEach(([className, level]) => {
+          console.log(`  "${className}" → ${level}`);
+        });
+      }
+    } catch (error) {
+      testResults.tests.push({
+        name: 'Class-LEVEL Mapping | 班級-LEVEL對應表',
+        status: '❌ FAIL',
+        details: error.message
+      });
+      testResults.errors.push(`Class-level mapping failed: ${error.message}`);
+    }
+    
+    // Test 3: LEVEL 格式驗證
+    console.log('📋 Test 3: LEVEL format validation | 測試 3: LEVEL 格式驗證');
+    const testLevels = ['G1E1', 'G2E2', 'G3E3', 'G4E1', 'G5E2', 'G6E3', 'INVALID'];
+    let validationPassCount = 0;
+    
+    testLevels.forEach(level => {
+      try {
+        const validation = validateLevelAndPermissions(level, 'IT');
+        const isValid = level !== 'INVALID';
+        
+        if ((validation.success && isValid) || (!validation.success && !isValid)) {
+          validationPassCount++;
+          console.log(`  ✅ ${level}: ${validation.success ? 'Valid' : 'Invalid (as expected)'}`);
+        } else {
+          console.log(`  ❌ ${level}: Unexpected result`);
+        }
+      } catch (error) {
+        console.log(`  ❌ ${level}: Validation error: ${error.message}`);
+      }
+    });
+    
+    testResults.tests.push({
+      name: 'LEVEL Format Validation | LEVEL 格式驗證',
+      status: validationPassCount === testLevels.length ? '✅ PASS' : '⚠️ PARTIAL',
+      details: `${validationPassCount}/${testLevels.length} validation tests passed | ${validationPassCount}/${testLevels.length} 驗證測試通過`
+    });
+    
+    // Test 4: 模擬 LEVEL 篩選測試（如果有測試成績簿）
+    console.log('📋 Test 4: LEVEL filtering simulation | 測試 4: LEVEL 篩選模擬');
+    // 這個測試需要實際的成績簿才能執行，這裡先記錄測試框架
+    testResults.tests.push({
+      name: 'LEVEL Filtering Simulation | LEVEL 篩選模擬',
+      status: '⚠️ SKIPPED',
+      details: 'Requires actual gradebook for testing | 需要實際成績簿進行測試'
+    });
+    
+    // 總結測試結果
+    const passedTests = testResults.tests.filter(test => test.status.includes('✅')).length;
+    const totalTests = testResults.tests.length;
+    const hasErrors = testResults.errors.length > 0;
+    
+    testResults.summary = {
+      passed: passedTests,
+      total: totalTests,
+      hasErrors: hasErrors,
+      message: `${passedTests}/${totalTests} tests passed | ${passedTests}/${totalTests} 測試通過`
+    };
+    
+    if (hasErrors) {
+      testResults.success = false;
+    }
+    
+    console.log('🏁 Test workflow completed | 測試工作流程完成');
+    console.log(`📊 Results: ${testResults.summary.message}`);
+    
+    if (testResults.errors.length > 0) {
+      console.log('❌ Errors found | 發現錯誤:');
+      testResults.errors.forEach(error => console.log(`  - ${error}`));
+    }
+    
+    return testResults;
+    
+  } catch (error) {
+    console.error('❌ Test workflow failed | 測試工作流程失敗:', error);
+    return {
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+/**
+ * 快速測試新增的核心函數
+ * Quick test for newly added core functions
+ */
+function testCoreFunctions() {
+  console.log('🧪 Testing core functions | 測試核心函數...');
+  
+  const tests = [
+    {
+      name: 'getClassLevelMapping',
+      func: () => getClassLevelMapping()
+    },
+    {
+      name: 'preflightDataConsistencyCheck',
+      func: () => preflightDataConsistencyCheck()
+    },
+    {
+      name: 'validateLevelAndPermissions',
+      func: () => validateLevelAndPermissions('G1E1', 'IT')
+    }
+  ];
+  
+  const results = [];
+  
+  tests.forEach(test => {
+    try {
+      console.log(`🔍 Testing ${test.name}...`);
+      const result = test.func();
+      results.push({
+        name: test.name,
+        success: true,
+        result: result
+      });
+      console.log(`  ✅ ${test.name}: Success`);
+    } catch (error) {
+      results.push({
+        name: test.name,
+        success: false,
+        error: error.message
+      });
+      console.log(`  ❌ ${test.name}: ${error.message}`);
+    }
+  });
+  
+  console.log(`🎯 Core function tests completed: ${results.filter(r => r.success).length}/${results.length} passed`);
+  return results;
+}
