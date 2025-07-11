@@ -3782,82 +3782,155 @@ function getClassLevelMapping() {
       throw new Error('Master Data file not found | 找不到主控資料檔案');
     }
     
-    // 1. 嘗試找到班級資料工作表 (可能的名稱)
-    const possibleSheetNames = ['Classes', 'Class Data', 'Class', '班級資料', '班級', 'ClassData'];
+    // 1. 嘗試找到班級資料工作表 (包含完整名稱格式)
+    const possibleSheetNames = [
+      'Classes | 班級資料',    // 完整格式名稱 (優先)
+      'Classes',               // 簡短英文名稱
+      'Class Data', 
+      'Class', 
+      '班級資料',              // 中文名稱
+      '班級', 
+      'ClassData'
+    ];
+    
     let classesSheet = null;
+    let foundSheetName = '';
     
     for (const sheetName of possibleSheetNames) {
       classesSheet = masterData.getSheetByName(sheetName);
       if (classesSheet) {
-        console.log(`✅ Found class data sheet: ${sheetName} | 找到班級資料工作表: ${sheetName}`);
+        foundSheetName = sheetName;
+        console.log(`✅ Found class data sheet: "${sheetName}" | 找到班級資料工作表: "${sheetName}"`);
         break;
       }
     }
     
     if (!classesSheet) {
-      throw new Error(`Class data sheet not found. Tried: ${possibleSheetNames.join(', ')} | 找不到班級資料工作表。已嘗試: ${possibleSheetNames.join(', ')}`);
+      throw new Error(`Class data sheet not found. Tried: ${possibleSheetNames.map(name => `"${name}"`).join(', ')} | 找不到班級資料工作表。已嘗試: ${possibleSheetNames.map(name => `"${name}"`).join(', ')}`);
     }
     
-    // 2. 查找 Class Name 和 Level 欄位
-    const headers = classesSheet.getRange(1, 1, 1, classesSheet.getLastColumn()).getValues()[0];
-    console.log('📋 Headers found:', headers);
-    
-    const classNameCol = headers.findIndex(h => {
-      const headerStr = h.toString().toLowerCase();
-      return headerStr.includes('class') && headerStr.includes('name');
-    });
-    
-    const levelCol = headers.findIndex(h => {
-      const headerStr = h.toString().toLowerCase();
-      return headerStr.includes('level');
-    });
-    
-    if (classNameCol === -1) {
-      throw new Error(`Class Name column not found in headers: ${headers} | 在標題中找不到 Class Name 欄位: ${headers}`);
-    }
-    
-    if (levelCol === -1) {
-      throw new Error(`Level column not found in headers: ${headers} | 在標題中找不到 Level 欄位: ${headers}`);
-    }
-    
-    console.log(`📍 Found columns - Class Name: ${classNameCol + 1}, Level: ${levelCol + 1} | 找到欄位 - 班級名稱: ${classNameCol + 1}, 級別: ${levelCol + 1}`);
-    
-    // 3. 建立班級-Level對應表
+    // 2. 智慧解析工作表結構 (支援不同格式)
     const lastRow = classesSheet.getLastRow();
-    if (lastRow <= 1) {
+    const lastColumn = classesSheet.getLastColumn();
+    
+    if (lastRow < 2 || lastColumn < 2) {
+      throw new Error(`Class data sheet appears empty or invalid (${lastRow} rows × ${lastColumn} columns) | 班級資料工作表為空或無效 (${lastRow} 行 × ${lastColumn} 列)`);
+    }
+    
+    // 讀取前幾行來智慧識別資料結構
+    const analysisRows = Math.min(10, lastRow);
+    const analysisData = classesSheet.getRange(1, 1, analysisRows, lastColumn).getValues();
+    
+    let headerRowIndex = -1;
+    let classNameColIndex = -1;
+    let levelColIndex = -1;
+    
+    // 尋找包含 Class Name 和 Level 的標題行
+    for (let rowIndex = 0; rowIndex < analysisRows; rowIndex++) {
+      const row = analysisData[rowIndex];
+      let foundClassName = false;
+      let foundLevel = false;
+      
+      for (let colIndex = 0; colIndex < row.length; colIndex++) {
+        const cellValue = String(row[colIndex]).toLowerCase().trim();
+        
+        // 檢查 Class Name 欄位
+        if ((cellValue.includes('class') && cellValue.includes('name')) || cellValue === 'class name') {
+          classNameColIndex = colIndex;
+          foundClassName = true;
+        }
+        
+        // 檢查 Level 欄位
+        if (cellValue === 'level' || cellValue === '等級' || cellValue.includes('level')) {
+          levelColIndex = colIndex;
+          foundLevel = true;
+        }
+      }
+      
+      // 如果同時找到兩個欄位，這就是標題行
+      if (foundClassName && foundLevel) {
+        headerRowIndex = rowIndex;
+        console.log(`✅ Found header row at row ${rowIndex + 1} | 在第 ${rowIndex + 1} 行找到標題行`);
+        console.log(`📍 Columns found - Class Name: ${classNameColIndex + 1}, Level: ${levelColIndex + 1}`);
+        break;
+      }
+    }
+    
+    if (headerRowIndex === -1 || classNameColIndex === -1 || levelColIndex === -1) {
+      // 提供詳細的診斷資訊
+      console.log('\n🔍 DIAGNOSTIC INFO | 診斷資訊:');
+      for (let i = 0; i < Math.min(5, analysisData.length); i++) {
+        const row = analysisData[i];
+        const rowData = row.map(cell => `"${String(cell).trim()}"`).join(', ');
+        console.log(`Row ${i + 1}: ${rowData}`);
+      }
+      
+      throw new Error(`Could not find Class Name and Level columns in sheet "${foundSheetName}". Please ensure the sheet has columns named "Class Name" and "Level" | 在工作表 "${foundSheetName}" 中找不到 Class Name 和 Level 欄位。請確保工作表有名為 "Class Name" 和 "Level" 的欄位`);
+    }
+    
+    // 3. 讀取資料並建立對應表
+    const dataStartRow = headerRowIndex + 2; // 標題行的下一行開始
+    if (dataStartRow > lastRow) {
       return {
         success: true,
         data: {},
-        message: 'Class data sheet is empty | 班級資料工作表為空'
+        message: `No data rows found after header row ${headerRowIndex + 1} | 在標題行 ${headerRowIndex + 1} 後找不到資料行`
       };
     }
     
-    const data = classesSheet.getRange(2, 1, lastRow - 1, classesSheet.getLastColumn()).getValues();
+    const dataRange = classesSheet.getRange(dataStartRow, 1, lastRow - headerRowIndex - 1, lastColumn);
+    const data = dataRange.getValues();
+    
     const classLevelMap = {};
     let processedCount = 0;
+    let skippedCount = 0;
     
     data.forEach((row, index) => {
-      const className = row[classNameCol];
-      const level = row[levelCol];
+      const className = row[classNameColIndex];
+      const level = row[levelColIndex];
       
       if (className && level) {
-        const cleanClassName = className.toString().trim();
-        const cleanLevel = level.toString().trim();
-        classLevelMap[cleanClassName] = cleanLevel;
-        processedCount++;
-        console.log(`  📝 Mapped: "${cleanClassName}" → "${cleanLevel}"`);
+        const cleanClassName = String(className).trim();
+        const cleanLevel = String(level).trim();
+        
+        if (cleanClassName && cleanLevel) {
+          classLevelMap[cleanClassName] = cleanLevel;
+          processedCount++;
+          
+          // 只記錄前幾個對應以避免記錄過多
+          if (processedCount <= 5) {
+            console.log(`  📝 Mapped: "${cleanClassName}" → "${cleanLevel}"`);
+          }
+        } else {
+          skippedCount++;
+        }
       } else {
-        console.log(`  ⚠️ Skipped row ${index + 2}: className="${className}", level="${level}"`);
+        skippedCount++;
       }
     });
     
-    console.log(`✅ Class-level mapping created: ${processedCount} classes processed | 班級-LEVEL對應表建立: 處理 ${processedCount} 個班級`);
+    if (processedCount > 5) {
+      console.log(`  ... (and ${processedCount - 5} more mappings)`);
+    }
     
-    // 4. 驗證 Students 工作表中的班級名稱 (如果存在)
+    console.log(`✅ Class-level mapping created: ${processedCount} classes processed, ${skippedCount} rows skipped | 班級-LEVEL對應表建立: 處理 ${processedCount} 個班級, 跳過 ${skippedCount} 行`);
+    
+    // 4. 驗證資料合理性
+    const levelDistribution = {};
+    Object.values(classLevelMap).forEach(level => {
+      levelDistribution[level] = (levelDistribution[level] || 0) + 1;
+    });
+    
+    console.log('\n📊 Level distribution | 等級分佈:');
+    Object.keys(levelDistribution).sort().forEach(level => {
+      console.log(`   ${level}: ${levelDistribution[level]} classes`);
+    });
+    
+    // 5. 驗證 Students 工作表中的班級名稱 (如果存在)
     let validation = null;
     const studentsSheet = masterData.getSheetByName('Students');
     if (studentsSheet) {
-      console.log('🔍 Validating Students sheet consistency | 驗證學生工作表一致性...');
+      console.log('\n🔍 Validating Students sheet consistency | 驗證學生工作表一致性...');
       validation = validateStudentsClassNames(studentsSheet, classLevelMap);
     }
     
@@ -3867,7 +3940,11 @@ function getClassLevelMapping() {
       validation: validation,
       summary: {
         totalClasses: processedCount,
-        sheetName: classesSheet.getName(),
+        skippedRows: skippedCount,
+        sheetName: foundSheetName,
+        headerRow: headerRowIndex + 1,
+        dataStartRow: dataStartRow,
+        levelDistribution: levelDistribution,
         hasValidation: validation !== null,
         validationPassed: validation ? validation.success : null
       }
