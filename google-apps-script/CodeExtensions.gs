@@ -1707,8 +1707,15 @@ function getTeacherDataFromMasterData() {
   }
 }
 
-function applyAssessmentTitlesToGradebook(gradebookName, assessmentTitles) {
+function applyAssessmentTitlesToGradebook(gradebookName, assessmentTitles, gradeGroup = null, htType = null, targetLevel = null) {
   try {
+    console.log(`🎯 Applying assessment titles to gradebook: ${gradebookName} | 將評量標題應用到成績簿: ${gradebookName}`);
+    
+    // Log LEVEL-specific sync info if provided
+    if (targetLevel) {
+      console.log(`  📌 LEVEL-specific sync: ${targetLevel} | LEVEL-特定同步: ${targetLevel}`);
+    }
+    
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
     const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
     const files = teacherGradebooksFolder.getFiles();
@@ -1729,50 +1736,114 @@ function applyAssessmentTitlesToGradebook(gradebookName, assessmentTitles) {
       };
     }
     
-    // Get all class sheets in the gradebook
-    const sheets = targetGradebook.getSheets();
-    const classSheets = sheets.filter(sheet => {
-      const name = sheet.getName();
-      return name.match(/^📚\s*G\d+/) || name.match(/^G\d+/);
-    });
+    // Use LEVEL-specific filtering if targetLevel is provided
+    let classSheets;
+    let filteringAnalysis = null;
     
-    if (classSheets.length === 0) {
-      return {
-        success: false,
-        error: `No class sheets found in ${gradebookName} | 在 ${gradebookName} 中找不到班級工作表`
-      };
+    if (targetLevel) {
+      console.log(`🔍 Using LEVEL-specific filtering for: ${targetLevel} | 使用 LEVEL-特定篩選: ${targetLevel}`);
+      
+      const filterResult = filterSheetsByLevel(targetGradebook, targetLevel);
+      if (!filterResult.success) {
+        return {
+          success: false,
+          error: `LEVEL filtering failed: ${filterResult.error} | LEVEL 篩選失敗: ${filterResult.error}`
+        };
+      }
+      
+      classSheets = filterResult.sheets;
+      filteringAnalysis = filterResult.analysis;
+      
+      console.log(`  📊 Filtering results: ${classSheets.length} sheets match LEVEL ${targetLevel} | 篩選結果: ${classSheets.length} 個工作表符合 LEVEL ${targetLevel}`);
+      
+      if (classSheets.length === 0) {
+        return {
+          success: true,
+          message: `No sheets match LEVEL ${targetLevel} in ${gradebookName} | 在 ${gradebookName} 中沒有工作表符合 LEVEL ${targetLevel}`,
+          data: {
+            gradebookName: gradebookName,
+            targetLevel: targetLevel,
+            totalSheetsInGradebook: filterResult.analysis.totalSheets,
+            matchingSheets: 0,
+            nonMatchingSheets: filterResult.analysis.nonMatchingSheets.length,
+            unmappedSheets: filterResult.analysis.unmappedSheets.length,
+            updatedSheets: 0,
+            skippedSheets: filterResult.analysis.totalSheets,
+            errors: [],
+            analysis: filterResult.analysis
+          }
+        };
+      }
+    } else {
+      // Legacy behavior: update all class sheets (for backward compatibility)
+      console.log('📋 Using legacy class sheet filtering | 使用傳統班級工作表篩選');
+      
+      const sheets = targetGradebook.getSheets();
+      classSheets = sheets.filter(sheet => {
+        const name = sheet.getName();
+        return name.match(/^📚\s*G\d+/) || name.match(/^G\d+/);
+      });
+      
+      if (classSheets.length === 0) {
+        return {
+          success: false,
+          error: `No class sheets found in ${gradebookName} | 在 ${gradebookName} 中找不到班級工作表`
+        };
+      }
     }
     
     let updatedSheets = 0;
     const errors = [];
+    const updatedSheetNames = [];
+    const skippedSheetNames = [];
     
-    // Update each class sheet
+    // Update each filtered class sheet
     for (const sheet of classSheets) {
       try {
+        console.log(`  🔄 Updating sheet: ${sheet.getName()} | 更新工作表: ${sheet.getName()}`);
         const sheetResult = updateAssessmentTitlesInSheet(sheet, assessmentTitles);
         if (sheetResult.success) {
           updatedSheets++;
+          updatedSheetNames.push(sheet.getName());
+          console.log(`    ✅ Successfully updated | 成功更新`);
         } else {
           errors.push(`${sheet.getName()}: ${sheetResult.error}`);
+          skippedSheetNames.push(sheet.getName());
+          console.log(`    ❌ Update failed: ${sheetResult.error} | 更新失敗: ${sheetResult.error}`);
         }
       } catch (error) {
         errors.push(`${sheet.getName()}: ${error.message}`);
+        skippedSheetNames.push(sheet.getName());
+        console.error(`    ❌ Error updating ${sheet.getName()}:`, error);
       }
     }
     
-    return {
+    const result = {
       success: updatedSheets > 0,
       data: {
         gradebookName: gradebookName,
-        totalSheets: classSheets.length,
+        targetLevel: targetLevel,
+        gradeGroup: gradeGroup,
+        htType: htType,
+        totalSheetsInGradebook: targetGradebook.getSheets().length,
+        totalClassSheets: classSheets.length,
         updatedSheets: updatedSheets,
-        errors: errors
+        skippedSheets: classSheets.length - updatedSheets,
+        updatedSheetNames: updatedSheetNames,
+        skippedSheetNames: skippedSheetNames,
+        errors: errors,
+        analysis: filteringAnalysis // Include LEVEL filtering analysis if available
       },
-      message: `Updated ${updatedSheets}/${classSheets.length} sheets | 已更新 ${updatedSheets}/${classSheets.length} 工作表`
+      message: targetLevel ? 
+        `LEVEL ${targetLevel} sync: Updated ${updatedSheets}/${classSheets.length} matching sheets | LEVEL ${targetLevel} 同步: 已更新 ${updatedSheets}/${classSheets.length} 個符合的工作表` :
+        `Updated ${updatedSheets}/${classSheets.length} sheets | 已更新 ${updatedSheets}/${classSheets.length} 工作表`
     };
     
+    console.log(`✅ Assessment titles application completed | 評量標題應用完成:`, result.message);
+    return result;
+    
   } catch (error) {
-    console.error(`Apply assessment titles to ${gradebookName} failed:`, error);
+    console.error(`❌ Apply assessment titles to ${gradebookName} failed | 將評量標題應用到 ${gradebookName} 失敗:`, error);
     return {
       success: false,
       error: `Update failed: ${error.message} | 更新失敗: ${error.message}`
@@ -3692,6 +3763,642 @@ function testSystemIntegrity() {
       summary: `❌ System integrity test FAILED | 系統完整性測試失敗: ${error.message}`,
       errors: [error.message],
       tests: []
+    };
+  }
+}
+
+// ===== LEVEL-SPECIFIC SYNC FUNCTIONS | LEVEL-特定同步函數 =====
+
+/**
+ * 從班級資料工作表取得班級-LEVEL對應表 (以班級資料為權威來源)
+ * Get class-level mapping from class data sheet (class data as authoritative source)
+ */
+function getClassLevelMapping() {
+  try {
+    console.log('🔍 Getting class-level mapping from Master Data | 從主控資料取得班級-LEVEL對應表...');
+    
+    const masterData = getMasterDataFile();
+    if (!masterData) {
+      throw new Error('Master Data file not found | 找不到主控資料檔案');
+    }
+    
+    // 1. 嘗試找到班級資料工作表 (可能的名稱)
+    const possibleSheetNames = ['Classes', 'Class Data', 'Class', '班級資料', '班級', 'ClassData'];
+    let classesSheet = null;
+    
+    for (const sheetName of possibleSheetNames) {
+      classesSheet = masterData.getSheetByName(sheetName);
+      if (classesSheet) {
+        console.log(`✅ Found class data sheet: ${sheetName} | 找到班級資料工作表: ${sheetName}`);
+        break;
+      }
+    }
+    
+    if (!classesSheet) {
+      throw new Error(`Class data sheet not found. Tried: ${possibleSheetNames.join(', ')} | 找不到班級資料工作表。已嘗試: ${possibleSheetNames.join(', ')}`);
+    }
+    
+    // 2. 查找 Class Name 和 Level 欄位
+    const headers = classesSheet.getRange(1, 1, 1, classesSheet.getLastColumn()).getValues()[0];
+    console.log('📋 Headers found:', headers);
+    
+    const classNameCol = headers.findIndex(h => {
+      const headerStr = h.toString().toLowerCase();
+      return headerStr.includes('class') && headerStr.includes('name');
+    });
+    
+    const levelCol = headers.findIndex(h => {
+      const headerStr = h.toString().toLowerCase();
+      return headerStr.includes('level');
+    });
+    
+    if (classNameCol === -1) {
+      throw new Error(`Class Name column not found in headers: ${headers} | 在標題中找不到 Class Name 欄位: ${headers}`);
+    }
+    
+    if (levelCol === -1) {
+      throw new Error(`Level column not found in headers: ${headers} | 在標題中找不到 Level 欄位: ${headers}`);
+    }
+    
+    console.log(`📍 Found columns - Class Name: ${classNameCol + 1}, Level: ${levelCol + 1} | 找到欄位 - 班級名稱: ${classNameCol + 1}, 級別: ${levelCol + 1}`);
+    
+    // 3. 建立班級-Level對應表
+    const lastRow = classesSheet.getLastRow();
+    if (lastRow <= 1) {
+      return {
+        success: true,
+        data: {},
+        message: 'Class data sheet is empty | 班級資料工作表為空'
+      };
+    }
+    
+    const data = classesSheet.getRange(2, 1, lastRow - 1, classesSheet.getLastColumn()).getValues();
+    const classLevelMap = {};
+    let processedCount = 0;
+    
+    data.forEach((row, index) => {
+      const className = row[classNameCol];
+      const level = row[levelCol];
+      
+      if (className && level) {
+        const cleanClassName = className.toString().trim();
+        const cleanLevel = level.toString().trim();
+        classLevelMap[cleanClassName] = cleanLevel;
+        processedCount++;
+        console.log(`  📝 Mapped: "${cleanClassName}" → "${cleanLevel}"`);
+      } else {
+        console.log(`  ⚠️ Skipped row ${index + 2}: className="${className}", level="${level}"`);
+      }
+    });
+    
+    console.log(`✅ Class-level mapping created: ${processedCount} classes processed | 班級-LEVEL對應表建立: 處理 ${processedCount} 個班級`);
+    
+    // 4. 驗證 Students 工作表中的班級名稱 (如果存在)
+    let validation = null;
+    const studentsSheet = masterData.getSheetByName('Students');
+    if (studentsSheet) {
+      console.log('🔍 Validating Students sheet consistency | 驗證學生工作表一致性...');
+      validation = validateStudentsClassNames(studentsSheet, classLevelMap);
+    }
+    
+    return {
+      success: true,
+      data: classLevelMap,
+      validation: validation,
+      summary: {
+        totalClasses: processedCount,
+        sheetName: classesSheet.getName(),
+        hasValidation: validation !== null,
+        validationPassed: validation ? validation.success : null
+      }
+    };
+    
+  } catch (error) {
+    console.error('❌ Get class-level mapping failed | 取得班級-LEVEL對應表失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * 驗證 Students 工作表中的班級名稱與班級資料的一致性
+ * Validate consistency between Students sheet class names and class data
+ */
+function validateStudentsClassNames(studentsSheet, classLevelMap) {
+  try {
+    console.log('🔍 Validating Students sheet class names | 驗證學生工作表班級名稱...');
+    
+    const headers = studentsSheet.getRange(1, 1, 1, studentsSheet.getLastColumn()).getValues()[0];
+    const classNameCol = headers.findIndex(h => {
+      const headerStr = h.toString().toLowerCase();
+      return headerStr.includes('class') && headerStr.includes('name');
+    });
+    
+    if (classNameCol === -1) {
+      return { 
+        success: false, 
+        error: 'Class Name column not found in Students sheet | 在學生工作表中找不到 Class Name 欄位' 
+      };
+    }
+    
+    const lastRow = studentsSheet.getLastRow();
+    if (lastRow <= 1) {
+      return {
+        success: true,
+        totalStudentsClasses: 0,
+        totalClassesWithLevel: Object.keys(classLevelMap).length,
+        unmappedClasses: [],
+        validClasses: []
+      };
+    }
+    
+    const data = studentsSheet.getRange(2, 1, lastRow - 1, studentsSheet.getLastColumn()).getValues();
+    const studentsClasses = new Set();
+    const unmappedClasses = [];
+    
+    // 收集 Students 工作表中的所有班級名稱
+    data.forEach((row, index) => {
+      const className = row[classNameCol];
+      if (className) {
+        const cleanClassName = className.toString().trim();
+        studentsClasses.add(cleanClassName);
+        
+        // 檢查是否在班級資料中存在
+        if (!classLevelMap[cleanClassName]) {
+          unmappedClasses.push({
+            className: cleanClassName,
+            row: index + 2,
+            studentName: row[0] // 假設第一欄是學生姓名
+          });
+        }
+      }
+    });
+    
+    const validClasses = Array.from(studentsClasses).filter(name => classLevelMap[name]);
+    
+    console.log(`📊 Validation results | 驗證結果:`);
+    console.log(`  Total classes in Students sheet | 學生工作表中的總班級數: ${studentsClasses.size}`);
+    console.log(`  Total classes with Level data | 有 Level 資料的總班級數: ${Object.keys(classLevelMap).length}`);
+    console.log(`  Valid classes | 有效班級數: ${validClasses.length}`);
+    console.log(`  Unmapped classes | 未對應班級數: ${unmappedClasses.length}`);
+    
+    if (unmappedClasses.length > 0) {
+      console.log('⚠️ Unmapped classes found | 發現未對應的班級:');
+      unmappedClasses.forEach(item => {
+        console.log(`  - "${item.className}" (Row ${item.row}, Student: ${item.studentName})`);
+      });
+    }
+    
+    return {
+      success: unmappedClasses.length === 0,
+      totalStudentsClasses: studentsClasses.size,
+      totalClassesWithLevel: Object.keys(classLevelMap).length,
+      unmappedClasses: unmappedClasses,
+      validClasses: validClasses
+    };
+    
+  } catch (error) {
+    console.error('❌ Students class names validation failed | 學生班級名稱驗證失敗:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * 根據 LEVEL 篩選工作表 (含資料一致性驗證)
+ * Filter sheets by LEVEL with data consistency validation
+ */
+function filterSheetsByLevel(gradebook, targetLevel) {
+  try {
+    console.log(`🔍 Filtering sheets by LEVEL: ${targetLevel} | 根據 LEVEL 篩選工作表: ${targetLevel}`);
+    
+    // 1. 取得班級-LEVEL對應表 (以班級資料為準)
+    const levelMapping = getClassLevelMapping();
+    if (!levelMapping.success) {
+      throw new Error(`Cannot get class-level mapping: ${levelMapping.error} | 無法取得班級-LEVEL對應表: ${levelMapping.error}`);
+    }
+    
+    console.log(`📋 Total classes in mapping: ${Object.keys(levelMapping.data).length} | 對應表中的總班級數: ${Object.keys(levelMapping.data).length}`);
+    
+    // 2. 檢查資料一致性
+    if (levelMapping.validation && !levelMapping.validation.success) {
+      console.warn('⚠️ Data consistency warning | 資料一致性警告:', levelMapping.validation);
+      
+      // 如果有不一致的班級，提供詳細資訊
+      if (levelMapping.validation.unmappedClasses.length > 0) {
+        console.warn('The following classes exist in Students sheet but not found in class data | 以下班級在 Students 工作表中存在但在班級資料中找不到:');
+        levelMapping.validation.unmappedClasses.forEach(item => {
+          console.warn(`  - ${item.className} (Row ${item.row})`);
+        });
+      }
+    }
+    
+    // 3. 取得所有工作表並篩選
+    const allSheets = gradebook.getSheets();
+    console.log(`📊 Total sheets in gradebook: ${allSheets.length} | 成績簿中的總工作表數: ${allSheets.length}`);
+    
+    const matchingSheets = [];
+    const analysisResults = {
+      totalSheets: allSheets.length,
+      matchingSheets: [],
+      nonMatchingSheets: [],
+      unmappedSheets: [],
+      dataInconsistencies: levelMapping.validation?.unmappedClasses || []
+    };
+    
+    allSheets.forEach(sheet => {
+      const sheetName = sheet.getName().trim();
+      
+      // 直接查詢對應的 LEVEL (以班級資料為準)
+      const classLevel = levelMapping.data[sheetName];
+      
+      if (!classLevel) {
+        // 檢查是否為資料不一致造成的
+        const isInconsistency = levelMapping.validation?.unmappedClasses?.some(item => item.className === sheetName);
+        
+        analysisResults.unmappedSheets.push({
+          sheetName: sheetName,
+          reason: isInconsistency ? 
+            'Class exists in Students sheet but not found in class data (data inconsistency) | 此班級在 Students 工作表中存在但在班級資料中找不到 (資料不一致)' :
+            'Class not found in class data or not a class sheet | 在班級資料中找不到對應的班級或非班級工作表'
+        });
+        
+        console.log(`  ⚠️ Unmapped: "${sheetName}" - ${isInconsistency ? 'data inconsistency' : 'not in class data'}`);
+      } else if (classLevel === targetLevel) {
+        // 精確符合目標 LEVEL
+        matchingSheets.push(sheet);
+        analysisResults.matchingSheets.push({
+          sheetName: sheetName,
+          level: classLevel
+        });
+        console.log(`  ✅ Match: "${sheetName}" (Level: ${classLevel})`);
+      } else {
+        // 是班級工作表但 LEVEL 不符合
+        analysisResults.nonMatchingSheets.push({
+          sheetName: sheetName,
+          level: classLevel,
+          reason: `Level ${classLevel} does not match target ${targetLevel} | Level ${classLevel} 不符合目標 ${targetLevel}`
+        });
+        console.log(`  ➖ Non-match: "${sheetName}" (Level: ${classLevel} ≠ ${targetLevel})`);
+      }
+    });
+    
+    console.log(`🎯 Filtering results | 篩選結果:`);
+    console.log(`  Matching sheets: ${matchingSheets.length} | 符合的工作表: ${matchingSheets.length}`);
+    console.log(`  Non-matching sheets: ${analysisResults.nonMatchingSheets.length} | 不符合的工作表: ${analysisResults.nonMatchingSheets.length}`);
+    console.log(`  Unmapped sheets: ${analysisResults.unmappedSheets.length} | 未對應的工作表: ${analysisResults.unmappedSheets.length}`);
+    
+    return {
+      success: true,
+      sheets: matchingSheets,
+      analysis: analysisResults,
+      dataConsistency: levelMapping.validation,
+      summary: {
+        targetLevel: targetLevel,
+        totalSheets: allSheets.length,
+        matchingCount: matchingSheets.length,
+        hasDataIssues: levelMapping.validation && !levelMapping.validation.success
+      }
+    };
+    
+  } catch (error) {
+    console.error(`❌ Filter sheets by level failed | 根據 LEVEL 篩選工作表失敗:`, error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * 執行同步前的完整資料一致性檢查
+ * Complete data consistency check before sync execution
+ */
+function preflightDataConsistencyCheck() {
+  try {
+    console.log('🔍 Starting preflight data consistency check | 開始執行前資料一致性檢查...');
+    
+    // 檢查 Master Data 結構
+    const masterData = getMasterDataFile();
+    if (!masterData) {
+      return {
+        success: false,
+        error: 'Master Data file not found | 找不到主控資料檔案',
+        checks: {
+          masterDataStructure: '❌ 不完整'
+        }
+      };
+    }
+    
+    const studentsSheet = masterData.getSheetByName('Students');
+    const possibleClassSheets = ['Classes', 'Class Data', 'Class', '班級資料', '班級', 'ClassData'];
+    let classesSheet = null;
+    
+    for (const sheetName of possibleClassSheets) {
+      classesSheet = masterData.getSheetByName(sheetName);
+      if (classesSheet) break;
+    }
+    
+    if (!studentsSheet || !classesSheet) {
+      return {
+        success: false,
+        error: 'Master Data structure incomplete | Master Data 結構不完整',
+        checks: {
+          masterDataStructure: '❌ 不完整',
+          studentsSheet: studentsSheet ? '✅ 存在' : '❌ 缺失',
+          classesSheet: classesSheet ? '✅ 存在' : '❌ 缺失'
+        }
+      };
+    }
+    
+    // 執行資料一致性檢查
+    console.log('🔍 Checking data consistency | 檢查資料一致性...');
+    const levelMapping = getClassLevelMapping();
+    
+    const checks = {
+      masterDataStructure: '✅ 完整',
+      studentsSheet: '✅ 存在',
+      classesSheet: `✅ 存在 (${classesSheet.getName()})`,
+      classLevelMapping: levelMapping.success ? '✅ 成功' : '❌ 失敗',
+      dataConsistency: 'pending'
+    };
+    
+    if (!levelMapping.success) {
+      return {
+        success: false,
+        error: `Class-level mapping failed: ${levelMapping.error} | 班級-LEVEL對應失敗: ${levelMapping.error}`,
+        checks: {
+          ...checks,
+          dataConsistency: '❌ 無法檢查'
+        }
+      };
+    }
+    
+    // 分析一致性結果
+    const validation = levelMapping.validation;
+    if (validation) {
+      const isConsistent = validation.success;
+      checks.dataConsistency = isConsistent ? '✅ 一致' : '⚠️ 不一致';
+      
+      return {
+        success: isConsistent,
+        checks: checks,
+        dataQuality: {
+          totalStudentsClasses: validation.totalStudentsClasses,
+          totalClassesWithLevel: validation.totalClassesWithLevel,
+          validClasses: validation.validClasses.length,
+          unmappedClasses: validation.unmappedClasses.length,
+          inconsistencies: validation.unmappedClasses
+        },
+        recommendation: isConsistent ? 
+          'Data is consistent. Safe to proceed with sync. | 資料一致，可以安全執行同步。' : 
+          `Found ${validation.unmappedClasses.length} data inconsistencies. Recommend fixing before sync. | 發現 ${validation.unmappedClasses.length} 項資料不一致，建議先修正再執行同步。`
+      };
+    } else {
+      checks.dataConsistency = '⚠️ 無學生資料驗證';
+      return {
+        success: true,
+        checks: checks,
+        recommendation: 'No Students sheet found for validation, but class data is available. | 未找到學生工作表進行驗證，但班級資料可用。'
+      };
+    }
+    
+  } catch (error) {
+    console.error('❌ Preflight data consistency check failed | 執行前資料一致性檢查失敗:', error);
+    return {
+      success: false,
+      error: error.message,
+      checks: {
+        masterDataStructure: '❌ 檢查失敗'
+      }
+    };
+  }
+}
+
+/**
+ * LEVEL-特定同步函數 (增強版) - 支援精確的 LEVEL 匹配
+ * Enhanced LEVEL-specific sync function with precise LEVEL matching
+ */
+function syncAssessmentTitlesByLevelEnhanced(level, teacherType) {
+  try {
+    console.log(`🎯 Starting LEVEL-specific sync: ${level} ${teacherType} | 開始 LEVEL-特定同步: ${level} ${teacherType}`);
+    
+    // 1. 驗證 LEVEL 格式和權限
+    const levelValidation = validateLevelAndPermissions(level, teacherType);
+    if (!levelValidation.success) {
+      return levelValidation;
+    }
+    
+    const gradeGroup = levelValidation.gradeGroup;
+    console.log(`✅ LEVEL validation passed. Grade group: ${gradeGroup} | LEVEL 驗證通過。年段組: ${gradeGroup}`);
+    
+    // 2. 執行同步前資料一致性檢查
+    console.log('🔍 Running preflight data consistency check | 執行同步前資料一致性檢查...');
+    const preflightCheck = preflightDataConsistencyCheck();
+    
+    if (!preflightCheck.success) {
+      console.warn('⚠️ Preflight check failed, but proceeding with sync | 執行前檢查失敗，但繼續執行同步:', preflightCheck.error);
+    } else if (preflightCheck.dataQuality && preflightCheck.dataQuality.unmappedClasses > 0) {
+      console.warn(`⚠️ Found ${preflightCheck.dataQuality.unmappedClasses} data inconsistencies, but proceeding | 發現 ${preflightCheck.dataQuality.unmappedClasses} 項資料不一致，但繼續執行`);
+    }
+    
+    // 3. 取得 HT 評量標題
+    console.log(`📋 Getting assessment titles from HT gradebook | 從 HT 成績簿取得評量標題...`);
+    const assessmentTitles = getAssessmentTitlesFromHTGradebook(gradeGroup, teacherType);
+    if (!assessmentTitles.success) {
+      return {
+        success: false,
+        error: `Cannot get HT assessment titles: ${assessmentTitles.error} | 無法取得 HT 評量標題: ${assessmentTitles.error}`
+      };
+    }
+    
+    console.log(`✅ Successfully retrieved HT assessment titles | 成功取得 HT 評量標題`);
+    
+    // 4. 找到該年段的教師成績簿
+    console.log(`🔍 Finding teacher gradebooks for ${gradeGroup} ${teacherType} | 尋找 ${gradeGroup} ${teacherType} 的教師成績簿...`);
+    const teacherGradebooks = findTeacherGradebooksByGradeGroup(gradeGroup, teacherType);
+    
+    if (teacherGradebooks.length === 0) {
+      return {
+        success: false,
+        error: `No teacher gradebooks found for ${gradeGroup} ${teacherType} | 找不到 ${gradeGroup} ${teacherType} 的教師成績簿`
+      };
+    }
+    
+    console.log(`📚 Found ${teacherGradebooks.length} teacher gradebooks | 找到 ${teacherGradebooks.length} 個教師成績簿`);
+    
+    // 5. 對每個成績簿進行 LEVEL-特定同步
+    let totalSuccessCount = 0;
+    let totalErrorCount = 0;
+    let totalGradebooksProcessed = 0;
+    let totalSheetsProcessed = 0;
+    const detailedResults = [];
+    const errors = [];
+    
+    for (const gradebookName of teacherGradebooks) {
+      console.log(`📖 Processing gradebook: ${gradebookName} | 處理成績簿: ${gradebookName}`);
+      
+      const result = applyAssessmentTitlesToGradebook(
+        gradebookName, 
+        assessmentTitles.data, 
+        gradeGroup, 
+        teacherType, 
+        level  // 🎯 重要：傳遞具體的 LEVEL 進行精確篩選
+      );
+      
+      totalGradebooksProcessed++;
+      
+      if (result.success && result.data) {
+        totalSuccessCount += result.data.updatedSheets;
+        totalErrorCount += result.data.errors.length;
+        totalSheetsProcessed += result.data.totalClassSheets;
+        detailedResults.push(result.data);
+        
+        console.log(`  ✅ ${gradebookName}: ${result.data.updatedSheets}/${result.data.totalClassSheets} sheets updated | ${result.data.updatedSheets}/${result.data.totalClassSheets} 工作表已更新`);
+        
+        if (result.data.errors.length > 0) {
+          errors.push(...result.data.errors.map(err => `${gradebookName}: ${err}`));
+        }
+      } else {
+        totalErrorCount++;
+        errors.push(`${gradebookName}: ${result.error}`);
+        console.error(`  ❌ ${gradebookName}: ${result.error}`);
+      }
+    }
+    
+    // 6. 生成詳細的同步報告
+    const syncReport = {
+      success: true,
+      data: {
+        level: level,
+        gradeGroup: gradeGroup,
+        teacherType: teacherType,
+        timestamp: new Date().toISOString(),
+        
+        // 統計數據
+        totalGradebooks: teacherGradebooks.length,
+        processedGradebooks: totalGradebooksProcessed,
+        totalSheetsProcessed: totalSheetsProcessed,
+        totalSuccessCount: totalSuccessCount,
+        totalErrorCount: totalErrorCount,
+        
+        // 詳細結果
+        detailedResults: detailedResults,
+        errors: errors,
+        
+        // 資料品質資訊
+        preflightCheck: preflightCheck,
+        
+        // 摘要
+        summary: {
+          gradebooks: `${totalGradebooksProcessed}/${teacherGradebooks.length} processed`,
+          sheets: `${totalSuccessCount} updated, ${totalErrorCount} errors`,
+          dataQuality: preflightCheck.success ? 'Good' : 'Issues detected'
+        }
+      },
+      message: `LEVEL ${level} sync completed: ${totalGradebooksProcessed} gradebooks processed, ${totalSuccessCount} sheets updated | LEVEL ${level} 同步完成: 處理 ${totalGradebooksProcessed} 個成績簿, ${totalSuccessCount} 個工作表已更新`
+    };
+    
+    console.log(`🎉 LEVEL-specific sync completed successfully | LEVEL-特定同步成功完成:`, syncReport.message);
+    return syncReport;
+    
+  } catch (error) {
+    console.error(`❌ LEVEL-specific sync failed | LEVEL-特定同步失敗:`, error);
+    return {
+      success: false,
+      error: `LEVEL sync failed: ${error.message} | LEVEL 同步失敗: ${error.message}`
+    };
+  }
+}
+
+/**
+ * 驗證 LEVEL 和權限
+ * Validate LEVEL format and permissions
+ */
+function validateLevelAndPermissions(level, teacherType) {
+  try {
+    console.log(`🔐 Validating LEVEL and permissions: ${level} ${teacherType} | 驗證 LEVEL 和權限: ${level} ${teacherType}`);
+    
+    // 確定年段組
+    let gradeGroup;
+    if (['G1E1', 'G1E2', 'G1E3', 'G2E1', 'G2E2', 'G2E3'].includes(level)) {
+      gradeGroup = 'G1-G2';
+    } else if (['G3E1', 'G3E2', 'G3E3', 'G4E1', 'G4E2', 'G4E3'].includes(level)) {
+      gradeGroup = 'G3-G4';
+    } else if (['G5E1', 'G5E2', 'G5E3', 'G6E1', 'G6E2', 'G6E3'].includes(level)) {
+      gradeGroup = 'G5-G6';
+    } else {
+      return {
+        success: false,
+        error: `Invalid LEVEL format: ${level}. Expected format: G[1-6]E[1-3] | 無效的 LEVEL 格式: ${level}。期望格式: G[1-6]E[1-3]`
+      };
+    }
+    
+    // 驗證 teacherType
+    if (!['IT', 'LT'].includes(teacherType)) {
+      return {
+        success: false,
+        error: `Invalid teacher type: ${teacherType}. Expected: IT or LT | 無效的教師類型: ${teacherType}。期望: IT 或 LT`
+      };
+    }
+    
+    // 驗證 HT 權限
+    console.log('🔍 Checking HT permissions | 檢查 HT 權限...');
+    const htContext = getCurrentHTContextEnhanced();
+    
+    if (!htContext.success) {
+      // 檢查是否為管理員帳號
+      const userEmail = Session.getActiveUser().getEmail();
+      const isAdmin = SYSTEM_CONFIG.ADMIN?.ACCOUNTS?.includes(userEmail);
+      
+      if (isAdmin) {
+        console.log(`✅ Admin access granted for ${userEmail} | 為 ${userEmail} 授予管理員存取權限`);
+        return {
+          success: true,
+          gradeGroup: gradeGroup,
+          accessType: 'admin'
+        };
+      }
+      
+      return {
+        success: false,
+        error: `HT authentication failed and not admin: ${htContext.error} | HT 驗證失敗且非管理員: ${htContext.error}`
+      };
+    }
+    
+    // 檢查 HT 是否有此年段組的權限
+    if (!htContext.htGrades.includes(gradeGroup)) {
+      return {
+        success: false,
+        error: `Access denied: HT does not have permission for ${gradeGroup} | 存取被拒: HT 沒有 ${gradeGroup} 的權限`
+      };
+    }
+    
+    // 檢查 HT 是否有此教師類型的權限
+    if (!htContext.htTypes.includes(teacherType)) {
+      return {
+        success: false,
+        error: `Access denied: HT does not have permission for ${teacherType} | 存取被拒: HT 沒有 ${teacherType} 的權限`
+      };
+    }
+    
+    console.log(`✅ HT permissions validated successfully | HT 權限驗證成功`);
+    return {
+      success: true,
+      gradeGroup: gradeGroup,
+      accessType: 'ht',
+      htContext: htContext
+    };
+    
+  } catch (error) {
+    console.error('❌ LEVEL and permissions validation failed | LEVEL 和權限驗證失敗:', error);
+    return {
+      success: false,
+      error: `Validation failed: ${error.message} | 驗證失敗: ${error.message}`
     };
   }
 }
