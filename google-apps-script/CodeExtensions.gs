@@ -12,51 +12,84 @@
 function getMasterDataFile() {
   try {
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const files = systemFolder.getFiles();
-    const allFiles = [];
     
-    // First, collect all files for debugging | 首先收集所有檔案以便除錯
-    while (files.hasNext()) {
-      const file = files.next();
-      const fileName = file.getName();
-      const mimeType = file.getMimeType();
+    // Enhanced search function that checks both files and subfolders | 增強的搜尋函數，檢查檔案和子資料夾
+    function searchForMasterData(folder, depth = 0) {
+      console.log(`${'  '.repeat(depth)}🔍 Searching in folder: ${folder.getName()}`);
       
-      allFiles.push({name: fileName, type: mimeType});
-      
-      // Only check Google Sheets files | 只檢查 Google Sheets 檔案
-      if (mimeType === 'application/vnd.google-apps.spreadsheet') {
-        // Enhanced pattern matching for master data files | 增強的主控資料檔案模式匹配
-        const patterns = [
-          'Master Data', '主要資料', 'master data', 'MASTER DATA',
-          'Students', '學生資料', 'students', 'STUDENTS', 
-          '學生名單', '學生清單', 'Student List', 'student list',
-          '成績簿系統', 'Gradebook System', 'gradebook system',
-          '2425S2', // Current semester pattern
-          'Master', 'master', '主控', '主要'
-        ];
+      // Search files in current folder | 搜尋當前資料夾中的檔案
+      const files = folder.getFiles();
+      while (files.hasNext()) {
+        const file = files.next();
+        const fileName = file.getName();
+        const mimeType = file.getMimeType();
         
-        // Check if filename matches any pattern | 檢查檔案名稱是否符合任何模式
-        for (const pattern of patterns) {
-          if (fileName.includes(pattern)) {
-            console.log(`✅ Found master data file: ${fileName} (matched pattern: ${pattern})`);
-            return SpreadsheetApp.openById(file.getId());
+        console.log(`${'  '.repeat(depth)}   📄 Found file: ${fileName} (${mimeType})`);
+        
+        // Only check Google Sheets files | 只檢查 Google Sheets 檔案
+        if (mimeType === 'application/vnd.google-apps.spreadsheet') {
+          // Enhanced pattern matching for master data files | 增強的主控資料檔案模式匹配
+          const patterns = [
+            'Master Data', '主要資料', 'master data', 'MASTER DATA',
+            'Students', '學生資料', 'students', 'STUDENTS', 
+            '學生名單', '學生清單', 'Student List', 'student list',
+            '成績簿系統', 'Gradebook System', 'gradebook system',
+            '2425S2', // Current semester pattern
+            'Master', 'master', '主控', '主要', '主控資料'
+          ];
+          
+          // Check if filename matches any pattern | 檢查檔案名稱是否符合任何模式
+          for (const pattern of patterns) {
+            if (fileName.includes(pattern)) {
+              console.log(`✅ Found master data file: ${fileName} (matched pattern: ${pattern}) in folder: ${folder.getName()}`);
+              return SpreadsheetApp.openById(file.getId());
+            }
           }
         }
       }
+      
+      // Search subfolders (limit depth to prevent infinite recursion) | 搜尋子資料夾（限制深度以防止無限遞歸）
+      if (depth < 2) {
+        const subfolders = folder.getFolders();
+        while (subfolders.hasNext()) {
+          const subfolder = subfolders.next();
+          const subfolderName = subfolder.getName();
+          
+          console.log(`${'  '.repeat(depth)}📁 Found subfolder: ${subfolderName}`);
+          
+          // Check if this is a Master Data folder | 檢查是否為主控資料資料夾
+          const masterDataFolderPatterns = [
+            'Master Data', '主控資料', 'master data', 'MASTER DATA',
+            'Master', '主控', '主要資料', 'MasterData'
+          ];
+          
+          const isMasterDataFolder = masterDataFolderPatterns.some(pattern => 
+            subfolderName.includes(pattern)
+          );
+          
+          if (isMasterDataFolder) {
+            console.log(`🎯 Checking Master Data folder: ${subfolderName}`);
+          }
+          
+          // Recursively search subfolder | 遞歸搜尋子資料夾
+          const result = searchForMasterData(subfolder, depth + 1);
+          if (result) {
+            return result;
+          }
+        }
+      }
+      
+      return null;
     }
     
-    // If no file found, log all available files for debugging | 如果找不到檔案，記錄所有可用檔案以便除錯
-    console.error('❌ Master Data file not found. Available files in system folder:');
-    allFiles.forEach(file => {
-      console.log(`   - ${file.name} (${file.type})`);
-    });
+    // Start searching from system folder | 從系統資料夾開始搜尋
+    const result = searchForMasterData(systemFolder);
     
-    // REMOVED FALLBACK MECHANISM | 移除備用機制
-    // The fallback was incorrectly selecting Dashboard files
-    // 備用機制錯誤地選擇了 Dashboard 檔案
-    console.log('❌ No Master Data file found with expected patterns | 找不到符合預期模式的主控資料檔案');
+    if (!result) {
+      console.error('❌ Master Data file not found in system folder or subfolders | 在系統資料夾或子資料夾中找不到主控資料檔案');
+    }
     
-    return null;
+    return result;
     
   } catch (error) {
     console.error('Error accessing master data file | 存取主控資料檔案時發生錯誤:', error);
@@ -2937,21 +2970,44 @@ function getMasterDataUrl() {
       };
     }
     
-    // List all files in the folder for debugging | 列出資料夾中所有檔案以便除錯
-    const files = systemFolder.getFiles();
-    const allFiles = [];
-    
-    while (files.hasNext()) {
-      const file = files.next();
-      allFiles.push({
-        name: file.getName(),
-        type: file.getMimeType(),
-        id: file.getId()
-      });
+    // Enhanced folder exploration for debugging | 增強的資料夾探索以便除錯
+    function exploreFolder(folder, depth = 0) {
+      const indent = '  '.repeat(depth);
+      const items = [];
+      
+      console.log(`${indent}📁 Exploring folder: ${folder.getName()}`);
+      
+      // List files | 列出檔案
+      const files = folder.getFiles();
+      while (files.hasNext()) {
+        const file = files.next();
+        const fileInfo = {
+          name: file.getName(),
+          type: file.getMimeType(),
+          id: file.getId(),
+          folder: folder.getName()
+        };
+        items.push(fileInfo);
+        console.log(`${indent}   📄 ${fileInfo.name} (${fileInfo.type})`);
+      }
+      
+      // List subfolders | 列出子資料夾
+      if (depth < 2) {
+        const subfolders = folder.getFolders();
+        while (subfolders.hasNext()) {
+          const subfolder = subfolders.next();
+          console.log(`${indent}   📁 ${subfolder.getName()}/`);
+          items.push(...exploreFolder(subfolder, depth + 1));
+        }
+      }
+      
+      return items;
     }
     
-    console.log(`📋 Found ${allFiles.length} files in system folder`);
-    allFiles.forEach(file => console.log(`   - ${file.name} (${file.type})`));
+    const allItems = exploreFolder(systemFolder);
+    const allFiles = allItems.filter(item => item.type);
+    
+    console.log(`📋 Found ${allFiles.length} total files across all folders`);
     
     // Try to get master data file | 嘗試取得主控資料檔案
     const masterData = getMasterDataFile();
