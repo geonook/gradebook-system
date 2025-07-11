@@ -719,6 +719,7 @@ function createMasterDataSheet(systemFolder) {
     'Grade | 年級',
     'Homeroom | 班級',
     'English Class | 英文班級',
+    'Level | 等級',
     'LT Teacher | LT老師',
     'IT Teacher | IT老師',
     'Email | 電子郵件',
