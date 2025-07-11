@@ -13,22 +13,62 @@ function getMasterDataFile() {
   try {
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
     const files = systemFolder.getFiles();
+    const allFiles = [];
     
+    // First, collect all files for debugging | 首先收集所有檔案以便除錯
     while (files.hasNext()) {
       const file = files.next();
       const fileName = file.getName();
+      const mimeType = file.getMimeType();
       
-      // Look for master data file patterns
-      if (fileName.includes('Master Data') || fileName.includes('主要資料') || 
-          fileName.includes('Students') || fileName.includes('學生資料')) {
-        return SpreadsheetApp.openById(file.getId());
+      allFiles.push({name: fileName, type: mimeType});
+      
+      // Only check Google Sheets files | 只檢查 Google Sheets 檔案
+      if (mimeType === 'application/vnd.google-apps.spreadsheet') {
+        // Enhanced pattern matching for master data files | 增強的主控資料檔案模式匹配
+        const patterns = [
+          'Master Data', '主要資料', 'master data', 'MASTER DATA',
+          'Students', '學生資料', 'students', 'STUDENTS', 
+          '學生名單', '學生清單', 'Student List', 'student list',
+          '成績簿系統', 'Gradebook System', 'gradebook system',
+          '2425S2', // Current semester pattern
+          'Master', 'master', '主控', '主要'
+        ];
+        
+        // Check if filename matches any pattern | 檢查檔案名稱是否符合任何模式
+        for (const pattern of patterns) {
+          if (fileName.includes(pattern)) {
+            console.log(`✅ Found master data file: ${fileName} (matched pattern: ${pattern})`);
+            return SpreadsheetApp.openById(file.getId());
+          }
+        }
+      }
+    }
+    
+    // If no file found, log all available files for debugging | 如果找不到檔案，記錄所有可用檔案以便除錯
+    console.error('❌ Master Data file not found. Available files in system folder:');
+    allFiles.forEach(file => {
+      console.log(`   - ${file.name} (${file.type})`);
+    });
+    
+    // Try to find ANY Google Sheets file as fallback | 嘗試找到任何 Google Sheets 檔案作為備選
+    const sheetsFiles = allFiles.filter(file => file.type === 'application/vnd.google-apps.spreadsheet');
+    if (sheetsFiles.length > 0) {
+      console.log(`⚠️ Using first available Google Sheets file as fallback: ${sheetsFiles[0].name}`);
+      // Re-iterate to get the actual file object
+      const filesAgain = systemFolder.getFiles();
+      while (filesAgain.hasNext()) {
+        const file = filesAgain.next();
+        if (file.getName() === sheetsFiles[0].name) {
+          return SpreadsheetApp.openById(file.getId());
+        }
       }
     }
     
     return null;
     
   } catch (error) {
-    console.error('Error accessing master data file:', error);
+    console.error('Error accessing master data file | 存取主控資料檔案時發生錯誤:', error);
     return null;
   }
 }
@@ -2890,24 +2930,72 @@ function getSystemFolderUrl() {
 
 function getMasterDataUrl() {
   try {
-    const masterData = getMasterDataFile();
-    if (masterData) {
+    console.log('🔍 Searching for Master Data file | 搜尋主控資料檔案...');
+    
+    // First, verify system folder access | 首先驗證系統資料夾存取
+    let systemFolder;
+    try {
+      systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+      console.log(`✅ System folder accessible: ${systemFolder.getName()}`);
+    } catch (folderError) {
+      console.error('❌ Cannot access system folder:', folderError);
       return {
-        success: true,
-        url: masterData.getUrl()
+        success: false,
+        error: `Cannot access system folder: ${folderError.message} | 無法存取系統資料夾: ${folderError.message}`,
+        step: 'folder_access'
       };
     }
     
+    // List all files in the folder for debugging | 列出資料夾中所有檔案以便除錯
+    const files = systemFolder.getFiles();
+    const allFiles = [];
+    
+    while (files.hasNext()) {
+      const file = files.next();
+      allFiles.push({
+        name: file.getName(),
+        type: file.getMimeType(),
+        id: file.getId()
+      });
+    }
+    
+    console.log(`📋 Found ${allFiles.length} files in system folder`);
+    allFiles.forEach(file => console.log(`   - ${file.name} (${file.type})`));
+    
+    // Try to get master data file | 嘗試取得主控資料檔案
+    const masterData = getMasterDataFile();
+    if (masterData) {
+      const url = masterData.getUrl();
+      const name = masterData.getName();
+      console.log(`✅ Master Data file found: ${name}`);
+      
+      return {
+        success: true,
+        url: url,
+        name: name
+      };
+    }
+    
+    // If not found, provide detailed error info | 如果找不到，提供詳細錯誤信息
+    const sheetsFiles = allFiles.filter(f => f.type === 'application/vnd.google-apps.spreadsheet');
+    
     return {
       success: false,
-      error: 'Master Data file not found | 找不到主控資料檔案'
+      error: `Master Data file not found in system folder | 在系統資料夾中找不到主控資料檔案`,
+      step: 'file_search',
+      filesInFolder: allFiles.map(f => f.name),
+      sheetsCount: sheetsFiles.length,
+      suggestion: sheetsFiles.length > 0 ? 
+        `Found ${sheetsFiles.length} Google Sheets files, but none match expected patterns | 找到 ${sheetsFiles.length} 個 Google Sheets 檔案，但都不符合預期模式` :
+        'No Google Sheets files found in system folder | 系統資料夾中沒有找到 Google Sheets 檔案'
     };
     
   } catch (error) {
     console.error('Error getting master data URL | 取得主控資料 URL 時發生錯誤:', error);
     return {
       success: false,
-      error: `Failed to access Master Data file: ${error.message} | 無法存取主控資料檔案: ${error.message}`
+      error: `Failed to access Master Data file: ${error.message} | 無法存取主控資料檔案: ${error.message}`,
+      step: 'unexpected_error'
     };
   }
 }
@@ -3349,6 +3437,81 @@ function setupHTDataForCurrentUser(userEmail = null) {
     
   } catch (error) {
     console.error('❌ Setup HT data failed:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+// ===== FILE SYSTEM DIAGNOSTICS | 檔案系統診斷 =====
+
+/**
+ * Diagnose files in system folder | 診斷系統資料夾中的檔案
+ */
+function diagnoseSystemFiles() {
+  try {
+    console.log('🔍 Starting system files diagnosis | 開始系統檔案診斷...');
+    
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const folderName = systemFolder.getName();
+    const files = systemFolder.getFiles();
+    
+    const result = {
+      success: true,
+      folderName: folderName,
+      folderId: SYSTEM_CONFIG.MAIN_FOLDER_ID,
+      files: [],
+      googleSheetsFiles: [],
+      potentialMasterDataFiles: []
+    };
+    
+    // Collect all files | 收集所有檔案
+    while (files.hasNext()) {
+      const file = files.next();
+      const fileInfo = {
+        name: file.getName(),
+        type: file.getMimeType(),
+        id: file.getId(),
+        url: file.getUrl(),
+        lastModified: file.getLastUpdated()
+      };
+      
+      result.files.push(fileInfo);
+      
+      // Check if it's a Google Sheets file | 檢查是否為 Google Sheets 檔案
+      if (fileInfo.type === 'application/vnd.google-apps.spreadsheet') {
+        result.googleSheetsFiles.push(fileInfo);
+        
+        // Check potential master data patterns | 檢查潛在的主控資料模式
+        const fileName = fileInfo.name.toLowerCase();
+        const masterDataPatterns = [
+          'master', 'student', 'gradebook', '學生', '主控', '主要', '成績', '2425'
+        ];
+        
+        for (const pattern of masterDataPatterns) {
+          if (fileName.includes(pattern.toLowerCase())) {
+            result.potentialMasterDataFiles.push({
+              ...fileInfo,
+              matchedPattern: pattern
+            });
+            break;
+          }
+        }
+      }
+    }
+    
+    // Sort by modification date | 按修改日期排序
+    result.files.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+    result.googleSheetsFiles.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+    
+    console.log(`📋 Found ${result.files.length} total files, ${result.googleSheetsFiles.length} Google Sheets files`);
+    console.log(`🎯 Found ${result.potentialMasterDataFiles.length} potential master data files`);
+    
+    return result;
+    
+  } catch (error) {
+    console.error('❌ System files diagnosis failed | 系統檔案診斷失敗:', error);
     return {
       success: false,
       error: error.message
