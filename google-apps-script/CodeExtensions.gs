@@ -3355,3 +3355,130 @@ function setupHTDataForCurrentUser(userEmail = null) {
     };
   }
 }
+
+// ===== SYSTEM INTEGRITY TESTING | 系統完整性測試 =====
+
+/**
+ * Test complete system integrity | 測試完整系統完整性
+ */
+function testSystemIntegrity() {
+  try {
+    console.log('🧪 Starting system integrity test | 開始系統完整性測試...');
+    
+    const results = {
+      success: true,
+      summary: '',
+      errors: [],
+      tests: []
+    };
+    
+    // Test 1: Configuration integrity | 測試 1：配置完整性
+    try {
+      validateConfiguration();
+      results.tests.push({name: 'Configuration Validation | 配置驗證', status: '✅ PASS', details: 'All settings valid | 所有設定有效'});
+    } catch (configError) {
+      results.errors.push(`Configuration Error | 配置錯誤: ${configError.message}`);
+      results.tests.push({name: 'Configuration Validation | 配置驗證', status: '❌ FAIL', details: configError.message});
+      results.success = false;
+    }
+    
+    // Test 2: Google Drive access | 測試 2：Google Drive 存取
+    try {
+      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+      const folderName = systemFolder.getName();
+      results.tests.push({name: 'Google Drive Access | Google Drive 存取', status: '✅ PASS', details: `Folder accessible: ${folderName} | 資料夾可存取: ${folderName}`});
+    } catch (driveError) {
+      results.errors.push(`Google Drive Error | Google Drive 錯誤: ${driveError.message}`);
+      results.tests.push({name: 'Google Drive Access | Google Drive 存取', status: '❌ FAIL', details: driveError.message});
+      results.success = false;
+    }
+    
+    // Test 3: Master Data accessibility | 測試 3：主控資料可存取性
+    try {
+      const masterData = getMasterDataFile();
+      if (masterData) {
+        const studentsSheet = masterData.getSheetByName('Students');
+        const teachersSheet = masterData.getSheetByName('Teachers');
+        
+        if (studentsSheet && teachersSheet) {
+          results.tests.push({name: 'Master Data Structure | 主控資料結構', status: '✅ PASS', details: 'Students and Teachers sheets found | 找到學生和教師工作表'});
+        } else {
+          results.errors.push('Master Data missing required sheets | 主控資料缺少必要工作表');
+          results.tests.push({name: 'Master Data Structure | 主控資料結構', status: '❌ FAIL', details: 'Missing Students or Teachers sheet | 缺少學生或教師工作表'});
+          results.success = false;
+        }
+      } else {
+        results.errors.push('Master Data file not found | 找不到主控資料檔案');
+        results.tests.push({name: 'Master Data Access | 主控資料存取', status: '❌ FAIL', details: 'Master Data file not found | 找不到主控資料檔案'});
+        results.success = false;
+      }
+    } catch (masterDataError) {
+      results.errors.push(`Master Data Error | 主控資料錯誤: ${masterDataError.message}`);
+      results.tests.push({name: 'Master Data Access | 主控資料存取', status: '❌ FAIL', details: masterDataError.message});
+      results.success = false;
+    }
+    
+    // Test 4: Core functions availability | 測試 4：核心函數可用性
+    const coreFunctions = [
+      'initializeSystem', 'batchCreateGradebooks', 'checkSystemStatus', 
+      'getSystemFolderUrl', 'getMasterDataUrl', 'performCodeQualityCheck'
+    ];
+    
+    let functionTestPassed = 0;
+    for (const funcName of coreFunctions) {
+      try {
+        if (typeof this[funcName] === 'function' || typeof global[funcName] === 'function') {
+          functionTestPassed++;
+        } else {
+          results.errors.push(`Function missing: ${funcName} | 函數缺失: ${funcName}`);
+          results.success = false;
+        }
+      } catch (funcError) {
+        results.errors.push(`Function test error for ${funcName}: ${funcError.message} | 函數測試錯誤 ${funcName}: ${funcError.message}`);
+        results.success = false;
+      }
+    }
+    
+    results.tests.push({
+      name: 'Core Functions | 核心函數', 
+      status: functionTestPassed === coreFunctions.length ? '✅ PASS' : '⚠️  PARTIAL', 
+      details: `${functionTestPassed}/${coreFunctions.length} functions available | ${functionTestPassed}/${coreFunctions.length} 個函數可用`
+    });
+    
+    // Test 5: HT System functionality | 測試 5：HT 系統功能
+    try {
+      const htContext = getCurrentHTContextEnhanced();
+      if (htContext.success) {
+        results.tests.push({name: 'HT System | HT 系統', status: '✅ PASS', details: 'HT authentication and context working | HT 驗證和上下文正常'});
+      } else {
+        results.tests.push({name: 'HT System | HT 系統', status: '⚠️  INFO', details: 'HT system available but not currently authenticated | HT 系統可用但目前未驗證'});
+      }
+    } catch (htError) {
+      results.errors.push(`HT System Error | HT 系統錯誤: ${htError.message}`);
+      results.tests.push({name: 'HT System | HT 系統', status: '❌ FAIL', details: htError.message});
+      results.success = false;
+    }
+    
+    // Generate summary | 生成摘要
+    const passedTests = results.tests.filter(test => test.status.includes('✅')).length;
+    const totalTests = results.tests.length;
+    
+    if (results.success) {
+      results.summary = `🎉 System integrity test PASSED | 系統完整性測試通過\n✅ All ${totalTests} critical tests passed | 所有 ${totalTests} 項關鍵測試通過`;
+    } else {
+      results.summary = `⚠️ System integrity test COMPLETED with issues | 系統完整性測試完成但有問題\n✅ ${passedTests}/${totalTests} tests passed | ${passedTests}/${totalTests} 項測試通過\n❌ ${results.errors.length} errors found | 發現 ${results.errors.length} 個錯誤`;
+    }
+    
+    console.log('🏁 System integrity test completed | 系統完整性測試完成');
+    return results;
+    
+  } catch (error) {
+    console.error('❌ System integrity test failed | 系統完整性測試失敗:', error);
+    return {
+      success: false,
+      summary: `❌ System integrity test FAILED | 系統完整性測試失敗: ${error.message}`,
+      errors: [error.message],
+      tests: []
+    };
+  }
+}
