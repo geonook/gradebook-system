@@ -5184,17 +5184,32 @@ function diagnoseGradebookSheetNames() {
  * @param {Object} checkpointConfig - Configuration for the checkpoint
  */
 function performProgressAudit(checkpointConfig) {
+  // Initialize diagnostics collection
+  const diagnostics = {
+    steps: [],
+    masterData: {},
+    teacherExtraction: {},
+    gradebookSearch: {},
+    errors: [],
+    timestamp: new Date().toISOString()
+  };
+  
   try {
     console.log('🚀 Starting progress audit:', checkpointConfig.name);
+    diagnostics.steps.push('🚀 Progress audit started: ' + checkpointConfig.name);
     
     // Initialize progress tracker
     const progressTracker = new ProgressTracker(1, '進度稽核');
     progressTracker.update(0, '正在初始化稽核系統...');
+    diagnostics.steps.push('✅ Progress tracker initialized');
     
     // Validate checkpoint configuration
     if (!checkpointConfig || !checkpointConfig.name || !checkpointConfig.requirements) {
-      throw new Error('Invalid checkpoint configuration | 無效的檢查點配置');
+      const error = 'Invalid checkpoint configuration | 無效的檢查點配置';
+      diagnostics.errors.push(error);
+      throw new Error(error);
     }
+    diagnostics.steps.push('✅ Checkpoint configuration validated');
     
     // Get all teachers and their gradebooks
     const teacherResults = [];
@@ -5203,20 +5218,37 @@ function performProgressAudit(checkpointConfig) {
     let totalCompletionSum = 0;
     
     // Get master data for teacher-class mappings
-    console.log('🔍 Step 1: Getting Master Data Sheet...');
-    const masterDataSheet = getMasterDataSheet();
-    console.log(`✅ Master Data Sheet found: ${masterDataSheet.getName()}`);
-    
-    console.log('🔍 Step 2: Extracting teacher-class mappings...');
-    const teacherClassMap = getTeacherClassMapping(masterDataSheet);
-    
-    console.log(`📊 Found ${Object.keys(teacherClassMap).length} teachers to analyze`);
-    console.log('📋 Teacher list:', Object.keys(teacherClassMap));
-    
-    // Detailed teacher data logging
-    Object.entries(teacherClassMap).forEach(([name, data]) => {
-      console.log(`👤 ${name} (${data.type}): Classes [${data.classes.join(', ')}]`);
-    });
+    try {
+      console.log('🔍 Step 1: Getting Master Data Sheet...');
+      diagnostics.steps.push('🔍 Step 1: Getting Master Data Sheet...');
+      
+      const masterDataSheet = getMasterDataSheet();
+      diagnostics.masterData.found = true;
+      diagnostics.masterData.name = masterDataSheet.getName();
+      diagnostics.steps.push('✅ Master Data Sheet found: ' + masterDataSheet.getName());
+      
+      console.log('🔍 Step 2: Extracting teacher-class mappings...');
+      diagnostics.steps.push('🔍 Step 2: Extracting teacher-class mappings...');
+      
+      const teacherClassMap = getTeacherClassMapping(masterDataSheet);
+      diagnostics.teacherExtraction.count = Object.keys(teacherClassMap).length;
+      diagnostics.teacherExtraction.teachers = Object.keys(teacherClassMap);
+      diagnostics.teacherExtraction.details = teacherClassMap;
+      
+      diagnostics.steps.push('📊 Found ' + Object.keys(teacherClassMap).length + ' teachers to analyze');
+      console.log(`📊 Found ${Object.keys(teacherClassMap).length} teachers to analyze`);
+      
+      // Detailed teacher data logging
+      Object.entries(teacherClassMap).forEach(([name, data]) => {
+        console.log(`👤 ${name} (${data.type}): Classes [${data.classes.join(', ')}]`);
+        diagnostics.steps.push(`👤 ${name} (${data.type}): Classes [${data.classes.join(', ')}]`);
+      });
+    } catch (masterDataError) {
+      diagnostics.errors.push('Master Data access failed: ' + masterDataError.message);
+      diagnostics.masterData.found = false;
+      diagnostics.masterData.error = masterDataError.message;
+      throw masterDataError;
+    }
     
     // Analyze each teacher
     for (const [teacherName, teacherData] of Object.entries(teacherClassMap)) {
@@ -5252,6 +5284,7 @@ function performProgressAudit(checkpointConfig) {
     // Calculate overall completion
     const overallCompletion = totalTeachers > 0 ? Math.round(totalCompletionSum / totalTeachers) : 0;
     
+    diagnostics.steps.push(`✅ Progress audit completed: ${totalTeachers} teachers analyzed`);
     console.log(`✅ Progress audit completed: ${totalTeachers} teachers analyzed`);
     
     progressTracker.addSuccess('進度稽核', '稽核已完成');
@@ -5265,15 +5298,20 @@ function performProgressAudit(checkpointConfig) {
       overallCompletion: overallCompletion,
       teacherResults: teacherResults.sort((a, b) => b.overallCompletion - a.overallCompletion),
       levelGroupBreakdown: levelGroupBreakdown,
-      message: `Progress audit completed successfully. Analyzed ${totalTeachers} teachers with ${overallCompletion}% overall completion.`
+      message: `Progress audit completed successfully. Analyzed ${totalTeachers} teachers with ${overallCompletion}% overall completion.`,
+      diagnostics: diagnostics
     };
     
   } catch (error) {
     console.error('❌ Progress audit failed:', error);
+    diagnostics.errors.push('Progress audit failed: ' + error.message);
+    diagnostics.steps.push('❌ Progress audit failed: ' + error.message);
+    
     return {
       success: false,
       message: `Progress audit failed: ${error.message}`,
-      error: error.message
+      error: error.message,
+      diagnostics: diagnostics
     };
   }
 }
