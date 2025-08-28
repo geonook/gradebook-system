@@ -4727,11 +4727,41 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
         // Update assessment titles in all relevant class sheets for this teacher
         targetClassNames.forEach(actualClassName => {
           try {
-            const sheet = gradebook.getSheetByName(actualClassName);
-            if (!sheet) {
-              console.warn(`⚠️ ${teacher}: ${actualClassName} sheet not found | 找不到${actualClassName}工作表`);
-              return; // Skip this class, don't count as error
+            // Try different sheet naming patterns
+            const possibleSheetNames = [
+              `📚 ${actualClassName}`,        // Most likely format based on diagnosis
+              actualClassName,                // Fallback to original format
+              `📚${actualClassName}`,         // Without space
+              actualClassName.replace(/\s+/g, ''),  // Remove all spaces
+              `Class ${actualClassName}`,     // Another possible format
+            ];
+            
+            let sheet = null;
+            let foundSheetName = null;
+            
+            // Try each possible name
+            for (const sheetName of possibleSheetNames) {
+              try {
+                sheet = gradebook.getSheetByName(sheetName);
+                if (sheet) {
+                  foundSheetName = sheetName;
+                  break;
+                }
+              } catch (e) {
+                // Continue to next possibility
+              }
             }
+            
+            if (!sheet) {
+              // Get actual sheet names for debugging
+              const actualSheets = gradebook.getSheets().map(s => s.getName());
+              console.warn(`⚠️ ${teacher}: No matching sheet found for ${actualClassName}`);
+              console.warn(`   Available sheets: ${actualSheets.join(', ')}`);
+              console.warn(`   Tried names: ${possibleSheetNames.join(', ')}`);
+              return; // Skip this class, don't count as error since teacher might not teach this class
+            }
+            
+            console.log(`✅ Found sheet for ${teacher}: "${foundSheetName}"`);
             
             // Update the specific assessment column
             const columnIndex = getAssessmentColumnIndex(assessmentCode);
@@ -4744,8 +4774,8 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
             
             // Update the assessment title
             sheet.getRange(2, columnIndex).setValue(newTitle);
-            console.log(`✅ Updated ${teacher} - ${actualClassName} - ${assessmentCode} -> "${newTitle}"`);
-            updateDetails.push(`${teacher} (${actualClassName})`);
+            console.log(`✅ Updated ${teacher} - "${foundSheetName}" - ${assessmentCode} -> "${newTitle}"`);
+            updateDetails.push(`${teacher} (${foundSheetName})`);
             
           } catch (classError) {
             console.error(`❌ Error updating ${teacher} - ${actualClassName}:`, classError);
