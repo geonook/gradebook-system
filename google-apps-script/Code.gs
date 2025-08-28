@@ -4671,3 +4671,88 @@ function getAssessmentColumnIndex(assessmentCode) {
   
   return mapping[assessmentCode] || null;
 }
+
+/**
+ * Debug function to check basic data access and format
+ * 調試函數：檢查基本數據訪問和格式
+ */
+function debugBasicData() {
+  try {
+    console.log('🔍 開始基本數據調試...');
+    
+    // 1. 測試 Master Data 訪問
+    const masterData = getMasterDataSheet();
+    console.log('✅ Master Data 檔案:', masterData.getName());
+    
+    // 2. 測試 Students 工作表訪問  
+    const studentsSheet = masterData.getSheetByName('Students');
+    console.log('✅ Students 工作表:', studentsSheet ? '找到' : '找不到');
+    
+    if (!studentsSheet) {
+      console.error('❌ Students 工作表不存在');
+      return '❌ Students 工作表不存在';
+    }
+    
+    // 3. 獲取並顯示數據
+    const data = studentsSheet.getDataRange().getValues();
+    console.log('📊 總數據行數:', data.length);
+    
+    if (data.length === 0) {
+      console.error('❌ Students 工作表沒有數據');
+      return '❌ Students 工作表沒有數據';
+    }
+    
+    // 4. 顯示欄位標題
+    const headers = data[0];
+    console.log('📋 欄位標題 (' + headers.length + ' 個):');
+    headers.forEach((header, index) => {
+      console.log(`  ${index}: "${header}"`);
+    });
+    
+    // 5. 顯示前3行學生數據  
+    console.log('👥 前3行學生數據:');
+    for (let i = 1; i <= Math.min(3, data.length - 1); i++) {
+      console.log(`  學生 ${i}:`, data[i]);
+    }
+    
+    // 6. 檢查特定欄位索引
+    console.log('🔍 關鍵欄位索引檢查:');
+    const targetHeaders = [
+      'English Class | 英文班級',
+      'LT Teacher | LT老師', 
+      'IT Teacher | IT老師',
+      'English Class',  // 試試簡化版本
+      'LT Teacher',
+      'IT Teacher'
+    ];
+    
+    targetHeaders.forEach(targetHeader => {
+      const index = headers.indexOf(targetHeader);
+      console.log(`  "${targetHeader}": ${index}`);
+    });
+    
+    // 7. 搜尋G1E1相關數據
+    console.log('🔍 搜尋G1E1相關數據:');
+    const classColIndex = headers.indexOf('English Class | 英文班級');
+    if (classColIndex !== -1) {
+      let g1e1Count = 0;
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][classColIndex] === 'G1E1') {
+          g1e1Count++;
+          if (g1e1Count <= 2) {  // 只顯示前2個
+            console.log(`  G1E1 學生 ${g1e1Count}:`, data[i]);
+          }
+        }
+      }
+      console.log(`  總G1E1學生數: ${g1e1Count}`);
+    } else {
+      console.log('  找不到 English Class | 英文班級 欄位');
+    }
+    
+    return '✅ 調試完成，請查看執行記錄';
+    
+  } catch (error) {
+    console.error('❌ 調試失敗:', error);
+    return `❌ 錯誤: ${error.message}`;
+  }
+}
