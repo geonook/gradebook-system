@@ -4682,6 +4682,8 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
  */
 function updateSingleClassAssessment(className, subjectType, assessmentCode, newTitle) {
   try {
+    console.log(`🔄 Starting assessment update for ${className} ${subjectType} ${assessmentCode} -> "${newTitle}"`);
+    
     // Find all teachers for this class and subject
     const teachers = findAllTeachersForClassAndSubject(className, subjectType);
     
@@ -4692,57 +4694,99 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
       };
     }
     
+    console.log(`📊 Found ${teachers.length} teachers:`, teachers);
+    
+    // Get actual class names for level groups
+    let targetClassNames = [className];
+    const levelGroupClasses = getClassesByLevelGroup(className);
+    if (levelGroupClasses.length > 0) {
+      targetClassNames = levelGroupClasses;
+      console.log(`🔍 Level group detected. Target classes:`, targetClassNames);
+    }
+    
     let successCount = 0;
     const errors = [];
     const updatedTeachers = [];
+    const updateDetails = [];
     
     // Update each teacher's gradebook
     teachers.forEach(teacher => {
+      console.log(`👨‍🏫 Processing teacher: ${teacher}`);
       try {
         // Find teacher's gradebook
         const gradebook = findTeacherGradebookByName(teacher, subjectType);
         if (!gradebook) {
-          errors.push(`${teacher}: Gradebook not found | 找不到成績簿`);
+          const error = `${teacher}: Gradebook not found | 找不到成績簿`;
+          errors.push(error);
+          console.warn(error);
           return;
         }
         
-        // Find the specific class sheet
-        const sheet = gradebook.getSheetByName(className);
-        if (!sheet) {
-          errors.push(`${teacher}: ${className} sheet not found | 找不到${className}工作表`);
-          return;
-        }
+        console.log(`✅ Found gradebook for ${teacher}: ${gradebook.getName()}`);
         
-        // Update the specific assessment column
-        const columnIndex = getAssessmentColumnIndex(assessmentCode);
-        if (!columnIndex) {
-          errors.push(`${teacher}: Invalid assessment code ${assessmentCode} | 無效的評量代碼`);
-          return;
-        }
+        // Update assessment titles in all relevant class sheets for this teacher
+        targetClassNames.forEach(actualClassName => {
+          try {
+            const sheet = gradebook.getSheetByName(actualClassName);
+            if (!sheet) {
+              console.warn(`⚠️ ${teacher}: ${actualClassName} sheet not found | 找不到${actualClassName}工作表`);
+              return; // Skip this class, don't count as error
+            }
+            
+            // Update the specific assessment column
+            const columnIndex = getAssessmentColumnIndex(assessmentCode);
+            if (!columnIndex) {
+              const error = `${teacher}: Invalid assessment code ${assessmentCode} | 無效的評量代碼`;
+              errors.push(error);
+              console.error(error);
+              return;
+            }
+            
+            // Update the assessment title
+            sheet.getRange(2, columnIndex).setValue(newTitle);
+            console.log(`✅ Updated ${teacher} - ${actualClassName} - ${assessmentCode} -> "${newTitle}"`);
+            updateDetails.push(`${teacher} (${actualClassName})`);
+            
+          } catch (classError) {
+            console.error(`❌ Error updating ${teacher} - ${actualClassName}:`, classError);
+          }
+        });
         
-        sheet.getRange(2, columnIndex).setValue(newTitle);
         successCount++;
         updatedTeachers.push(teacher);
         
       } catch (error) {
-        errors.push(`${teacher}: ${error.message}`);
+        const errorMsg = `${teacher}: ${error.message}`;
+        errors.push(errorMsg);
+        console.error(errorMsg);
       }
     });
     
-    return {
+    const result = {
       success: successCount > 0,
       message: `Successfully updated ${successCount} teacher(s) | 成功更新 ${successCount} 位老師`,
-      details: `Updated: ${updatedTeachers.join(', ')} | 已更新: ${updatedTeachers.join(', ')}`,
+      details: `Updated sheets: ${updateDetails.join(', ')} | 已更新工作表: ${updateDetails.join(', ')}`,
       errors: errors.length > 0 ? errors : null,
       totalTeachers: teachers.length,
-      successCount: successCount
+      successCount: successCount,
+      targetClasses: targetClassNames,
+      updateSummary: {
+        levelGroup: className,
+        actualClasses: targetClassNames,
+        teachers: teachers,
+        successfulUpdates: updateDetails.length,
+        errors: errors.length
+      }
     };
     
+    console.log(`📊 Update complete:`, result);
+    return result;
+    
   } catch (error) {
-    console.error('Error updating single class assessment:', error);
+    console.error('❌ Error updating single class assessment:', error);
     return {
       success: false,
-      error: error.message
+      error: `System error | 系統錯誤: ${error.message || 'Unknown error'}`
     };
   }
 }
@@ -4753,6 +4797,8 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
  */
 function findTeacherGradebookByName(teacherName, subjectType) {
   try {
+    console.log(`🔍 Searching for gradebook: ${teacherName} ${subjectType}`);
+    
     const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
     const teacherFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS, false);
     
@@ -4760,24 +4806,77 @@ function findTeacherGradebookByName(teacherName, subjectType) {
       throw new Error('Teacher gradebooks folder not found | 找不到老師成績簿資料夾');
     }
     
+    console.log(`📁 Searching in folder: ${teacherFolder.getName()}`);
+    
     // Search for gradebook files containing the teacher's name and subject type
     const files = teacherFolder.getFiles();
+    const allFiles = [];
+    const matchingFiles = [];
+    
     while (files.hasNext()) {
       const file = files.next();
       const fileName = file.getName();
+      allFiles.push(fileName);
       
-      // Check if filename contains teacher name and subject type
-      if (fileName.includes(teacherName) && fileName.includes(subjectType) && fileName.includes('Gradebook')) {
-        console.log(`Found gradebook for ${teacherName} ${subjectType}: ${fileName}`);
-        return SpreadsheetApp.openById(file.getId());
+      // Multiple matching patterns for flexibility
+      const patterns = [
+        // Exact match with subject type
+        `${teacherName} ${subjectType} Gradebook`,
+        `${teacherName} - ${subjectType} Gradebook`,
+        `${teacherName}_${subjectType}_Gradebook`,
+        // More flexible patterns
+        `${teacherName}.*${subjectType}.*Gradebook`,
+        // Just teacher name and gradebook (if subject type is in file content)
+        `${teacherName}.*Gradebook`
+      ];
+      
+      // Check different matching criteria
+      const nameMatch = fileName.includes(teacherName);
+      const subjectMatch = fileName.includes(subjectType);
+      const gradebookMatch = fileName.includes('Gradebook') || fileName.includes('gradebook');
+      
+      if (nameMatch && subjectMatch && gradebookMatch) {
+        matchingFiles.push({file, fileName, match: 'exact'});
+      } else if (nameMatch && gradebookMatch) {
+        matchingFiles.push({file, fileName, match: 'partial'});
       }
     }
     
-    console.warn(`Gradebook not found for ${teacherName} ${subjectType}`);
+    console.log(`📋 Found ${allFiles.length} total files in teacher folder`);
+    console.log(`🎯 Found ${matchingFiles.length} potential matching files:`, matchingFiles.map(f => f.fileName));
+    
+    // Prefer exact matches first
+    const exactMatch = matchingFiles.find(f => f.match === 'exact');
+    if (exactMatch) {
+      console.log(`✅ Found exact match for ${teacherName} ${subjectType}: ${exactMatch.fileName}`);
+      return SpreadsheetApp.openById(exactMatch.file.getId());
+    }
+    
+    // Fall back to partial matches
+    const partialMatch = matchingFiles.find(f => f.match === 'partial');
+    if (partialMatch) {
+      console.log(`⚠️ Using partial match for ${teacherName} ${subjectType}: ${partialMatch.fileName}`);
+      return SpreadsheetApp.openById(partialMatch.file.getId());
+    }
+    
+    // Enhanced error message with available files
+    console.warn(`❌ Gradebook not found for ${teacherName} ${subjectType}`);
+    console.warn(`📁 Available files in teacher folder (first 10):`, allFiles.slice(0, 10));
+    
+    // Look for files with similar teacher names
+    const similarFiles = allFiles.filter(name => {
+      const nameWords = teacherName.split(' ');
+      return nameWords.some(word => name.includes(word)) && name.includes('Gradebook');
+    });
+    
+    if (similarFiles.length > 0) {
+      console.warn(`🔍 Files with similar names found:`, similarFiles);
+    }
+    
     return null;
     
   } catch (error) {
-    console.error('Error finding teacher gradebook:', error);
+    console.error('❌ Error finding teacher gradebook:', error);
     throw error;
   }
 }
