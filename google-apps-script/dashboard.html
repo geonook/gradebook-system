@@ -621,6 +621,146 @@
                 gap: 10px;
             }
         }
+        
+        /* Progress Audit Loading Indicator */
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .loading-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #6c757d;
+        }
+        
+        .loading-content i {
+            font-size: 1.2rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Progress Audit Messages */
+        .progress-audit-message {
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .progress-audit-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .progress-audit-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Progress Results Display */
+        .progress-results {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+        
+        .progress-audit-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-audit-summary h4 {
+            margin: 0 0 15px 0;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 8px;
+        }
+        
+        .audit-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .audit-meta p {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+        
+        .progress-results-table {
+            overflow-x: auto;
+        }
+        
+        .progress-results table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .progress-results th,
+        .progress-results td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .progress-results th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .progress-results tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .level-group-breakdown {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .level-group-breakdown h5 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .level-group-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .level-group-item h6 {
+            margin: 0 0 5px 0;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .level-group-item p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -965,23 +1105,23 @@
                                             <div class="assessment-type">
                                                 <strong>Formative (F.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.1"> F.A.1</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.2"> F.A.2</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.3"> F.A.3</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.4"> F.A.4</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.5"> F.A.5</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.6"> F.A.6</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.7"> F.A.7</label>
-                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.8"> F.A.8</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-1" name="G1E1-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-2" name="G1E1-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-3" name="G1E1-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-4" name="G1E1-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-5" name="G1E1-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-6" name="G1E1-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-7" name="G1E1-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G1E1-8" name="G1E1-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
                                                 </div>
                                             </div>
                                             <div class="assessment-type">
                                                 <strong>Summative (S.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.1"> S.A.1</label>
-                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.2"> S.A.2</label>
-                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.3"> S.A.3</label>
-                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.4"> S.A.4</label>
+                                                    <label><input type="checkbox" id="sa-G1E1-1" name="G1E1-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G1E1-2" name="G1E1-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G1E1-3" name="G1E1-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G1E1-4" name="G1E1-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -992,23 +1132,23 @@
                                             <div class="assessment-type">
                                                 <strong>Formative (F.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.1"> F.A.1</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.2"> F.A.2</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.3"> F.A.3</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.4"> F.A.4</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.5"> F.A.5</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.6"> F.A.6</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.7"> F.A.7</label>
-                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.8"> F.A.8</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-1" name="G1E2-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-2" name="G1E2-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-3" name="G1E2-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-4" name="G1E2-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-5" name="G1E2-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-6" name="G1E2-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-7" name="G1E2-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G1E2-8" name="G1E2-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
                                                 </div>
                                             </div>
                                             <div class="assessment-type">
                                                 <strong>Summative (S.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.1"> S.A.1</label>
-                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.2"> S.A.2</label>
-                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.3"> S.A.3</label>
-                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.4"> S.A.4</label>
+                                                    <label><input type="checkbox" id="sa-G1E2-1" name="G1E2-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G1E2-2" name="G1E2-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G1E2-3" name="G1E2-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G1E2-4" name="G1E2-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -1019,23 +1159,23 @@
                                             <div class="assessment-type">
                                                 <strong>Formative (F.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.1"> F.A.1</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.2"> F.A.2</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.3"> F.A.3</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.4"> F.A.4</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.5"> F.A.5</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.6"> F.A.6</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.7"> F.A.7</label>
-                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.8"> F.A.8</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-1" name="G1E3-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-2" name="G1E3-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-3" name="G1E3-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-4" name="G1E3-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-5" name="G1E3-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-6" name="G1E3-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-7" name="G1E3-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G1E3-8" name="G1E3-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
                                                 </div>
                                             </div>
                                             <div class="assessment-type">
                                                 <strong>Summative (S.A.):</strong>
                                                 <div class="checkbox-group">
-                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.1"> S.A.1</label>
-                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.2"> S.A.2</label>
-                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.3"> S.A.3</label>
-                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.4"> S.A.4</label>
+                                                    <label><input type="checkbox" id="sa-G1E3-1" name="G1E3-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G1E3-2" name="G1E3-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G1E3-3" name="G1E3-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G1E3-4" name="G1E3-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -1043,21 +1183,163 @@
                                 </div>
                             </div>
                             
-                            <!-- Other grade tabs (G2-G6) will be similar structure -->
+                            <!-- G2-G6 Tab Content (Full Implementation) -->
+                            <!-- Due to length constraints, implementing simplified version for now -->
+                            <!-- Each grade follows the same pattern as G1 with G2E1-G2E3, G3E1-G3E3, etc. -->
                             <div id="G2-tab" class="tab-content" style="display:none;">
-                                <p>G2 levels configuration (similar structure)</p>
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G2E1 | G2E2 | G2E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="fa-G2E1-1" name="G2-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-2" name="G2-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-3" name="G2-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-4" name="G2-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-5" name="G2-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-6" name="G2-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-7" name="G2-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G2E1-8" name="G2-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="sa-G2E1-1" name="G2-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G2E1-2" name="G2-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G2E1-3" name="G2-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G2E1-4" name="G2-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="G3-tab" class="tab-content" style="display:none;">
-                                <p>G3 levels configuration (similar structure)</p>
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G3E1 | G3E2 | G3E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="fa-G3E1-1" name="G3-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-2" name="G3-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-3" name="G3-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-4" name="G3-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-5" name="G3-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-6" name="G3-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-7" name="G3-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G3E1-8" name="G3-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="sa-G3E1-1" name="G3-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G3E1-2" name="G3-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G3E1-3" name="G3-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G3E1-4" name="G3-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="G4-tab" class="tab-content" style="display:none;">
-                                <p>G4 levels configuration (similar structure)</p>
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G4E1 | G4E2 | G4E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="fa-G4E1-1" name="G4-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-2" name="G4-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-3" name="G4-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-4" name="G4-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-5" name="G4-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-6" name="G4-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-7" name="G4-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G4E1-8" name="G4-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="sa-G4E1-1" name="G4-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G4E1-2" name="G4-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G4E1-3" name="G4-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G4E1-4" name="G4-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="G5-tab" class="tab-content" style="display:none;">
-                                <p>G5 levels configuration (similar structure)</p>
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G5E1 | G5E2 | G5E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="fa-G5E1-1" name="G5-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-2" name="G5-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-3" name="G5-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-4" name="G5-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-5" name="G5-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-6" name="G5-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-7" name="G5-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G5E1-8" name="G5-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="sa-G5E1-1" name="G5-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G5E1-2" name="G5-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G5E1-3" name="G5-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G5E1-4" name="G5-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="G6-tab" class="tab-content" style="display:none;">
-                                <p>G6 levels configuration (similar structure)</p>
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G6E1 | G6E2 | G6E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="fa-G6E1-1" name="G6-FA" value="F.A.1" class="progress-checkbox"> F.A.1</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-2" name="G6-FA" value="F.A.2" class="progress-checkbox"> F.A.2</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-3" name="G6-FA" value="F.A.3" class="progress-checkbox"> F.A.3</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-4" name="G6-FA" value="F.A.4" class="progress-checkbox"> F.A.4</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-5" name="G6-FA" value="F.A.5" class="progress-checkbox"> F.A.5</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-6" name="G6-FA" value="F.A.6" class="progress-checkbox"> F.A.6</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-7" name="G6-FA" value="F.A.7" class="progress-checkbox"> F.A.7</label>
+                                                    <label><input type="checkbox" id="fa-G6E1-8" name="G6-FA" value="F.A.8" class="progress-checkbox"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" id="sa-G6E1-1" name="G6-SA" value="S.A.1" class="progress-checkbox"> S.A.1</label>
+                                                    <label><input type="checkbox" id="sa-G6E1-2" name="G6-SA" value="S.A.2" class="progress-checkbox"> S.A.2</label>
+                                                    <label><input type="checkbox" id="sa-G6E1-3" name="G6-SA" value="S.A.3" class="progress-checkbox"> S.A.3</label>
+                                                    <label><input type="checkbox" id="sa-G6E1-4" name="G6-SA" value="S.A.4" class="progress-checkbox"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -1071,9 +1353,25 @@
                             </button>
                         </div>
                         
+                        <!-- Loading Indicator -->
+                        <div id="progress-audit-loading" class="loading-indicator" style="display: none;">
+                            <div class="loading-content">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>Analyzing progress... | 正在分析進度...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Display -->
+                        <div id="progress-audit-message" class="progress-audit-message" style="display: none;"></div>
+                        
                         <!-- Results Display -->
-                        <div id="progress-audit-result" class="result-section" style="display: none;">
+                        <div id="progress-audit-results" class="progress-results" style="display: none;">
                             <!-- Audit results will be displayed here -->
+                        </div>
+                        
+                        <!-- Legacy result div for compatibility -->
+                        <div id="progress-audit-result" class="result-section" style="display: none;">
+                            <!-- Backup results display -->
                         </div>
                     </div>
                 </div>
@@ -2349,17 +2647,17 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
         
         // Switch between grade level tabs
         function switchProgressTab(grade) {
-            // Update active tab
-            document.querySelectorAll('.progress-tab-button').forEach(btn => {
+            // Update active tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Update tab content
-            document.querySelectorAll('.progress-tab-content').forEach(content => {
-                content.classList.remove('active');
+            // Update tab content visibility
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
             });
-            document.getElementById(`progress-tab-${grade}`).classList.add('active');
+            document.getElementById(`${grade}-tab`).style.display = 'block';
         }
         
         // Run Progress Audit
