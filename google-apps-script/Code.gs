@@ -5203,10 +5203,20 @@ function performProgressAudit(checkpointConfig) {
     let totalCompletionSum = 0;
     
     // Get master data for teacher-class mappings
+    console.log('🔍 Step 1: Getting Master Data Sheet...');
     const masterDataSheet = getMasterDataSheet();
+    console.log(`✅ Master Data Sheet found: ${masterDataSheet.getName()}`);
+    
+    console.log('🔍 Step 2: Extracting teacher-class mappings...');
     const teacherClassMap = getTeacherClassMapping(masterDataSheet);
     
     console.log(`📊 Found ${Object.keys(teacherClassMap).length} teachers to analyze`);
+    console.log('📋 Teacher list:', Object.keys(teacherClassMap));
+    
+    // Detailed teacher data logging
+    Object.entries(teacherClassMap).forEach(([name, data]) => {
+      console.log(`👤 ${name} (${data.type}): Classes [${data.classes.join(', ')}]`);
+    });
     
     // Analyze each teacher
     for (const [teacherName, teacherData] of Object.entries(teacherClassMap)) {
@@ -5337,6 +5347,7 @@ function analyzeTeacherProgress(teacherName, teacherData, checkpointConfig) {
  */
 function getTeacherClassMapping(masterDataSheet) {
   try {
+    console.log('🔍 Getting Students sheet from Master Data...');
     const studentsSheet = masterDataSheet.getSheetByName('Students');
     if (!studentsSheet) {
       throw new Error('Students sheet not found in master data');
@@ -5344,11 +5355,15 @@ function getTeacherClassMapping(masterDataSheet) {
     
     const data = studentsSheet.getDataRange().getValues();
     const headers = data[0];
+    console.log('📋 Headers found:', headers);
+    console.log(`📊 Data rows found: ${data.length - 1} (excluding header)`);
     
     // Find teacher columns
     const ltTeacherCol = headers.findIndex(h => h.toString().includes('LT Teacher'));
     const itTeacherCol = headers.findIndex(h => h.toString().includes('IT Teacher'));
     const classCol = headers.findIndex(h => h.toString().includes('Class'));
+    
+    console.log(`📍 Column indexes - LT Teacher: ${ltTeacherCol}, IT Teacher: ${itTeacherCol}, Class: ${classCol}`);
     
     if (ltTeacherCol === -1 || itTeacherCol === -1 || classCol === -1) {
       throw new Error('Required columns not found in Students sheet');
@@ -5386,11 +5401,109 @@ function getTeacherClassMapping(masterDataSheet) {
       }
     }
     
+    console.log(`📊 Teacher mapping completed. Found ${Object.keys(teacherClassMap).length} teachers:`);
+    Object.entries(teacherClassMap).forEach(([name, data]) => {
+      console.log(`  - ${name} (${data.type}): ${data.classes.length} classes`);
+    });
+    
     return teacherClassMap;
     
   } catch (error) {
     console.error('❌ Error getting teacher-class mapping:', error);
     throw error;
+  }
+}
+
+/**
+ * Comprehensive diagnosis of Progress Audit system
+ * Progress Audit 系統全面診斷
+ */
+function diagnoseProgressAuditSystem() {
+  try {
+    console.log('🔍 Starting comprehensive Progress Audit system diagnosis...');
+    const report = {
+      timestamp: new Date().toISOString(),
+      masterData: {},
+      teachers: {},
+      gradebooks: {},
+      classMapping: {},
+      issues: []
+    };
+    
+    // 1. Check Master Data accessibility
+    console.log('📊 Step 1: Checking Master Data accessibility...');
+    try {
+      const masterDataSheet = getMasterDataSheet();
+      report.masterData.found = true;
+      report.masterData.name = masterDataSheet.getName();
+      
+      const studentsSheet = masterDataSheet.getSheetByName('Students');
+      if (!studentsSheet) {
+        report.issues.push('Students sheet not found in Master Data');
+        report.masterData.studentsSheet = false;
+      } else {
+        report.masterData.studentsSheet = true;
+        const data = studentsSheet.getDataRange().getValues();
+        report.masterData.totalRows = data.length;
+        report.masterData.headers = data[0];
+      }
+    } catch (error) {
+      report.masterData.found = false;
+      report.masterData.error = error.message;
+      report.issues.push(\`Master Data access failed: \${error.message}\`);
+    }
+    
+    // 2. Check teacher extraction
+    console.log('👥 Step 2: Checking teacher extraction...');
+    try {
+      const masterDataSheet = getMasterDataSheet();
+      const teacherClassMap = getTeacherClassMapping(masterDataSheet);
+      report.teachers.count = Object.keys(teacherClassMap).length;
+      report.teachers.list = Object.keys(teacherClassMap);
+      report.teachers.details = teacherClassMap;
+    } catch (error) {
+      report.teachers.error = error.message;
+      report.issues.push(\`Teacher extraction failed: \${error.message}\`);
+    }
+    
+    // 3. Check gradebook files accessibility
+    console.log('📚 Step 3: Checking gradebook files...');
+    try {
+      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+      const teacherFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS, false);
+      
+      if (teacherFolder) {
+        const files = teacherFolder.getFiles();
+        const gradebookFiles = [];
+        while (files.hasNext()) {
+          const file = files.next();
+          gradebookFiles.push(file.getName());
+        }
+        report.gradebooks.folderFound = true;
+        report.gradebooks.fileCount = gradebookFiles.length;
+        report.gradebooks.files = gradebookFiles;
+      } else {
+        report.gradebooks.folderFound = false;
+        report.issues.push('Teacher gradebooks folder not found');
+      }
+    } catch (error) {
+      report.gradebooks.error = error.message;
+      report.issues.push(\`Gradebook access failed: \${error.message}\`);
+    }
+    
+    // 4. Check class-level mapping
+    console.log('🔗 Step 4: Checking class-level mapping...');
+    report.classMapping.totalMappings = Object.keys(CLASS_TO_LEVEL_MAPPING).length;
+    report.classMapping.levelGroups = [...new Set(Object.values(CLASS_TO_LEVEL_MAPPING))];
+    
+    console.log('✅ Diagnosis completed');
+    console.log('📋 Diagnosis Report:', JSON.stringify(report, null, 2));
+    
+    return report;
+    
+  } catch (error) {
+    console.error('❌ Diagnosis failed:', error);
+    return { error: error.message, timestamp: new Date().toISOString() };
   }
 }
 
