@@ -4881,3 +4881,38 @@ function debugBasicData() {
     return `❌ 錯誤: ${error.message}`;
   }
 }
+
+/**
+ * Test the level group functionality specifically for G1E1
+ * 测试G1E1级别组功能
+ */
+function testG1E1LevelGroup() {
+  try {
+    console.log('🧪 Testing G1E1 level group functionality...');
+    
+    // Test the helper function first
+    const g1e1Classes = getClassesByLevelGroup('G1E1');
+    console.log('✅ G1E1 classes from mapping:', g1e1Classes);
+    
+    // Test finding teachers for G1E1 LT
+    console.log('🔍 Testing findAllTeachersForClassAndSubject for G1E1 LT...');
+    const ltTeachers = findAllTeachersForClassAndSubject('G1E1', 'LT');
+    
+    console.log('📊 LT Teachers found:', ltTeachers);
+    
+    // Test finding teachers for G1E1 IT
+    console.log('🔍 Testing findAllTeachersForClassAndSubject for G1E1 IT...');
+    const itTeachers = findAllTeachersForClassAndSubject('G1E1', 'IT');
+    
+    console.log('📊 IT Teachers found:', itTeachers);
+    
+    const message = `✅ Level group test complete! Found ${ltTeachers.length} LT teachers and ${itTeachers.length} IT teachers for G1E1 level group (${g1e1Classes.length} classes: ${g1e1Classes.join(', ')})`;
+    console.log(message);
+    
+    return message;
+    
+  } catch (error) {
+    console.error('❌ G1E1 test failed:', error);
+    return `❌ 錯誤: ${error.message}`;
+  }
+}
