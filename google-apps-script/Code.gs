@@ -5061,3 +5061,87 @@ Error details: ${result.errors ? result.errors.join(', ') : 'No specific errors'
     return `❌ Test Error: ${error.message}`;
   }
 }
+
+/**
+ * Diagnose actual sheet names in teacher gradebooks
+ * 診斷老師成績簿中的實際工作表名稱
+ */
+function diagnoseGradebookSheetNames() {
+  try {
+    console.log('🔍 Diagnosing actual sheet names in teacher gradebooks...');
+    
+    const teachers = ['Ms. Wendy', 'Ms. Liza', 'Ms. Kassie'];
+    const subjectType = 'LT';
+    
+    const results = [];
+    
+    teachers.forEach(teacher => {
+      try {
+        console.log(`👨‍🏫 Checking ${teacher} gradebook...`);
+        
+        const gradebook = findTeacherGradebookByName(teacher, subjectType);
+        if (!gradebook) {
+          results.push(`❌ ${teacher}: Gradebook not found`);
+          return;
+        }
+        
+        console.log(`✅ Found gradebook: ${gradebook.getName()}`);
+        
+        // Get all sheet names
+        const sheets = gradebook.getSheets();
+        const sheetNames = sheets.map(sheet => sheet.getName());
+        
+        console.log(`📋 ${teacher} sheet names (${sheetNames.length} total):`, sheetNames);
+        
+        // Look for G1-related sheets
+        const g1Sheets = sheetNames.filter(name => name.includes('G1'));
+        console.log(`🎯 ${teacher} G1-related sheets:`, g1Sheets);
+        
+        results.push({
+          teacher: teacher,
+          gradebook: gradebook.getName(),
+          totalSheets: sheetNames.length,
+          allSheets: sheetNames,
+          g1Sheets: g1Sheets
+        });
+        
+      } catch (error) {
+        console.error(`❌ Error checking ${teacher}:`, error);
+        results.push(`❌ ${teacher}: ${error.message}`);
+      }
+    });
+    
+    console.log('📊 Complete diagnosis results:', results);
+    
+    // Generate summary report
+    let report = `🔍 GRADEBOOK SHEET NAME DIAGNOSIS REPORT\n\n`;
+    
+    results.forEach(result => {
+      if (typeof result === 'string') {
+        report += `${result}\n\n`;
+      } else {
+        report += `👨‍🏫 ${result.teacher} (${result.gradebook}):\n`;
+        report += `  📊 Total sheets: ${result.totalSheets}\n`;
+        report += `  🎯 G1-related sheets: ${result.g1Sheets.length > 0 ? result.g1Sheets.join(', ') : 'None found'}\n`;
+        report += `  📋 All sheets: ${result.allSheets.join(', ')}\n\n`;
+      }
+    });
+    
+    report += `\n💡 ANALYSIS:\n`;
+    const allG1Sheets = results.flatMap(r => r.g1Sheets || []);
+    if (allG1Sheets.length > 0) {
+      report += `✅ Found ${allG1Sheets.length} G1-related sheets across all teachers\n`;
+      report += `🔍 Unique G1 sheet patterns: ${[...new Set(allG1Sheets)].join(', ')}\n`;
+    } else {
+      report += `❌ No G1-related sheets found - this explains why updates failed!\n`;
+      report += `🤔 Sheet names may use different naming convention\n`;
+    }
+    
+    console.log(report);
+    return report;
+    
+  } catch (error) {
+    console.error('❌ Diagnosis failed:', error);
+    return `❌ Diagnosis Error: ${error.message}`;
+  }
+}
