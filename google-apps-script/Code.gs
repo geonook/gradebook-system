@@ -5175,3 +5175,332 @@ function diagnoseGradebookSheetNames() {
     return `❌ Diagnosis Error: ${error.message}`;
   }
 }
+
+// ===== PROGRESS AUDIT SYSTEM | 進度稽核系統 =====
+
+/**
+ * Main function for performing progress audit
+ * 執行進度稽核的主要函數
+ * @param {Object} checkpointConfig - Configuration for the checkpoint
+ */
+function performProgressAudit(checkpointConfig) {
+  try {
+    console.log('🚀 Starting progress audit:', checkpointConfig.name);
+    
+    // Initialize progress tracker
+    const progressTracker = new ProgressTracker(1, '進度稽核');
+    progressTracker.update(0, '正在初始化稽核系統...');
+    
+    // Validate checkpoint configuration
+    if (!checkpointConfig || !checkpointConfig.name || !checkpointConfig.requirements) {
+      throw new Error('Invalid checkpoint configuration | 無效的檢查點配置');
+    }
+    
+    // Get all teachers and their gradebooks
+    const teacherResults = [];
+    const levelGroupBreakdown = {};
+    let totalTeachers = 0;
+    let totalCompletionSum = 0;
+    
+    // Get master data for teacher-class mappings
+    const masterDataSheet = findMasterDataSheet();
+    const teacherClassMap = getTeacherClassMapping(masterDataSheet);
+    
+    console.log(`📊 Found ${Object.keys(teacherClassMap).length} teachers to analyze`);
+    
+    // Analyze each teacher
+    for (const [teacherName, teacherData] of Object.entries(teacherClassMap)) {
+      try {
+        const teacherAnalysis = analyzeTeacherProgress(teacherName, teacherData, checkpointConfig);
+        if (teacherAnalysis) {
+          teacherResults.push(teacherAnalysis);
+          totalTeachers++;
+          totalCompletionSum += teacherAnalysis.overallCompletion;
+          
+          // Update level group breakdown
+          teacherAnalysis.levelGroups.forEach(levelGroup => {
+            if (!levelGroupBreakdown[levelGroup]) {
+              levelGroupBreakdown[levelGroup] = {
+                completion: 0,
+                teacherCount: 0,
+                completionSum: 0
+              };
+            }
+            levelGroupBreakdown[levelGroup].teacherCount++;
+            levelGroupBreakdown[levelGroup].completionSum += teacherAnalysis.overallCompletion;
+            levelGroupBreakdown[levelGroup].completion = Math.round(
+              levelGroupBreakdown[levelGroup].completionSum / levelGroupBreakdown[levelGroup].teacherCount
+            );
+          });
+        }
+      } catch (teacherError) {
+        console.error(`❌ Error analyzing teacher ${teacherName}:`, teacherError);
+        // Continue with other teachers
+      }
+    }
+    
+    // Calculate overall completion
+    const overallCompletion = totalTeachers > 0 ? Math.round(totalCompletionSum / totalTeachers) : 0;
+    
+    console.log(`✅ Progress audit completed: ${totalTeachers} teachers analyzed`);
+    
+    progressTracker.addSuccess('進度稽核', '稽核已完成');
+    progressTracker.complete();
+    
+    return {
+      success: true,
+      checkpointName: checkpointConfig.name,
+      timestamp: checkpointConfig.timestamp,
+      teacherCount: totalTeachers,
+      overallCompletion: overallCompletion,
+      teacherResults: teacherResults.sort((a, b) => b.overallCompletion - a.overallCompletion),
+      levelGroupBreakdown: levelGroupBreakdown,
+      message: `Progress audit completed successfully. Analyzed ${totalTeachers} teachers with ${overallCompletion}% overall completion.`
+    };
+    
+  } catch (error) {
+    console.error('❌ Progress audit failed:', error);
+    return {
+      success: false,
+      message: `Progress audit failed: ${error.message}`,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Analyze individual teacher progress
+ * 分析個別教師進度
+ */
+function analyzeTeacherProgress(teacherName, teacherData, checkpointConfig) {
+  try {
+    // Find teacher gradebook
+    const gradebook = findTeacherGradebookByName(teacherName);
+    if (!gradebook) {
+      console.log(`⚠️ No gradebook found for teacher: ${teacherName}`);
+      return null;
+    }
+    
+    // Determine which level groups this teacher teaches
+    const teacherLevelGroups = getTeacherLevelGroups(teacherData.classes);
+    
+    // Calculate progress for each relevant level group
+    let formativeTotal = 0;
+    let formativeCompleted = 0;
+    let summativeTotal = 0;
+    let summativeCompleted = 0;
+    
+    teacherLevelGroups.forEach(levelGroup => {
+      if (checkpointConfig.requirements[levelGroup]) {
+        const requirements = checkpointConfig.requirements[levelGroup];
+        
+        // Check formative assessments
+        if (requirements.formative.length > 0) {
+          formativeTotal += requirements.formative.length;
+          formativeCompleted += checkAssessmentCompletion(gradebook, levelGroup, requirements.formative, 'formative');
+        }
+        
+        // Check summative assessments
+        if (requirements.summative.length > 0) {
+          summativeTotal += requirements.summative.length;
+          summativeCompleted += checkAssessmentCompletion(gradebook, levelGroup, requirements.summative, 'summative');
+        }
+      }
+    });
+    
+    // Calculate completion percentages
+    const formativeCompletion = formativeTotal > 0 ? Math.round((formativeCompleted / formativeTotal) * 100) : 0;
+    const summativeCompletion = summativeTotal > 0 ? Math.round((summativeCompleted / summativeTotal) * 100) : 0;
+    const overallCompletion = Math.round(((formativeCompleted + summativeCompleted) / (formativeTotal + summativeTotal)) * 100);
+    
+    return {
+      name: teacherName,
+      levelGroups: teacherLevelGroups,
+      formativeCompletion: formativeCompletion,
+      summativeCompletion: summativeCompletion,
+      overallCompletion: isNaN(overallCompletion) ? 0 : overallCompletion,
+      gradebookId: gradebook.getId(),
+      gradebookUrl: gradebook.getUrl()
+    };
+    
+  } catch (error) {
+    console.error(`❌ Error analyzing teacher ${teacherName}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Get teacher-class mapping from master data
+ * 從主控資料取得教師-班級映射
+ */
+function getTeacherClassMapping(masterDataSheet) {
+  try {
+    const studentsSheet = masterDataSheet.getSheetByName('Students');
+    if (!studentsSheet) {
+      throw new Error('Students sheet not found in master data');
+    }
+    
+    const data = studentsSheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find teacher columns
+    const ltTeacherCol = headers.findIndex(h => h.toString().includes('LT Teacher'));
+    const itTeacherCol = headers.findIndex(h => h.toString().includes('IT Teacher'));
+    const classCol = headers.findIndex(h => h.toString().includes('Class'));
+    
+    if (ltTeacherCol === -1 || itTeacherCol === -1 || classCol === -1) {
+      throw new Error('Required columns not found in Students sheet');
+    }
+    
+    const teacherClassMap = {};
+    
+    // Process data rows (skip header)
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const className = row[classCol];
+      const ltTeacher = row[ltTeacherCol];
+      const itTeacher = row[itTeacherCol];
+      
+      if (className) {
+        // Add LT Teacher
+        if (ltTeacher) {
+          if (!teacherClassMap[ltTeacher]) {
+            teacherClassMap[ltTeacher] = { classes: [], type: 'LT' };
+          }
+          if (!teacherClassMap[ltTeacher].classes.includes(className)) {
+            teacherClassMap[ltTeacher].classes.push(className);
+          }
+        }
+        
+        // Add IT Teacher
+        if (itTeacher) {
+          if (!teacherClassMap[itTeacher]) {
+            teacherClassMap[itTeacher] = { classes: [], type: 'IT' };
+          }
+          if (!teacherClassMap[itTeacher].classes.includes(className)) {
+            teacherClassMap[itTeacher].classes.push(className);
+          }
+        }
+      }
+    }
+    
+    return teacherClassMap;
+    
+  } catch (error) {
+    console.error('❌ Error getting teacher-class mapping:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get level groups that a teacher teaches based on their classes
+ * 根據教師的班級取得所教的分級組
+ */
+function getTeacherLevelGroups(classes) {
+  const levelGroups = new Set();
+  
+  classes.forEach(className => {
+    // Use existing CLASS_TO_LEVEL_MAPPING
+    Object.entries(CLASS_TO_LEVEL_MAPPING).forEach(([levelGroup, mappedClasses]) => {
+      if (mappedClasses.includes(className)) {
+        levelGroups.add(levelGroup);
+      }
+    });
+  });
+  
+  return Array.from(levelGroups);
+}
+
+/**
+ * Check assessment completion for specific requirements
+ * 檢查特定要求的評量完成情況
+ */
+function checkAssessmentCompletion(gradebook, levelGroup, requiredAssessments, assessmentType) {
+  try {
+    let completedCount = 0;
+    
+    // Get classes for this level group
+    const classes = CLASS_TO_LEVEL_MAPPING[levelGroup] || [];
+    
+    classes.forEach(className => {
+      // Find the sheet for this class (with possible emoji prefix)
+      const sheet = findSheetByClassName(gradebook, className);
+      if (!sheet) {
+        console.log(`⚠️ Sheet not found for class: ${className}`);
+        return;
+      }
+      
+      // Get header row to find assessment columns
+      const headers = sheet.getRange(1, 1, 2, sheet.getLastColumn()).getValues();
+      const row1Headers = headers[0];
+      const row2Headers = headers[1];
+      
+      // Check each required assessment
+      requiredAssessments.forEach(assessmentCode => {
+        const columnIndex = findAssessmentColumn(row1Headers, row2Headers, assessmentCode, assessmentType);
+        if (columnIndex !== -1) {
+          // Check if there's any data in this column (excluding headers)
+          const columnData = sheet.getRange(3, columnIndex + 1, sheet.getLastRow() - 2, 1).getValues();
+          const hasData = columnData.some(cell => cell[0] !== '' && cell[0] !== null && cell[0] !== undefined);
+          if (hasData) {
+            completedCount++;
+          }
+        }
+      });
+    });
+    
+    return completedCount;
+    
+  } catch (error) {
+    console.error(`❌ Error checking assessment completion for ${levelGroup}:`, error);
+    return 0;
+  }
+}
+
+/**
+ * Find assessment column by code and type
+ * 根據代碼和類型尋找評量欄位
+ */
+function findAssessmentColumn(row1Headers, row2Headers, assessmentCode, assessmentType) {
+  for (let i = 0; i < row1Headers.length; i++) {
+    const header1 = row1Headers[i].toString();
+    const header2 = row2Headers[i].toString();
+    
+    // Check if this matches the assessment code
+    if (header2.includes(assessmentCode)) {
+      return i;
+    }
+    
+    // Alternative matching logic for different naming patterns
+    if (assessmentType === 'formative' && header1.includes('Formative') && header2.includes(assessmentCode.replace('F.A.', ''))) {
+      return i;
+    }
+    if (assessmentType === 'summative' && header1.includes('Summative') && header2.includes(assessmentCode.replace('S.A.', ''))) {
+      return i;
+    }
+  }
+  
+  return -1; // Not found
+}
+
+/**
+ * Find sheet by class name with flexible matching
+ * 根據班級名稱尋找工作表（靈活匹配）
+ */
+function findSheetByClassName(gradebook, className) {
+  const sheets = gradebook.getSheets();
+  
+  // Try exact match first
+  let sheet = sheets.find(s => s.getName() === className);
+  if (sheet) return sheet;
+  
+  // Try with emoji prefix
+  sheet = sheets.find(s => s.getName() === `📚 ${className}`);
+  if (sheet) return sheet;
+  
+  // Try partial match (contains class name)
+  sheet = sheets.find(s => s.getName().includes(className));
+  if (sheet) return sheet;
+  
+  return null;
+}

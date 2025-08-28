@@ -503,6 +503,98 @@
             border: 1px solid #f5c6cb;
         }
         
+        /* Progress Audit Modal Styles */
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #e9ecef;
+        }
+        
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 0 5px 5px 5px;
+            min-height: 200px;
+        }
+        
+        .level-groups {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .level-group {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .level-group h4 {
+            margin: 0 0 15px 0;
+            color: #007bff;
+            font-size: 1.2em;
+        }
+        
+        .assessment-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .assessment-type {
+            background: white;
+            padding: 12px;
+            border-radius: 5px;
+        }
+        
+        .assessment-type strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            cursor: pointer;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -657,6 +749,9 @@
                     </button>
                     <button class="btn btn-primary" onclick="openHTDashboard()">
                         <i class="fas fa-user-tie"></i> HT Dashboard
+                    </button>
+                    <button class="btn btn-warning" onclick="openProgressAudit()">
+                        <i class="fas fa-clipboard-check"></i> Progress Audit | 進度稽核
                     </button>
                 </div>
             </div>
@@ -826,6 +921,159 @@
                         
                         <div id="assessment-result" class="result-section" style="display: none;">
                             <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Audit Modal -->
+    <div id="progressAuditModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-clipboard-check"></i> Progress Audit Configuration | 進度稽核設定</h2>
+                <span class="close" onclick="closeProgressAuditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="progress-audit-content">
+                    <div class="progress-audit-form">
+                        <!-- Checkpoint Info -->
+                        <div class="form-section">
+                            <label for="checkpointName"><i class="fas fa-bookmark"></i> Checkpoint Name | 檢查點名稱:</label>
+                            <input type="text" id="checkpointName" class="form-control" 
+                                   placeholder="e.g., Mid-Term Progress Check | 期中進度檢查">
+                        </div>
+                        
+                        <!-- Grade Level Tabs -->
+                        <div class="tab-container">
+                            <div class="tab-buttons">
+                                <button class="tab-btn active" onclick="switchProgressTab('G1')">G1</button>
+                                <button class="tab-btn" onclick="switchProgressTab('G2')">G2</button>
+                                <button class="tab-btn" onclick="switchProgressTab('G3')">G3</button>
+                                <button class="tab-btn" onclick="switchProgressTab('G4')">G4</button>
+                                <button class="tab-btn" onclick="switchProgressTab('G5')">G5</button>
+                                <button class="tab-btn" onclick="switchProgressTab('G6')">G6</button>
+                            </div>
+                            
+                            <!-- Grade Level Content -->
+                            <div id="G1-tab" class="tab-content active">
+                                <div class="level-groups">
+                                    <div class="level-group">
+                                        <h4>G1E1</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.1"> F.A.1</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.2"> F.A.2</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.3"> F.A.3</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.4"> F.A.4</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.5"> F.A.5</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.6"> F.A.6</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.7"> F.A.7</label>
+                                                    <label><input type="checkbox" name="G1E1-FA" value="F.A.8"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.1"> S.A.1</label>
+                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.2"> S.A.2</label>
+                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.3"> S.A.3</label>
+                                                    <label><input type="checkbox" name="G1E1-SA" value="S.A.4"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-group">
+                                        <h4>G1E2</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.1"> F.A.1</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.2"> F.A.2</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.3"> F.A.3</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.4"> F.A.4</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.5"> F.A.5</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.6"> F.A.6</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.7"> F.A.7</label>
+                                                    <label><input type="checkbox" name="G1E2-FA" value="F.A.8"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.1"> S.A.1</label>
+                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.2"> S.A.2</label>
+                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.3"> S.A.3</label>
+                                                    <label><input type="checkbox" name="G1E2-SA" value="S.A.4"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-group">
+                                        <h4>G1E3</h4>
+                                        <div class="assessment-selection">
+                                            <div class="assessment-type">
+                                                <strong>Formative (F.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.1"> F.A.1</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.2"> F.A.2</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.3"> F.A.3</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.4"> F.A.4</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.5"> F.A.5</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.6"> F.A.6</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.7"> F.A.7</label>
+                                                    <label><input type="checkbox" name="G1E3-FA" value="F.A.8"> F.A.8</label>
+                                                </div>
+                                            </div>
+                                            <div class="assessment-type">
+                                                <strong>Summative (S.A.):</strong>
+                                                <div class="checkbox-group">
+                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.1"> S.A.1</label>
+                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.2"> S.A.2</label>
+                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.3"> S.A.3</label>
+                                                    <label><input type="checkbox" name="G1E3-SA" value="S.A.4"> S.A.4</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Other grade tabs (G2-G6) will be similar structure -->
+                            <div id="G2-tab" class="tab-content" style="display:none;">
+                                <p>G2 levels configuration (similar structure)</p>
+                            </div>
+                            <div id="G3-tab" class="tab-content" style="display:none;">
+                                <p>G3 levels configuration (similar structure)</p>
+                            </div>
+                            <div id="G4-tab" class="tab-content" style="display:none;">
+                                <p>G4 levels configuration (similar structure)</p>
+                            </div>
+                            <div id="G5-tab" class="tab-content" style="display:none;">
+                                <p>G5 levels configuration (similar structure)</p>
+                            </div>
+                            <div id="G6-tab" class="tab-content" style="display:none;">
+                                <p>G6 levels configuration (similar structure)</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-actions">
+                            <button class="btn btn-primary" onclick="runProgressAudit()">
+                                <i class="fas fa-play"></i> Run Audit | 執行稽核
+                            </button>
+                            <button class="btn btn-secondary" onclick="closeProgressAuditModal()">
+                                <i class="fas fa-times"></i> Cancel | 取消
+                            </button>
+                        </div>
+                        
+                        <!-- Results Display -->
+                        <div id="progress-audit-result" class="result-section" style="display: none;">
+                            <!-- Audit results will be displayed here -->
                         </div>
                     </div>
                 </div>
@@ -2068,11 +2316,263 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             document.getElementById('assessment-result').style.display = 'none';
         }
         
+        // ===== PROGRESS AUDIT FUNCTIONS | 進度稽核函數 =====
+        
+        // Open Progress Audit Modal
+        function openProgressAudit() {
+            document.getElementById('progressAuditModal').style.display = 'block';
+            resetProgressAuditForm();
+            // Default to G1 tab
+            switchProgressTab('G1');
+        }
+        
+        // Close Progress Audit Modal
+        function closeProgressAuditModal() {
+            document.getElementById('progressAuditModal').style.display = 'none';
+            resetProgressAuditForm();
+        }
+        
+        // Reset Progress Audit Form
+        function resetProgressAuditForm() {
+            // Reset checkpoint name
+            document.getElementById('checkpointName').value = '';
+            
+            // Reset all checkboxes
+            document.querySelectorAll('.progress-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Clear results
+            document.getElementById('progress-audit-results').innerHTML = '';
+            document.getElementById('progress-audit-results').style.display = 'none';
+        }
+        
+        // Switch between grade level tabs
+        function switchProgressTab(grade) {
+            // Update active tab
+            document.querySelectorAll('.progress-tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.progress-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`progress-tab-${grade}`).classList.add('active');
+        }
+        
+        // Run Progress Audit
+        function runProgressAudit() {
+            const checkpointName = document.getElementById('checkpointName').value.trim();
+            
+            // Validation
+            if (!checkpointName) {
+                showProgressAuditError('Please enter a checkpoint name | 請輸入檢查點名稱');
+                return;
+            }
+            
+            // Collect checkpoint configuration for all grades
+            const checkpointConfig = {
+                name: checkpointName,
+                timestamp: new Date().toISOString(),
+                requirements: {}
+            };
+            
+            // Collect requirements for each grade level (G1-G6)
+            const grades = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6'];
+            let hasAnyRequirements = false;
+            
+            grades.forEach(grade => {
+                const levelGroups = [`${grade}E1`, `${grade}E2`, `${grade}E3`];
+                
+                levelGroups.forEach(levelGroup => {
+                    const formativeRequirements = [];
+                    const summativeRequirements = [];
+                    
+                    // Collect formative requirements (F.A.1 to F.A.8)
+                    for (let i = 1; i <= 8; i++) {
+                        const checkbox = document.getElementById(`fa-${levelGroup}-${i}`);
+                        if (checkbox && checkbox.checked) {
+                            formativeRequirements.push(`F.A.${i}`);
+                        }
+                    }
+                    
+                    // Collect summative requirements (S.A.1 to S.A.4)
+                    for (let i = 1; i <= 4; i++) {
+                        const checkbox = document.getElementById(`sa-${levelGroup}-${i}`);
+                        if (checkbox && checkbox.checked) {
+                            summativeRequirements.push(`S.A.${i}`);
+                        }
+                    }
+                    
+                    if (formativeRequirements.length > 0 || summativeRequirements.length > 0) {
+                        checkpointConfig.requirements[levelGroup] = {
+                            formative: formativeRequirements,
+                            summative: summativeRequirements
+                        };
+                        hasAnyRequirements = true;
+                    }
+                });
+            });
+            
+            if (!hasAnyRequirements) {
+                showProgressAuditError('Please select at least one assessment requirement | 請至少選擇一個評量要求');
+                return;
+            }
+            
+            // Show loading
+            showProgressAuditLoading();
+            
+            // Call backend function
+            google.script.run
+                .withSuccessHandler(handleProgressAuditSuccess)
+                .withFailureHandler(handleProgressAuditError)
+                .performProgressAudit(checkpointConfig);
+        }
+        
+        // Handle successful progress audit
+        function handleProgressAuditSuccess(result) {
+            hideProgressAuditLoading();
+            
+            if (result.success) {
+                displayProgressAuditResults(result);
+                showProgressAuditSuccess('Progress audit completed successfully | 進度稽核已完成');
+            } else {
+                showProgressAuditError(`Audit failed: ${result.message} | 稽核失敗：${result.message}`);
+            }
+        }
+        
+        // Handle progress audit error
+        function handleProgressAuditError(error) {
+            hideProgressAuditLoading();
+            showProgressAuditError(`Audit error: ${error.message} | 稽核錯誤：${error.message}`);
+        }
+        
+        // Display progress audit results
+        function displayProgressAuditResults(result) {
+            const resultsDiv = document.getElementById('progress-audit-results');
+            
+            let html = `
+                <div class="progress-audit-summary">
+                    <h4><i class="fas fa-chart-line"></i> Progress Audit Report | 進度稽核報告</h4>
+                    <div class="audit-meta">
+                        <p><strong>Checkpoint:</strong> ${result.checkpointName}</p>
+                        <p><strong>Audit Date:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
+                        <p><strong>Teachers Analyzed:</strong> ${result.teacherCount}</p>
+                        <p><strong>Overall Completion:</strong> ${result.overallCompletion}%</p>
+                    </div>
+                </div>
+                
+                <div class="progress-results-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Teacher | 教師</th>
+                                <th>Level Groups | 分級</th>
+                                <th>Formative | 形成性</th>
+                                <th>Summative | 總結性</th>
+                                <th>Overall | 整體</th>
+                                <th>Status | 狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            result.teacherResults.forEach(teacher => {
+                const statusColor = teacher.overallCompletion >= 90 ? '#4caf50' : 
+                                  teacher.overallCompletion >= 80 ? '#ff9800' : 
+                                  teacher.overallCompletion >= 60 ? '#ff5722' : '#f44336';
+                
+                const statusIcon = teacher.overallCompletion >= 90 ? '🟢' : 
+                                 teacher.overallCompletion >= 80 ? '🟡' : 
+                                 teacher.overallCompletion >= 60 ? '🟠' : '🔴';
+                
+                html += `
+                    <tr>
+                        <td><strong>${teacher.name}</strong></td>
+                        <td>${teacher.levelGroups.join(', ')}</td>
+                        <td>${teacher.formativeCompletion}%</td>
+                        <td>${teacher.summativeCompletion}%</td>
+                        <td style="color: ${statusColor}; font-weight: bold;">${teacher.overallCompletion}%</td>
+                        <td>${statusIcon}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            // Add detailed breakdown if available
+            if (result.levelGroupBreakdown) {
+                html += `
+                    <div class="level-group-breakdown">
+                        <h5><i class="fas fa-list-alt"></i> Level Group Breakdown | 分級詳細分析</h5>
+                `;
+                
+                Object.entries(result.levelGroupBreakdown).forEach(([levelGroup, data]) => {
+                    html += `
+                        <div class="level-group-item">
+                            <h6>${levelGroup}</h6>
+                            <p>Completion: ${data.completion}% | Teachers: ${data.teacherCount}</p>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+        }
+        
+        // Show progress audit loading
+        function showProgressAuditLoading() {
+            document.getElementById('progress-audit-loading').style.display = 'block';
+        }
+        
+        // Hide progress audit loading
+        function hideProgressAuditLoading() {
+            document.getElementById('progress-audit-loading').style.display = 'none';
+        }
+        
+        // Show progress audit success message
+        function showProgressAuditSuccess(message) {
+            showProgressAuditMessage(message, 'success');
+        }
+        
+        // Show progress audit error message
+        function showProgressAuditError(message) {
+            showProgressAuditMessage(message, 'error');
+        }
+        
+        // Show progress audit message
+        function showProgressAuditMessage(message, type) {
+            const messageDiv = document.getElementById('progress-audit-message');
+            messageDiv.textContent = message;
+            messageDiv.className = `progress-audit-message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
         // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('assessmentModal');
-            if (event.target === modal) {
+            const assessmentModal = document.getElementById('assessmentModal');
+            const progressModal = document.getElementById('progressAuditModal');
+            
+            if (event.target === assessmentModal) {
                 closeAssessmentModal();
+            } else if (event.target === progressModal) {
+                closeProgressAuditModal();
             }
         }
 
