@@ -4477,30 +4477,71 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
     const data = studentsSheet.getDataRange().getValues();
     const headers = data[0];
     
+    // DEBUG: Log all headers to see what we actually have
+    console.log('🔍 DEBUG: All headers found:', headers);
+    console.log('🔍 DEBUG: Looking for these exact headers:', [
+      'English Class | 英文班級',
+      'LT Teacher | LT老師', 
+      'IT Teacher | IT老師'
+    ]);
+    
     // Find column indices - match complete bilingual headers
     const classColumnIndex = headers.indexOf('English Class | 英文班級');
     const ltTeacherIndex = headers.indexOf('LT Teacher | LT老師');
     const itTeacherIndex = headers.indexOf('IT Teacher | IT老師');
     
+    // DEBUG: Log column indices
+    console.log('🔍 DEBUG: Column indices found:');
+    console.log('  - English Class index:', classColumnIndex);
+    console.log('  - LT Teacher index:', ltTeacherIndex); 
+    console.log('  - IT Teacher index:', itTeacherIndex);
+    
     if (classColumnIndex === -1 || ltTeacherIndex === -1 || itTeacherIndex === -1) {
+      console.error('❌ DEBUG: Missing columns. Available headers:', headers.map((h, i) => `${i}: "${h}"`));
       throw new Error('Required columns not found in Students sheet | Students工作表中找不到必要欄位');
     }
     
     // Find all unique teachers for this class and subject
     const teachers = new Set();
+    let debugStudentCount = 0;
+    let matchingStudents = [];
+    
+    console.log(`🔍 DEBUG: Searching for className="${className}" and subjectType="${subjectType}"`);
     
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       const studentClass = row[classColumnIndex];
       const teacher = (subjectType === 'LT') ? row[ltTeacherIndex] : row[itTeacherIndex];
       
+      debugStudentCount++;
+      
+      // DEBUG: Log first few students to see data format
+      if (i <= 3) {
+        console.log(`🔍 DEBUG: Student ${i}:`);
+        console.log(`  - Class: "${studentClass}" (type: ${typeof studentClass})`);
+        console.log(`  - Teacher: "${teacher}" (type: ${typeof teacher})`);
+        console.log(`  - Class match: ${studentClass === className}`);
+      }
+      
       if (studentClass === className && teacher && teacher.trim() !== '') {
         teachers.add(teacher.trim());
+        matchingStudents.push({
+          student: row[1] || 'Unknown', // Assuming name is in column 1
+          class: studentClass,
+          teacher: teacher
+        });
       }
     }
     
     const teacherList = Array.from(teachers);
-    console.log(`Found ${teacherList.length} teachers for ${className} ${subjectType}: ${teacherList.join(', ')}`);
+    
+    // DEBUG: Comprehensive logging
+    console.log(`🔍 DEBUG: Search results:`);
+    console.log(`  - Total students processed: ${debugStudentCount}`);
+    console.log(`  - Students matching ${className}: ${matchingStudents.length}`);
+    console.log(`  - Matching students:`, matchingStudents);
+    console.log(`  - Unique teachers found: ${teacherList.length}`);
+    console.log(`  - Teacher list: ${teacherList.join(', ')}`);
     
     return teacherList;
     
