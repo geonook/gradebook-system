@@ -130,6 +130,8 @@ function onOpen() {
       .addItem('🔧 Repair Sheets | 修復損壞格式', 'repairDamagedSheets'))
     
     .addSubMenu(ui.createMenu('🏷️ Assessment Management | 評量管理')
+      .addItem('🎯 Simple HT Manager | 簡化HT管理', 'simpleHTAssessmentManager')
+      .addSeparator()
       .addItem('➕ Add HT Sheet | 新增HT工作表', 'addHTSheetToExistingMasterData')
       .addSeparator()
       .addItem('👨‍🏫 HT Dashboard | HT控制台', 'openHTDashboard')
@@ -4376,4 +4378,255 @@ function include(filename) {
     console.error(`Failed to include file: ${filename}`, error);
     return `<!-- Failed to include ${filename} -->`;
   }
+}
+
+// ===== SIMPLIFIED HT ASSESSMENT MANAGEMENT | 簡化HT評量管理 =====
+
+/**
+ * Simple HT Assessment Title Management - Main Interface
+ * 簡化的HT評量標題管理 - 主介面
+ */
+function simpleHTAssessmentManager() {
+  try {
+    const ui = SpreadsheetApp.getUi();
+    
+    // Step 1: Select class
+    const classResult = ui.prompt(
+      'Step 1: Select Class | 步驟1：選擇班級',
+      'Please enter class code (e.g., G1E1, G2E2, G3E3...) | 請輸入班級代碼 (例如：G1E1, G2E2, G3E3...)',
+      ui.ButtonSet.OK_CANCEL
+    );
+    
+    if (classResult.getSelectedButton() !== ui.Button.OK) return;
+    const selectedClass = classResult.getResponseText().trim();
+    
+    // Step 2: Select subject
+    const subjectResult = ui.alert(
+      'Step 2: Select Subject | 步驟2：選擇科目',
+      `Class: ${selectedClass}\nChoose subject type | 選擇科目類型:\nYES = LT, NO = IT`,
+      ui.ButtonSet.YES_NO_CANCEL
+    );
+    
+    if (subjectResult === ui.Button.CANCEL) return;
+    const subjectType = (subjectResult === ui.Button.YES) ? 'LT' : 'IT';
+    
+    // Step 3: Select assessment
+    const assessmentResult = ui.prompt(
+      'Step 3: Select Assessment | 步驟3：選擇評量',
+      `Class: ${selectedClass}, Subject: ${subjectType}\nEnter assessment code | 輸入評量代碼:\nF.A.1~8, S.A.1~4, or Midterm`,
+      ui.ButtonSet.OK_CANCEL
+    );
+    
+    if (assessmentResult.getSelectedButton() !== ui.Button.OK) return;
+    const assessmentCode = assessmentResult.getResponseText().trim();
+    
+    // Step 4: Enter new title
+    const titleResult = ui.prompt(
+      'Step 4: New Title | 步驟4：新標題',
+      `Class: ${selectedClass}, Subject: ${subjectType}, Assessment: ${assessmentCode}\nEnter new title | 輸入新標題:`,
+      ui.ButtonSet.OK_CANCEL
+    );
+    
+    if (titleResult.getSelectedButton() !== ui.Button.OK) return;
+    const newTitle = titleResult.getResponseText().trim();
+    
+    // Step 5: Execute update
+    ui.alert('Processing...', 'Updating assessment titles... | 正在更新評量標題...', ui.ButtonSet.OK);
+    
+    const result = updateSingleClassAssessment(selectedClass, subjectType, assessmentCode, newTitle);
+    
+    // Show result
+    if (result.success) {
+      ui.alert(
+        'Success | 成功',
+        `${result.message}\n${result.details || ''}`,
+        ui.ButtonSet.OK
+      );
+    } else {
+      ui.alert(
+        'Error | 錯誤',
+        `Failed: ${result.error} | 失敗: ${result.error}`,
+        ui.ButtonSet.OK
+      );
+    }
+    
+  } catch (error) {
+    console.error('Error in simpleHTAssessmentManager:', error);
+    SpreadsheetApp.getUi().alert(
+      'System Error | 系統錯誤',
+      `Unexpected error: ${error.message} | 未預期的錯誤: ${error.message}`,
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+  }
+}
+
+/**
+ * Find all teachers for a specific class and subject
+ * 查找特定班級和科目的所有老師
+ */
+function findAllTeachersForClassAndSubject(className, subjectType) {
+  try {
+    const masterData = getMasterDataSheet();
+    const studentsSheet = masterData.getSheetByName('Students');
+    
+    if (!studentsSheet) {
+      throw new Error('Students sheet not found in Master Data | Master Data中找不到Students工作表');
+    }
+    
+    // Get all student data
+    const data = studentsSheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find column indices
+    const classColumnIndex = headers.indexOf('English Class');
+    const ltTeacherIndex = headers.indexOf('LT Teacher');
+    const itTeacherIndex = headers.indexOf('IT Teacher');
+    
+    if (classColumnIndex === -1 || ltTeacherIndex === -1 || itTeacherIndex === -1) {
+      throw new Error('Required columns not found in Students sheet | Students工作表中找不到必要欄位');
+    }
+    
+    // Find all unique teachers for this class and subject
+    const teachers = new Set();
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const studentClass = row[classColumnIndex];
+      const teacher = (subjectType === 'LT') ? row[ltTeacherIndex] : row[itTeacherIndex];
+      
+      if (studentClass === className && teacher && teacher.trim() !== '') {
+        teachers.add(teacher.trim());
+      }
+    }
+    
+    const teacherList = Array.from(teachers);
+    console.log(`Found ${teacherList.length} teachers for ${className} ${subjectType}: ${teacherList.join(', ')}`);
+    
+    return teacherList;
+    
+  } catch (error) {
+    console.error('Error finding teachers:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update assessment title for a specific class across all relevant teacher gradebooks
+ * 更新特定班級在所有相關老師成績簿中的評量標題
+ */
+function updateSingleClassAssessment(className, subjectType, assessmentCode, newTitle) {
+  try {
+    // Find all teachers for this class and subject
+    const teachers = findAllTeachersForClassAndSubject(className, subjectType);
+    
+    if (teachers.length === 0) {
+      return {
+        success: false,
+        error: `No teachers found for ${className} ${subjectType} | 找不到 ${className} ${subjectType} 的老師`
+      };
+    }
+    
+    let successCount = 0;
+    const errors = [];
+    const updatedTeachers = [];
+    
+    // Update each teacher's gradebook
+    teachers.forEach(teacher => {
+      try {
+        // Find teacher's gradebook
+        const gradebook = findTeacherGradebookByName(teacher, subjectType);
+        if (!gradebook) {
+          errors.push(`${teacher}: Gradebook not found | 找不到成績簿`);
+          return;
+        }
+        
+        // Find the specific class sheet
+        const sheet = gradebook.getSheetByName(className);
+        if (!sheet) {
+          errors.push(`${teacher}: ${className} sheet not found | 找不到${className}工作表`);
+          return;
+        }
+        
+        // Update the specific assessment column
+        const columnIndex = getAssessmentColumnIndex(assessmentCode);
+        if (!columnIndex) {
+          errors.push(`${teacher}: Invalid assessment code ${assessmentCode} | 無效的評量代碼`);
+          return;
+        }
+        
+        sheet.getRange(2, columnIndex).setValue(newTitle);
+        successCount++;
+        updatedTeachers.push(teacher);
+        
+      } catch (error) {
+        errors.push(`${teacher}: ${error.message}`);
+      }
+    });
+    
+    return {
+      success: successCount > 0,
+      message: `Successfully updated ${successCount} teacher(s) | 成功更新 ${successCount} 位老師`,
+      details: `Updated: ${updatedTeachers.join(', ')} | 已更新: ${updatedTeachers.join(', ')}`,
+      errors: errors.length > 0 ? errors : null,
+      totalTeachers: teachers.length,
+      successCount: successCount
+    };
+    
+  } catch (error) {
+    console.error('Error updating single class assessment:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Find teacher's gradebook by name and subject type
+ * 根據老師姓名和科目類型查找老師的成績簿
+ */
+function findTeacherGradebookByName(teacherName, subjectType) {
+  try {
+    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const teacherFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS, false);
+    
+    if (!teacherFolder) {
+      throw new Error('Teacher gradebooks folder not found | 找不到老師成績簿資料夾');
+    }
+    
+    // Search for gradebook files containing the teacher's name and subject type
+    const files = teacherFolder.getFiles();
+    while (files.hasNext()) {
+      const file = files.next();
+      const fileName = file.getName();
+      
+      // Check if filename contains teacher name and subject type
+      if (fileName.includes(teacherName) && fileName.includes(subjectType) && fileName.includes('Gradebook')) {
+        console.log(`Found gradebook for ${teacherName} ${subjectType}: ${fileName}`);
+        return SpreadsheetApp.openById(file.getId());
+      }
+    }
+    
+    console.warn(`Gradebook not found for ${teacherName} ${subjectType}`);
+    return null;
+    
+  } catch (error) {
+    console.error('Error finding teacher gradebook:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get column index for assessment code
+ * 取得評量代碼對應的欄位索引
+ */
+function getAssessmentColumnIndex(assessmentCode) {
+  const mapping = {
+    'F.A.1': 8,  'F.A.2': 9,   'F.A.3': 10,  'F.A.4': 11,
+    'F.A.5': 12, 'F.A.6': 13,  'F.A.7': 14,  'F.A.8': 15,
+    'S.A.1': 16, 'S.A.2': 17,  'S.A.3': 18,  'S.A.4': 19,
+    'Midterm': 20
+  };
+  
+  return mapping[assessmentCode] || null;
 }
