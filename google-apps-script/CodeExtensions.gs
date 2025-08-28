@@ -34,7 +34,7 @@ function getMasterDataFile() {
             'Students', '學生資料', 'students', 'STUDENTS', 
             '學生名單', '學生清單', 'Student List', 'student list',
             '成績簿系統', 'Gradebook System', 'gradebook system',
-            '2425S2', // Current semester pattern
+            '2526F1', // Current semester pattern
             'Master', 'master', '主控', '主要', '主控資料'
           ];
           

@@ -1127,7 +1127,7 @@ function getCurrentHTContext() {
     
     // Check if current file is an HT gradebook by filename pattern
     // Support multiple patterns:
-    // 1. New format: "G1_IT_HT_Ms_Smith_2425S2_Gradebook"
+    // 1. New format: "G1_IT_HT_Ms_Smith_2526F1_Gradebook"
     // 2. Old format: "G1 IT HT - John Smith - Gradebook" or "G1 LT HT - 李小明 - 成績簿"
     let match = null;
     let grade, teacherType, htName;
@@ -3766,7 +3766,7 @@ function getHTGradebooksForGrade(grade) {
     const gradebooks = [];
     const files = teacherGradebooksFolder.getFiles();
     
-    // HT gradebook naming pattern: G1_IT_HT_Ms_Smith_2425S2_Gradebook
+    // HT gradebook naming pattern: G1_IT_HT_Ms_Smith_2526F1_Gradebook
     const htPattern = new RegExp(`^${grade}_(IT|LT)_HT_(.+?)_\\d{4}S\\d_Gradebook$`, 'i');
     
     while (files.hasNext()) {

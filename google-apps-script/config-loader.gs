@@ -20,7 +20,7 @@ function loadExternalConfig() {
       SYSTEM: {
         NAME: 'Gradebook Management System | 成績簿管理系統',
         VERSION: '2.0.0',
-        SEMESTER: '2425S2',
+        SEMESTER: '2526F1',
         LAST_UPDATED: '2025-07-09'
       },
       
