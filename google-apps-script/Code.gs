@@ -2195,7 +2195,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   row1Headers.push('Final');
   
   // Row 2: Individual column headers
-  const row2Headers = ['', 'Student Name', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Final Assessment'];
+  const row2Headers = ['', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment'];
   
   // Add F.A. columns
   for (let i = 1; i <= 8; i++) {
@@ -2207,7 +2207,8 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     row2Headers.push(`S.A.${i}`);
   }
   
-  row2Headers.push('Final');
+  row2Headers.push('Midterm');
+  row2Headers.push('Assessment');
   
   // Set headers
   sheet.getRange(1, 1, 1, row1Headers.length).setValues([row1Headers]);
@@ -2229,12 +2230,12 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   students.forEach((student, index) => {
     const studentRow = [
       index + 1, // Row number
-      student.studentName,
+      student.englishName,
       student.studentId,
       '', // Term Grade - will be calculated
       '', // FA Average - will be calculated  
       '', // SA Average - will be calculated
-      '', // Final Assessment - to be filled
+      '', // Midterm Assessment - to be filled
     ];
     
     // Add empty cells for F.A.1-8
@@ -2247,8 +2248,9 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
       studentRow.push('');
     }
     
-    // Add empty cell for Final
-    studentRow.push('');
+    // Add empty cells for Midterm and Assessment
+    studentRow.push(''); // Midterm
+    studentRow.push(''); // Assessment
     
     sheet.getRange(currentRow, 1, 1, studentRow.length).setValues([studentRow]);
     currentRow++;
@@ -2271,7 +2273,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   // SA Average (column F)
   sheet.getRange(averageRow, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(F3:F${lastStudentRow},">0"),1))`);
   
-  // Final average (column G)
+  // Midterm Assessment average (column G)
   sheet.getRange(averageRow, 7).setFormula(`=IFERROR(ROUND(AVERAGEIF(G3:G${lastStudentRow},">0"),1))`);
   
   // Add average formulas for each F.A. column (H-O)
@@ -2286,8 +2288,11 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     sheet.getRange(averageRow, col).setFormula(`=IFERROR(ROUND(AVERAGEIF(${colLetter}3:${colLetter}${lastStudentRow},">0"),1))`);
   }
   
-  // Final column average (T)
+  // Midterm column average (T)
   sheet.getRange(averageRow, 20).setFormula(`=IFERROR(ROUND(AVERAGEIF(T3:T${lastStudentRow},">0"),1))`);
+  
+  // Assessment column average (U)  
+  sheet.getRange(averageRow, 21).setFormula(`=IFERROR(ROUND(AVERAGEIF(U3:U${lastStudentRow},">0"),1))`);
   
   // Set individual student formulas
   for (let row = 3; row < averageRow; row++) {
@@ -2300,7 +2305,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     // SA Average formula
     sheet.getRange(row, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(P${row}:S${row},">0"),1))`);
     
-    // Final Assessment formula - G3=T3
+    // Midterm Assessment formula - G3=T3 (T is now Midterm)
     sheet.getRange(row, 7).setFormula(`=T${row}`);
   }
   
@@ -2346,7 +2351,7 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
   
   // Basic info columns (A-G) | 基本資訊欄位 (A-G)
   row1Headers.push('', '', '', '', '', '', ''); // A-G empty for row 1
-  row2Headers.push('', 'Student Name', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Final Assessment');
+  row2Headers.push('', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment');
   
   // Formative Assessment columns (H-O) | 平時評量欄位 (H-O)
   let formativeStartCol = 8; // Column H
@@ -2374,10 +2379,12 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
     row2Headers.push(title);
   }
   
-  // Final column (if enabled) | 期末考欄位（如果啟用）
+  // Final columns (if enabled) | 期末考欄位（如果啟用）
   if (SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL) {
     row1Headers.push('');
-    row2Headers.push('Final');
+    row1Headers.push('');
+    row2Headers.push('Midterm');
+    row2Headers.push('Assessment');
   }
   
   // Set class title in A1 | 在A1設定班級標題
