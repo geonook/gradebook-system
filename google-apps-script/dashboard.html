@@ -1742,11 +1742,27 @@
     </div>
 
     <script>
+        // Error handling for debugging
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error occurred: ', {
+                message: msg,
+                source: url,
+                lineno: lineNo,
+                colno: columnNo,
+                error: error
+            });
+            return false;
+        };
+        
+        // Debug info
+        console.log('Dashboard script loading...');
+        
         // Global variables
         let isLoading = false;
 
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing dashboard...');
             updateTimestamp();
             loadSystemStatistics();
             setInterval(updateTimestamp, 60000); // Update every minute
@@ -2880,9 +2896,13 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
 
         // Assessment Title Manager Functions
         function openAssessmentTitleManager() {
+            console.log('openAssessmentTitleManager called');
             document.getElementById('assessmentModal').style.display = 'block';
             resetAssessmentForm();
         }
+        
+        // Ensure function is available globally
+        window.openAssessmentTitleManager = openAssessmentTitleManager;
         
         function closeAssessmentModal() {
             document.getElementById('assessmentModal').style.display = 'none';
@@ -2980,11 +3000,15 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
         
         // Open Progress Audit Modal
         function openProgressAudit() {
+            console.log('openProgressAudit called');
             document.getElementById('progressAuditModal').style.display = 'block';
             resetProgressAuditForm();
             // Default to G1 tab
             switchProgressTab('G1');
         }
+        
+        // Ensure function is available globally
+        window.openProgressAudit = openProgressAudit;
         
         // Close Progress Audit Modal
         function closeProgressAuditModal() {
@@ -3294,6 +3318,13 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                 closeProgressAuditModal();
             }
         }
+        
+        // Confirm script loaded successfully
+        console.log('Dashboard script loaded successfully!');
+        console.log('Functions available:', {
+            openProgressAudit: typeof window.openProgressAudit,
+            openAssessmentTitleManager: typeof window.openAssessmentTitleManager
+        });
 
     </script>
 </body>
