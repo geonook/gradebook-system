@@ -427,6 +427,82 @@
             margin-top: 5px;
         }
 
+        /* Assessment Title Manager Styles */
+        .assessment-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-section {
+            margin-bottom: 20px;
+        }
+        
+        .form-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: normal !important;
+        }
+        
+        .radio-label input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .result-section {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .result-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .result-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -442,6 +518,15 @@
             
             .control-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .assessment-form {
+                max-width: 100%;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -645,6 +730,9 @@
                 <button class="btn btn-warning" onclick="systemMaintenance()">
                     <i class="fas fa-tools"></i> System Maintenance
                 </button>
+                <button class="btn btn-success" onclick="openAssessmentTitleManager()">
+                    <i class="fas fa-edit"></i> Assessment Title Manager
+                </button>
             </div>
         </div>
     </div>
@@ -658,9 +746,87 @@
             </div>
             <div class="modal-body">
                 <div id="assessment-content">
-                    <div style="text-align: center; padding: 40px;">
-                        <div class="spinner"></div>
-                        <p>Loading assessment configurations...</p>
+                    <div class="assessment-form">
+                        <div class="form-section">
+                            <label for="classSelect"><i class="fas fa-school"></i> Class | 班級:</label>
+                            <select id="classSelect" class="form-control">
+                                <option value="">Select Class | 選擇班級</option>
+                                <option value="G1E1">G1E1</option>
+                                <option value="G1E2">G1E2</option>
+                                <option value="G1E3">G1E3</option>
+                                <option value="G2E1">G2E1</option>
+                                <option value="G2E2">G2E2</option>
+                                <option value="G2E3">G2E3</option>
+                                <option value="G3E1">G3E1</option>
+                                <option value="G3E2">G3E2</option>
+                                <option value="G3E3">G3E3</option>
+                                <option value="G4E1">G4E1</option>
+                                <option value="G4E2">G4E2</option>
+                                <option value="G4E3">G4E3</option>
+                                <option value="G5E1">G5E1</option>
+                                <option value="G5E2">G5E2</option>
+                                <option value="G5E3">G5E3</option>
+                                <option value="G6E1">G6E1</option>
+                                <option value="G6E2">G6E2</option>
+                                <option value="G6E3">G6E3</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label><i class="fas fa-book"></i> Subject | 科目:</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="subject" value="LT"> LT (Language Teacher)
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="subject" value="IT"> IT (International Teacher)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label for="assessmentSelect"><i class="fas fa-clipboard-check"></i> Assessment | 評量:</label>
+                            <select id="assessmentSelect" class="form-control">
+                                <option value="">Select Assessment | 選擇評量</option>
+                                <optgroup label="Formative Assessments | 形成性評量">
+                                    <option value="F.A.1">F.A.1</option>
+                                    <option value="F.A.2">F.A.2</option>
+                                    <option value="F.A.3">F.A.3</option>
+                                    <option value="F.A.4">F.A.4</option>
+                                    <option value="F.A.5">F.A.5</option>
+                                    <option value="F.A.6">F.A.6</option>
+                                    <option value="F.A.7">F.A.7</option>
+                                    <option value="F.A.8">F.A.8</option>
+                                </optgroup>
+                                <optgroup label="Summative Assessments | 總結性評量">
+                                    <option value="S.A.1">S.A.1</option>
+                                    <option value="S.A.2">S.A.2</option>
+                                    <option value="S.A.3">S.A.3</option>
+                                    <option value="S.A.4">S.A.4</option>
+                                </optgroup>
+                                <optgroup label="Other Assessments | 其他評量">
+                                    <option value="Midterm">Midterm | 期中考</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label for="newTitle"><i class="fas fa-edit"></i> New Title | 新標題:</label>
+                            <input type="text" id="newTitle" class="form-control" placeholder="Enter new assessment title | 輸入新的評量標題">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-primary" onclick="updateAssessmentTitle()">
+                                <i class="fas fa-save"></i> Update Title | 更新標題
+                            </button>
+                            <button class="btn btn-secondary" onclick="closeAssessmentModal()">
+                                <i class="fas fa-times"></i> Cancel | 取消
+                            </button>
+                        </div>
+                        
+                        <div id="assessment-result" class="result-section" style="display: none;">
+                            <!-- Results will be displayed here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1804,6 +1970,104 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                 .resetAssessmentTitlesByLevel(level, teacherType);
         }
 
+        // Assessment Title Manager Functions
+        function openAssessmentTitleManager() {
+            document.getElementById('assessmentModal').style.display = 'block';
+            resetAssessmentForm();
+        }
+        
+        function closeAssessmentModal() {
+            document.getElementById('assessmentModal').style.display = 'none';
+            resetAssessmentForm();
+        }
+        
+        function resetAssessmentForm() {
+            document.getElementById('classSelect').value = '';
+            document.querySelectorAll('input[name="subject"]').forEach(radio => radio.checked = false);
+            document.getElementById('assessmentSelect').value = '';
+            document.getElementById('newTitle').value = '';
+            hideAssessmentResult();
+        }
+        
+        function updateAssessmentTitle() {
+            // Get form values
+            const className = document.getElementById('classSelect').value;
+            const subjectRadios = document.querySelectorAll('input[name="subject"]:checked');
+            const assessmentCode = document.getElementById('assessmentSelect').value;
+            const newTitle = document.getElementById('newTitle').value.trim();
+            
+            // Validation
+            if (!className) {
+                showAssessmentError('Please select a class | 請選擇班級');
+                return;
+            }
+            
+            if (subjectRadios.length === 0) {
+                showAssessmentError('Please select a subject | 請選擇科目');
+                return;
+            }
+            
+            const subjectType = subjectRadios[0].value;
+            
+            if (!assessmentCode) {
+                showAssessmentError('Please select an assessment | 請選擇評量');
+                return;
+            }
+            
+            if (!newTitle) {
+                showAssessmentError('Please enter a new title | 請輸入新標題');
+                return;
+            }
+            
+            // Show loading
+            showAssessmentResult('🔄 Updating assessment title... | 正在更新評量標題...', 'loading');
+            
+            // Call the backend function
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    if (result.success) {
+                        showAssessmentResult(
+                            `✅ Successfully updated! | 更新成功！<br><br>` +
+                            `<strong>Class | 班級:</strong> ${className}<br>` +
+                            `<strong>Subject | 科目:</strong> ${subjectType}<br>` +
+                            `<strong>Assessment | 評量:</strong> ${assessmentCode}<br>` +
+                            `<strong>New Title | 新標題:</strong> ${newTitle}<br><br>` +
+                            `<strong>Updated Teachers | 已更新的老師:</strong><br>` +
+                            `${result.details || 'Update completed successfully | 更新完成'}`,
+                            'success'
+                        );
+                    } else {
+                        showAssessmentResult(`❌ Error | 錯誤: ${result.error}`, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showAssessmentResult(`❌ System error | 系統錯誤: ${error.message}`, 'error');
+                })
+                .updateSingleClassAssessment(className, subjectType, assessmentCode, newTitle);
+        }
+        
+        function showAssessmentResult(message, type) {
+            const resultDiv = document.getElementById('assessment-result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = 'result-section';
+            
+            if (type === 'success') {
+                resultDiv.classList.add('result-success');
+            } else if (type === 'error') {
+                resultDiv.classList.add('result-error');
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        function showAssessmentError(message) {
+            showAssessmentResult(message, 'error');
+        }
+        
+        function hideAssessmentResult() {
+            document.getElementById('assessment-result').style.display = 'none';
+        }
+        
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('assessmentModal');
