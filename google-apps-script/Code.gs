@@ -29,54 +29,6 @@
 /**
  * Handle web app GET requests | 處理網頁應用程式 GET 請求
  */
-function doGet(e) {
-  try {
-    // Check for page parameter | 檢查頁面參數
-    const page = e.parameter.page;
-    
-    if (page === 'ht') {
-      // Return HT Dashboard | 返回 HT 控制台
-      const htmlTemplate = HtmlService.createTemplateFromFile('dashboard_for_HT');
-      
-      // Add server-side data to template | 將伺服器端資料加入範本
-      htmlTemplate.config = SYSTEM_CONFIG;
-      htmlTemplate.timestamp = new Date().toLocaleString();
-      htmlTemplate.isWebApp = true;
-      
-      return htmlTemplate.evaluate()
-        .setTitle('HT Dashboard | 學年主任控制台')
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
-    } else {
-      // Default: Return main dashboard | 預設：返回主控制台
-      const htmlTemplate = HtmlService.createTemplateFromFile('dashboard');
-      
-      // Add server-side data to template | 將伺服器端資料加入範本
-      htmlTemplate.config = SYSTEM_CONFIG;
-      htmlTemplate.timestamp = new Date().toLocaleString();
-      
-      return htmlTemplate.evaluate()
-        .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
-    }
-  } catch (error) {
-    console.error('doGet error:', error);
-    // Return a simple error page
-    return HtmlService.createHtmlOutput(`
-      <!DOCTYPE html>
-      <html>
-      <head><title>Error</title></head>
-      <body>
-        <h1>系統錯誤 | System Error</h1>
-        <p>Error: ${error.message}</p>
-        <p>請檢查系統配置 | Please check system configuration</p>
-        <pre>${error.stack}</pre>
-      </body>
-      </html>
-    `);
-  }
-}
 
 
 // ===== MENU SYSTEM | 選單系統 =====
