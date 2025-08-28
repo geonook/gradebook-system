@@ -5274,10 +5274,12 @@ function performProgressAudit(checkpointConfig) {
  */
 function analyzeTeacherProgress(teacherName, teacherData, checkpointConfig) {
   try {
+    console.log(`🔍 Analyzing teacher: ${teacherName}, Type: ${teacherData.type}, Classes: ${teacherData.classes.join(', ')}`);
+    
     // Find teacher gradebook
-    const gradebook = findTeacherGradebookByName(teacherName);
+    const gradebook = findTeacherGradebookByName(teacherName, teacherData.type);
     if (!gradebook) {
-      console.log(`⚠️ No gradebook found for teacher: ${teacherName}`);
+      console.log(`⚠️ No gradebook found for teacher: ${teacherName} (${teacherData.type})`);
       return null;
     }
     
