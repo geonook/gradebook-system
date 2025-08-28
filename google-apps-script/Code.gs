@@ -5203,7 +5203,7 @@ function performProgressAudit(checkpointConfig) {
     let totalCompletionSum = 0;
     
     // Get master data for teacher-class mappings
-    const masterDataSheet = findMasterDataSheet();
+    const masterDataSheet = getMasterDataSheet();
     const teacherClassMap = getTeacherClassMapping(masterDataSheet);
     
     console.log(`📊 Found ${Object.keys(teacherClassMap).length} teachers to analyze`);
