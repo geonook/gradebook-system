@@ -2192,8 +2192,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     row1Headers.push('');
   }
   
-  row1Headers.push(''); // T column - Midterm
-  row1Headers.push(''); // U column - Assessment
+  row1Headers.push(''); // T column - Midterm only
   
   // Row 2: Individual column headers
   const row2Headers = ['', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment'];
@@ -2209,7 +2208,6 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   }
   
   row2Headers.push('Midterm');
-  row2Headers.push('Assessment');
   
   // Set headers
   sheet.getRange(1, 1, 1, row1Headers.length).setValues([row1Headers]);
@@ -2249,9 +2247,8 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
       studentRow.push('');
     }
     
-    // Add empty cells for Midterm and Assessment
+    // Add empty cell for Midterm
     studentRow.push(''); // Midterm
-    studentRow.push(''); // Assessment
     
     sheet.getRange(currentRow, 1, 1, studentRow.length).setValues([studentRow]);
     currentRow++;
@@ -2291,9 +2288,6 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   
   // Midterm column average (T)
   sheet.getRange(averageRow, 20).setFormula(`=IFERROR(ROUND(AVERAGEIF(T3:T${lastStudentRow},">0"),1))`);
-  
-  // Assessment column average (U)  
-  sheet.getRange(averageRow, 21).setFormula(`=IFERROR(ROUND(AVERAGEIF(U3:U${lastStudentRow},">0"),1))`);
   
   // Set individual student formulas
   for (let row = 3; row < averageRow; row++) {
@@ -2380,12 +2374,10 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
     row2Headers.push(title);
   }
   
-  // Final columns (if enabled) | 期末考欄位（如果啟用）
+  // Final column (if enabled) | 期末考欄位（如果啟用）
   if (SYSTEM_CONFIG.ASSESSMENTS.INCLUDE_FINAL) {
     row1Headers.push('');
-    row1Headers.push('');
     row2Headers.push('Midterm');
-    row2Headers.push('Assessment');
   }
   
   // Set class title in A1 | 在A1設定班級標題
