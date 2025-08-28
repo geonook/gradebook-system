@@ -4477,10 +4477,10 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
     const data = studentsSheet.getDataRange().getValues();
     const headers = data[0];
     
-    // Find column indices
-    const classColumnIndex = headers.indexOf('English Class');
-    const ltTeacherIndex = headers.indexOf('LT Teacher');
-    const itTeacherIndex = headers.indexOf('IT Teacher');
+    // Find column indices - match complete bilingual headers
+    const classColumnIndex = headers.indexOf('English Class | 英文班級');
+    const ltTeacherIndex = headers.indexOf('LT Teacher | LT老師');
+    const itTeacherIndex = headers.indexOf('IT Teacher | IT老師');
     
     if (classColumnIndex === -1 || ltTeacherIndex === -1 || itTeacherIndex === -1) {
       throw new Error('Required columns not found in Students sheet | Students工作表中找不到必要欄位');
