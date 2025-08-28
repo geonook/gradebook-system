@@ -5015,3 +5015,49 @@ function testG1E1LevelGroup() {
     return `❌ 錯誤: ${error.message}`;
   }
 }
+
+/**
+ * Test the complete Assessment Title Manager workflow
+ * 測試完整的評量標題管理工作流程
+ */
+function testAssessmentTitleUpdate() {
+  try {
+    console.log('🧪 Testing complete Assessment Title Manager workflow...');
+    
+    const testClassName = 'G1E1';
+    const testSubjectType = 'LT';
+    const testAssessmentCode = 'F.A.1';
+    const testNewTitle = 'Test Quiz - Unit 1';
+    
+    console.log(`📋 Test parameters:`);
+    console.log(`  - Class: ${testClassName}`);
+    console.log(`  - Subject: ${testSubjectType}`);
+    console.log(`  - Assessment: ${testAssessmentCode}`);
+    console.log(`  - New Title: "${testNewTitle}"`);
+    
+    // Run the actual update function
+    const result = updateSingleClassAssessment(testClassName, testSubjectType, testAssessmentCode, testNewTitle);
+    
+    console.log('📊 Update result:', result);
+    
+    if (result.success) {
+      return `✅ Assessment Title Manager test PASSED! 
+      
+Successfully updated ${result.successCount}/${result.totalTeachers} teachers:
+- Level Group: ${result.updateSummary.levelGroup}
+- Target Classes: ${result.updateSummary.actualClasses.join(', ')}
+- Updated Sheets: ${result.updateSummary.successfulUpdates}
+- Teachers: ${result.updateSummary.teachers.join(', ')}
+
+${result.details}`;
+    } else {
+      return `❌ Assessment Title Manager test FAILED: ${result.error}
+      
+Error details: ${result.errors ? result.errors.join(', ') : 'No specific errors'}`;
+    }
+    
+  } catch (error) {
+    console.error('❌ Assessment Title Manager test failed:', error);
+    return `❌ Test Error: ${error.message}`;
+  }
+}
