@@ -102,7 +102,7 @@ function loadExternalConfig() {
       SYSTEM: {
         NAME: 'Gradebook Management System | 成績簿管理系統',
         VERSION: '2.0.0',
-        SEMESTER: '2425S2'
+        SEMESTER: '2526F1'
       },
       GOOGLE_DRIVE: {
         MAIN_FOLDER_ID: '1w_UJnNthBkcP8wgyrF3rz2St0jZTPZzB'
