@@ -4860,12 +4860,18 @@ function findTeacherGradebookByName(teacherName, subjectType) {
         `${teacherName}.*Gradebook`
       ];
       
-      // Check different matching criteria
+      // Check different matching criteria - including semester prefix format
       const nameMatch = fileName.includes(teacherName);
       const subjectMatch = fileName.includes(subjectType);
       const gradebookMatch = fileName.includes('Gradebook') || fileName.includes('gradebook');
       
-      if (nameMatch && subjectMatch && gradebookMatch) {
+      // Check for semester-prefixed format: 2526F1_Ms. Wendy_LT_Gradebook
+      const semesterFormat = `${SYSTEM_CONFIG.SEMESTER}_${teacherName}_${subjectType}_Gradebook`;
+      const semesterMatch = fileName === semesterFormat;
+      
+      if (semesterMatch) {
+        matchingFiles.push({file, fileName, match: 'semester_exact'});
+      } else if (nameMatch && subjectMatch && gradebookMatch) {
         matchingFiles.push({file, fileName, match: 'exact'});
       } else if (nameMatch && gradebookMatch) {
         matchingFiles.push({file, fileName, match: 'partial'});
@@ -4875,7 +4881,14 @@ function findTeacherGradebookByName(teacherName, subjectType) {
     console.log(`📋 Found ${allFiles.length} total files in teacher folder`);
     console.log(`🎯 Found ${matchingFiles.length} potential matching files:`, matchingFiles.map(f => f.fileName));
     
-    // Prefer exact matches first
+    // Prefer semester format matches first (highest priority)
+    const semesterMatch = matchingFiles.find(f => f.match === 'semester_exact');
+    if (semesterMatch) {
+      console.log(`✅ Found semester format match for ${teacherName} ${subjectType}: ${semesterMatch.fileName}`);
+      return SpreadsheetApp.openById(semesterMatch.file.getId());
+    }
+    
+    // Then exact matches
     const exactMatch = matchingFiles.find(f => f.match === 'exact');
     if (exactMatch) {
       console.log(`✅ Found exact match for ${teacherName} ${subjectType}: ${exactMatch.fileName}`);
