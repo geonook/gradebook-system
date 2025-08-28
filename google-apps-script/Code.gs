@@ -5450,7 +5450,7 @@ function diagnoseProgressAuditSystem() {
     } catch (error) {
       report.masterData.found = false;
       report.masterData.error = error.message;
-      report.issues.push(\`Master Data access failed: \${error.message}\`);
+      report.issues.push('Master Data access failed: ' + error.message);
     }
     
     // 2. Check teacher extraction
@@ -5463,7 +5463,7 @@ function diagnoseProgressAuditSystem() {
       report.teachers.details = teacherClassMap;
     } catch (error) {
       report.teachers.error = error.message;
-      report.issues.push(\`Teacher extraction failed: \${error.message}\`);
+      report.issues.push('Teacher extraction failed: ' + error.message);
     }
     
     // 3. Check gradebook files accessibility
@@ -5488,7 +5488,7 @@ function diagnoseProgressAuditSystem() {
       }
     } catch (error) {
       report.gradebooks.error = error.message;
-      report.issues.push(\`Gradebook access failed: \${error.message}\`);
+      report.issues.push('Gradebook access failed: ' + error.message);
     }
     
     // 4. Check class-level mapping
