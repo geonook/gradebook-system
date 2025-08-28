@@ -2192,7 +2192,8 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     row1Headers.push('');
   }
   
-  row1Headers.push('Final');
+  row1Headers.push(''); // T column - Midterm
+  row1Headers.push(''); // U column - Assessment
   
   // Row 2: Individual column headers
   const row2Headers = ['', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment'];
