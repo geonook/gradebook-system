@@ -4464,6 +4464,119 @@ function simpleHTAssessmentManager() {
  * Find all teachers for a specific class and subject
  * 查找特定班級和科目的所有老師
  */
+// ===== CLASS TO LEVEL GROUP MAPPING | 班級到級別組映射 =====
+const CLASS_TO_LEVEL_MAPPING = {
+  // G1 Classes
+  'G1 Achievers': 'G1E1',
+  'G1 Discoverers': 'G1E1',
+  'G1 Voyagers': 'G1E1',
+  'G1 Explorers': 'G1E1',
+  'G1 Navigators': 'G1E1',
+  'G1 Adventurers': 'G1E2',
+  'G1 Guardians': 'G1E2',
+  'G1 Pioneers': 'G1E2',
+  'G1 Innovators': 'G1E2',
+  'G1 Visionaries': 'G1E2',
+  'G1 Pathfinders': 'G1E3',
+  'G1 Seekers': 'G1E3',
+  'G1 Trailblazers': 'G1E3',
+  'G1 Inventors': 'G1E3',
+  
+  // G2 Classes
+  'G2 Pioneers': 'G2E1',
+  'G2 Explorers': 'G2E1',
+  'G2 Inventors': 'G2E1',
+  'G2 Achievers': 'G2E1',
+  'G2 Voyagers': 'G2E1',
+  'G2 Adventurers': 'G2E2',
+  'G2 Innovators': 'G2E2',
+  'G2 Guardians': 'G2E2',
+  'G2 Pathfinders': 'G2E2',
+  'G2 Visionaries': 'G2E2',
+  'G2 Navigators': 'G2E3',
+  'G2 Discoverers': 'G2E3',
+  'G2 Seekers': 'G2E3',
+  'G2 Trailblazers': 'G2E3',
+  
+  // G3 Classes
+  'G3 Inventors': 'G3E1',
+  'G3 Innovators': 'G3E1',
+  'G3 Guardians': 'G3E1',
+  'G3 Achievers': 'G3E1',
+  'G3 Voyagers': 'G3E2',
+  'G3 Visionaries': 'G3E2',
+  'G3 Trailblazers': 'G3E2',
+  'G3 Discoverers': 'G3E2',
+  'G3 Explorers': 'G3E2',
+  'G3 Navigators': 'G3E2',
+  'G3 Adventurers': 'G3E2',
+  'G3 Seekers': 'G3E3',
+  'G3 Pathfinders': 'G3E3',
+  'G3 Pioneers': 'G3E3',
+  
+  // G4 Classes
+  'G4 Seekers': 'G4E1',
+  'G4 Voyagers': 'G4E1',
+  'G4 Visionaries': 'G4E1',
+  'G4 Achievers': 'G4E1',
+  'G4 Navigators': 'G4E2',
+  'G4 Trailblazers': 'G4E2',
+  'G4 Pathfinders': 'G4E2',
+  'G4 Explorers': 'G4E2',
+  'G4 Adventurers': 'G4E2',
+  'G4 Innovators': 'G4E2',
+  'G4 Discoverers': 'G4E2',
+  'G4 Guardians': 'G4E3',
+  'G4 Inventors': 'G4E3',
+  'G4 Pioneers': 'G4E3',
+  
+  // G5 Classes
+  'G5 Adventurers': 'G5E1',
+  'G5 Navigators': 'G5E1',
+  'G5 Pioneers': 'G5E1',
+  'G5 Inventors': 'G5E2',
+  'G5 Seekers': 'G5E2',
+  'G5 Discoverers': 'G5E2',
+  'G5 Guardians': 'G5E2',
+  'G5 Pathfinders': 'G5E2',
+  'G5 Explorers': 'G5E2',
+  'G5 Achievers': 'G5E2',
+  'G5 Voyagers': 'G5E3',
+  'G5 Trailblazers': 'G5E3',
+  'G5 Innovators': 'G5E3',
+  'G5 Visionaries': 'G5E3',
+  
+  // G6 Classes
+  'G6 Explorers': 'G6E1',
+  'G6 Inventors': 'G6E1',
+  'G6 Adventurers': 'G6E1',
+  'G6 Achievers': 'G6E1',
+  'G6 Voyagers': 'G6E2',
+  'G6 Discoverers': 'G6E2',
+  'G6 Innovators': 'G6E2',
+  'G6 Guardians': 'G6E2',
+  'G6 Pathfinders': 'G6E2',
+  'G6 Seekers': 'G6E2',
+  'G6 Visionaries': 'G6E2',
+  'G6 Pioneers': 'G6E3',
+  'G6 Trailblazers': 'G6E3',
+  'G6 Navigators': 'G6E3'
+};
+
+/**
+ * Get all actual class names that belong to a specific level group
+ * 获取属于特定级别组的所有实际班级名称
+ */
+function getClassesByLevelGroup(levelGroup) {
+  const classes = [];
+  for (const [className, mappedLevel] of Object.entries(CLASS_TO_LEVEL_MAPPING)) {
+    if (mappedLevel === levelGroup) {
+      classes.push(className);
+    }
+  }
+  return classes;
+}
+
 function findAllTeachersForClassAndSubject(className, subjectType) {
   try {
     const masterData = getMasterDataSheet();
@@ -4471,6 +4584,16 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
     
     if (!studentsSheet) {
       throw new Error('Students sheet not found in Master Data | Master Data中找不到Students工作表');
+    }
+    
+    // Check if className is a level group (like G1E1) and get actual class names
+    let targetClasses = [className];
+    const levelGroupClasses = getClassesByLevelGroup(className);
+    if (levelGroupClasses.length > 0) {
+      targetClasses = levelGroupClasses;
+      console.log(`🔍 DEBUG: Level group "${className}" detected. Searching for classes:`, targetClasses);
+    } else {
+      console.log(`🔍 DEBUG: Direct class search for: "${className}"`);
     }
     
     // Get all student data
@@ -4501,12 +4624,13 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
       throw new Error('Required columns not found in Students sheet | Students工作表中找不到必要欄位');
     }
     
-    // Find all unique teachers for this class and subject
+    // Find all unique teachers for target classes and subject
     const teachers = new Set();
     let debugStudentCount = 0;
     let matchingStudents = [];
     
-    console.log(`🔍 DEBUG: Searching for className="${className}" and subjectType="${subjectType}"`);
+    console.log(`🔍 DEBUG: Searching for target classes:`, targetClasses);
+    console.log(`🔍 DEBUG: Subject type: "${subjectType}"`);
     
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
@@ -4520,10 +4644,11 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
         console.log(`🔍 DEBUG: Student ${i}:`);
         console.log(`  - Class: "${studentClass}" (type: ${typeof studentClass})`);
         console.log(`  - Teacher: "${teacher}" (type: ${typeof teacher})`);
-        console.log(`  - Class match: ${studentClass === className}`);
+        console.log(`  - Class match with any target: ${targetClasses.includes(studentClass)}`);
       }
       
-      if (studentClass === className && teacher && teacher.trim() !== '') {
+      // Check if student's class matches any of our target classes
+      if (targetClasses.includes(studentClass) && teacher && teacher.trim() !== '') {
         teachers.add(teacher.trim());
         matchingStudents.push({
           student: row[1] || 'Unknown', // Assuming name is in column 1
@@ -4538,8 +4663,8 @@ function findAllTeachersForClassAndSubject(className, subjectType) {
     // DEBUG: Comprehensive logging
     console.log(`🔍 DEBUG: Search results:`);
     console.log(`  - Total students processed: ${debugStudentCount}`);
-    console.log(`  - Students matching ${className}: ${matchingStudents.length}`);
-    console.log(`  - Matching students:`, matchingStudents);
+    console.log(`  - Students matching target classes: ${matchingStudents.length}`);
+    console.log(`  - Matching students:`, matchingStudents.map(s => `${s.student} (${s.class} - ${s.teacher})`));
     console.log(`  - Unique teachers found: ${teacherList.length}`);
     console.log(`  - Teacher list: ${teacherList.join(', ')}`);
     
