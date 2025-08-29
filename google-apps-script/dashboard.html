@@ -1760,6 +1760,25 @@
         // Global variables
         let isLoading = false;
 
+        // Test backend connection
+        function testBackendConnection() {
+            console.log('🔍 Testing backend connection...');
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ Backend connection successful:', result);
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ Backend connection failed:', error);
+                        showError('後端連接失敗：' + error.message);
+                    })
+                    .getSystemVersion(); // Simple test function
+            } catch (error) {
+                console.error('❌ Google.script.run not available:', error);
+                showError('Google Apps Script 連接不可用');
+            }
+        }
+
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, initializing dashboard...');
@@ -1777,6 +1796,9 @@
                 openProgressAudit: typeof window.openProgressAudit,
                 openAssessmentTitleManager: typeof window.openAssessmentTitleManager
             });
+            
+            // Test backend connection
+            setTimeout(testBackendConnection, 1000);
             
             updateTimestamp();
             loadSystemStatistics();
@@ -1827,18 +1849,28 @@
 
         // System Functions
         function initializeSystem() {
+            console.log('🔘 initializeSystem button clicked');
             showLoading();
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    hideLoading();
-                    showSuccess('✅ System initialized successfully! | 系統初始化成功！');
-                    loadSystemStatistics();
-                })
-                .withFailureHandler(function(error) {
-                    hideLoading();
-                    showError('❌ Initialization failed: ' + error.message + ' | 初始化失敗');
-                })
-                .initializeSystem();
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ initializeSystem success:', result);
+                        hideLoading();
+                        showSuccess('✅ System initialized successfully! | 系統初始化成功！');
+                        loadSystemStatistics();
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ initializeSystem failed:', error);
+                        hideLoading();
+                        showError('❌ Initialization failed: ' + error.message + ' | 初始化失敗');
+                    })
+                    .initializeSystem();
+            } catch (error) {
+                console.error('❌ initializeSystem call error:', error);
+                hideLoading();
+                showError('呼叫初始化函數時發生錯誤：' + error.message);
+            }
         }
 
         function checkSystemStatus() {
@@ -1929,24 +1961,31 @@
 
         // Batch create gradebooks functionality
         function batchCreateGradebooks() {
+            console.log('🔘 batchCreateGradebooks button clicked');
+            
             if (!confirm('This will create gradebooks for all teachers. This process may take several minutes. Continue?')) {
+                console.log('User cancelled batch creation');
                 return;
             }
             
             showLoading();
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    hideLoading();
-                    if (result && result.success) {
-                        let message = `🎉 Gradebook creation completed!\n\n`;
-                        message += `✅ Successfully created: ${result.successCount} gradebooks\n`;
-                        if (result.errorCount > 0) {
-                            message += `❌ Errors: ${result.errorCount} gradebooks\n`;
-                        }
-                        message += `⏱️ Total time: ${result.duration} seconds\n`;
-                        message += `👥 Total teachers: ${result.totalTeachers}`;
-                        
-                        if (result.errors && result.errors.length > 0) {
+            console.log('📤 Calling backend batchCreateGradebooks...');
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ batchCreateGradebooks success:', result);
+                        hideLoading();
+                        if (result && result.success) {
+                            let message = `🎉 Gradebook creation completed!\n\n`;
+                            message += `✅ Successfully created: ${result.successCount} gradebooks\n`;
+                            if (result.errorCount > 0) {
+                                message += `❌ Errors: ${result.errorCount} gradebooks\n`;
+                            }
+                            message += `⏱️ Total time: ${result.duration} seconds\n`;
+                            message += `👥 Total teachers: ${result.totalTeachers}`;
+                            
+                            if (result.errors && result.errors.length > 0) {
                             message += `\n\n⚠️ Errors encountered:\n${result.errors.slice(0, 5).join('\n')}`;
                             if (result.errors.length > 5) {
                                 message += `\n... and ${result.errors.length - 5} more errors`;
@@ -1960,10 +1999,16 @@
                     }
                 })
                 .withFailureHandler(function(error) {
+                    console.error('❌ batchCreateGradebooks failed:', error);
                     hideLoading();
                     showError('❌ Failed to create gradebooks: ' + error.message);
                 })
                 .batchCreateGradebooks();
+            } catch (error) {
+                console.error('❌ batchCreateGradebooks call error:', error);
+                hideLoading();
+                showError('呼叫批量建立函數時發生錯誤：' + error.message);
+            }
         }
 
         // Progress Check Functions | 進度檢查函數

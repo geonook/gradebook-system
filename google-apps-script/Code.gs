@@ -4332,6 +4332,27 @@ function include(filename) {
   }
 }
 
+/**
+ * Simple test function for backend connectivity | 後端連接測試函數
+ */
+function getSystemVersion() {
+  try {
+    return {
+      success: true,
+      version: '2.0',
+      timestamp: new Date().toISOString(),
+      message: 'Backend connection successful | 後端連接成功'
+    };
+  } catch (error) {
+    console.error('getSystemVersion error:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: 'Backend connection failed | 後端連接失敗'
+    };
+  }
+}
+
 // ===== SIMPLIFIED HT ASSESSMENT MANAGEMENT | 簡化HT評量管理 =====
 
 /**

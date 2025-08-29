@@ -29,7 +29,7 @@
   "exceptionLogging": "CLOUD",
   "runtimeVersion": "V8",
   "webapp": {
-    "access": "MYSELF",
+    "access": "ANYONE",
     "executeAs": "USER_DEPLOYING"
   }
 }
