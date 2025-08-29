@@ -4552,13 +4552,20 @@ function getAllGradebookURLs() {
     // Log the output
     console.log(output);
     
+    // Calculate counts for return data
+    const regularTeachersCount = regularTeachers.length;
+    const htTeachersCount = htTeachers.length;
+    const ltCount = gradebookList.filter(g => g.teacherType === 'LT' && !g.isHT).length;
+    const itCount = gradebookList.filter(g => g.teacherType === 'IT' && !g.isHT).length;
+    
     // Return structured data
     return {
       success: true,
       totalCount: gradebookList.length,
-      ltCount: ltTeachers.length,
-      itCount: itTeachers.length,
-      htCount: htTeachers.length,
+      regularCount: regularTeachersCount,
+      ltCount: ltCount,
+      itCount: itCount,
+      htCount: htTeachersCount,
       gradebooks: gradebookList,
       formattedOutput: output
     };
