@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gradebook System Dashboard | 成績簿系統控制台</title>
-    <!-- Configuration Debug -->
-    <script>
-        console.log('🔧 Configuration Debug:', {
-            config: <?= JSON.stringify(config || {}) ?>,
-            timestamp: '<?= timestamp || "Not Set" ?>'
-        });
-    </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -1672,18 +1665,11 @@
     </div>
 
     <script>
-        console.log('🚀 Dashboard JavaScript Starting...');
-        
         // Global variables
         let isLoading = false;
 
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM Content Loaded - Functions Available:', {
-                initializeSystem: typeof initializeSystem !== 'undefined',
-                batchCreateGradebooks: typeof batchCreateGradebooks !== 'undefined',
-                openProgressAudit: typeof openProgressAudit !== 'undefined'
-            });
             updateTimestamp();
             loadSystemStatistics();
             setInterval(updateTimestamp, 60000); // Update every minute
@@ -3173,16 +3159,6 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             }
         }
 
-        // Final function availability check
-        console.log('🔍 Final JavaScript Load Check - All Functions:', {
-            initializeSystem: typeof initializeSystem !== 'undefined',
-            batchCreateGradebooks: typeof batchCreateGradebooks !== 'undefined',
-            openProgressAudit: typeof openProgressAudit !== 'undefined',
-            openAssessmentTitleManager: typeof openAssessmentTitleManager !== 'undefined',
-            refreshDashboard: typeof refreshDashboard !== 'undefined',
-            checkSystemStatus: typeof checkSystemStatus !== 'undefined'
-        });
-        console.log('✅ Dashboard JavaScript Loaded Successfully');
 
     </script>
 </body>
