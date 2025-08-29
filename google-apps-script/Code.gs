@@ -4279,8 +4279,7 @@ function getHTDashboardWebApp() {
     const htmlOutput = html.evaluate()
       .setTitle('HT Dashboard | 學年主任控制台')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
-      .addMetaTag('charset', 'UTF-8');
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
     
     console.log('✅ HT Dashboard Web App loaded successfully');
     return htmlOutput;
@@ -4310,8 +4309,7 @@ function getMainDashboardWebApp() {
     const htmlOutput = html.evaluate()
       .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
-      .addMetaTag('charset', 'UTF-8');
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
     
     console.log('✅ Main Dashboard Web App loaded successfully');
     return htmlOutput;
