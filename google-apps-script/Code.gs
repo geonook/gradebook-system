@@ -4249,6 +4249,15 @@ function doGet(e) {
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
     }
     
+    // Check if this is rebuild mode
+    if (e.parameter.rebuild === 'true') {
+      console.log('Loading rebuild dashboard...');
+      return HtmlService.createHtmlOutputFromFile('dashboard_rebuild')
+        .setTitle('Rebuild Dashboard | 重建控制台')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    }
+    
     // Check if this is HT Dashboard request
     if (e.parameter.page === 'ht' || e.parameter.app === 'ht') {
       return getHTDashboardWebApp();

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradebook System Dashboard | 成績簿系統控制台</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .bilingual {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 24px;
+            margin: 8px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-transform: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+        }
+
+        .btn-info {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #545b62);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #007bff;
+        }
+
+        .dashboard-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .statistics {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> Gradebook System | 成績簿系統</h1>
+            <div class="bilingual">Complete Google-based gradebook solution</div>
+            <div class="bilingual">完整的 Google 成績簿解決方案</div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="loading">⏳ 處理中... | Processing...</div>
+        <div id="alert-success" class="alert alert-success"></div>
+        <div id="alert-danger" class="alert alert-danger"></div>
+
+        <!-- Statistics -->
+        <div class="statistics">
+            <div class="stat-item">
+                <div class="stat-number" id="total-teachers">-</div>
+                <div>Total Teachers | 教師總數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="total-students">-</div>
+                <div>Total Students | 學生總數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completion-rate">-</div>
+                <div>Completion Rate | 完成率</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+            <!-- System Management -->
+            <div class="dashboard-card">
+                <h3><i class="fas fa-cog"></i> System Management | 系統管理</h3>
+                <div>
+                    <button class="btn btn-primary" onclick="initializeSystem()">
+                        <i class="fas fa-play"></i> Initialize | 初始化系統
+                    </button>
+                    <button class="btn btn-secondary" onclick="checkSystemStatus()">
+                        <i class="fas fa-heartbeat"></i> System Status | 系統狀態
+                    </button>
+                    <button class="btn btn-info" onclick="openHTDashboard()">
+                        <i class="fas fa-user-tie"></i> HT Dashboard
+                    </button>
+                    <button class="btn btn-warning" onclick="openProgressAudit()">
+                        <i class="fas fa-clipboard-check"></i> Progress Audit | 進度稽核
+                    </button>
+                </div>
+            </div>
+
+            <!-- Gradebook Operations -->
+            <div class="dashboard-card">
+                <h3><i class="fas fa-book"></i> Gradebook Operations | 成績簿操作</h3>
+                <div>
+                    <button class="btn btn-primary" onclick="batchCreateGradebooks()">
+                        <i class="fas fa-plus-circle"></i> Batch Create | 批量建立
+                    </button>
+                    <button class="btn btn-warning" onclick="quickProgressCheck()">
+                        <i class="fas fa-chart-line"></i> Quick Progress | 快速檢查
+                    </button>
+                    <button class="btn btn-success" onclick="openResourceManager()">
+                        <i class="fas fa-tools"></i> Resource Manager
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="last-updated">
+            Last updated: <span id="last-updated">-</span> | 最後更新時間
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 Rebuild dashboard loading...');
+
+        // Global variables
+        let isLoading = false;
+
+        // Basic utility functions
+        function showLoading() {
+            if (isLoading) return;
+            isLoading = true;
+            document.getElementById('loading').style.display = 'block';
+            hideAlerts();
+        }
+
+        function hideLoading() {
+            isLoading = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const alert = document.getElementById('alert-success');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            hideError();
+        }
+
+        function showError(message) {
+            const alert = document.getElementById('alert-danger');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            hideSuccess();
+        }
+
+        function hideSuccess() {
+            document.getElementById('alert-success').style.display = 'none';
+        }
+
+        function hideError() {
+            document.getElementById('alert-danger').style.display = 'none';
+        }
+
+        function hideAlerts() {
+            hideSuccess();
+            hideError();
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('last-updated').textContent = now.toLocaleString();
+        }
+
+        // System Functions
+        function initializeSystem() {
+            console.log('🔘 initializeSystem clicked');
+            showLoading();
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ initializeSystem success:', result);
+                        hideLoading();
+                        showSuccess('✅ System initialized successfully! | 系統初始化成功！');
+                        loadSystemStatistics();
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ initializeSystem failed:', error);
+                        hideLoading();
+                        showError('❌ Initialization failed: ' + error.message);
+                    })
+                    .initializeSystem();
+            } catch (error) {
+                console.error('❌ initializeSystem call error:', error);
+                hideLoading();
+                showError('呼叫初始化函數錯誤：' + error.message);
+            }
+        }
+
+        function checkSystemStatus() {
+            console.log('🔘 checkSystemStatus clicked');
+            showLoading();
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ checkSystemStatus success:', result);
+                        hideLoading();
+                        showSuccess('✅ System status checked successfully!');
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ checkSystemStatus failed:', error);
+                        hideLoading();
+                        showError('❌ Status check failed: ' + error.message);
+                    })
+                    .checkSystemStatus();
+            } catch (error) {
+                console.error('❌ checkSystemStatus call error:', error);
+                hideLoading();
+                showError('呼叫狀態檢查錯誤：' + error.message);
+            }
+        }
+
+        function openHTDashboard() {
+            console.log('🔘 openHTDashboard clicked');
+            const htUrl = 'https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec?page=ht';
+            console.log('Opening HT Dashboard:', htUrl);
+            window.open(htUrl, '_blank');
+        }
+
+        function openProgressAudit() {
+            console.log('🔘 openProgressAudit clicked');
+            showSuccess('✅ 進度稽核功能點擊正常！| Progress Audit clicked successfully!');
+        }
+
+        function batchCreateGradebooks() {
+            console.log('🔘 batchCreateGradebooks clicked');
+            
+            if (!confirm('This will create gradebooks for all teachers. Continue? | 這將為所有教師建立成績簿。是否繼續？')) {
+                console.log('User cancelled batch creation');
+                return;
+            }
+            
+            showLoading();
+            console.log('📤 Calling backend batchCreateGradebooks...');
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ batchCreateGradebooks success:', result);
+                        hideLoading();
+                        if (result && result.success) {
+                            showSuccess(`✅ 成功建立 ${result.successCount} 個成績簿！`);
+                        } else {
+                            showError('❌ 批量建立失敗：' + (result.error || 'Unknown error'));
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ batchCreateGradebooks failed:', error);
+                        hideLoading();
+                        showError('❌ 批量建立失敗：' + error.message);
+                    })
+                    .batchCreateGradebooks();
+            } catch (error) {
+                console.error('❌ batchCreateGradebooks call error:', error);
+                hideLoading();
+                showError('呼叫批量建立錯誤：' + error.message);
+            }
+        }
+
+        function quickProgressCheck() {
+            console.log('🔘 quickProgressCheck clicked');
+            showSuccess('✅ 快速進度檢查功能點擊正常！| Quick Progress Check clicked!');
+        }
+
+        function openResourceManager() {
+            console.log('🔘 openResourceManager clicked');
+            showSuccess('✅ 資源管理器功能點擊正常！| Resource Manager clicked!');
+        }
+
+        function loadSystemStatistics() {
+            console.log('📊 Loading system statistics...');
+            try {
+                google.script.run
+                    .withSuccessHandler(function(stats) {
+                        console.log('✅ Statistics loaded:', stats);
+                        document.getElementById('total-teachers').textContent = stats.totalTeachers || 0;
+                        document.getElementById('total-students').textContent = stats.totalStudents || 0;
+                        document.getElementById('completion-rate').textContent = (stats.completionRate || 0) + '%';
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ Failed to load statistics:', error);
+                        document.getElementById('total-teachers').textContent = 'Error';
+                        document.getElementById('total-students').textContent = 'Error';
+                        document.getElementById('completion-rate').textContent = 'Error';
+                    })
+                    .getSystemStatistics();
+            } catch (error) {
+                console.error('❌ Statistics call error:', error);
+            }
+        }
+
+        // Initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Rebuild dashboard DOM loaded');
+            console.log('Google script available:', typeof google !== 'undefined' && typeof google.script !== 'undefined');
+            
+            updateTimestamp();
+            loadSystemStatistics();
+            setInterval(updateTimestamp, 60000);
+        });
+
+        console.log('✅ Rebuild dashboard script loaded successfully!');
+    </script>
+</body>
+</html>
