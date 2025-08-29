@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard | 測試控制台</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .btn { 
+            padding: 10px 20px; 
+            margin: 10px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover { background: #0056b3; }
+        .alert { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+            display: none;
+        }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+        #loading { display: none; }
+    </style>
+</head>
+<body>
+    <h1>🧪 測試控制台 | Test Dashboard</h1>
+    
+    <div id="loading">⏳ 載入中...</div>
+    <div id="alert-success" class="alert alert-success"></div>
+    <div id="alert-danger" class="alert alert-danger"></div>
+    
+    <div>
+        <h2>基本功能測試 | Basic Function Tests</h2>
+        <button class="btn" onclick="testConnection()">測試連接 | Test Connection</button>
+        <button class="btn" onclick="testInitialize()">測試初始化 | Test Initialize</button>
+        <button class="btn" onclick="testBatchCreate()">測試批量建立 | Test Batch Create</button>
+        <button class="btn" onclick="openProgressAudit()">進度稽核 | Progress Audit</button>
+    </div>
+
+    <script>
+        console.log('🧪 Test dashboard loading...');
+
+        // Basic utility functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const alert = document.getElementById('alert-success');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            hideError();
+        }
+
+        function showError(message) {
+            const alert = document.getElementById('alert-danger');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            hideSuccess();
+        }
+
+        function hideSuccess() {
+            document.getElementById('alert-success').style.display = 'none';
+        }
+
+        function hideError() {
+            document.getElementById('alert-danger').style.display = 'none';
+        }
+
+        // Test functions
+        function testConnection() {
+            console.log('🔘 testConnection clicked');
+            showLoading();
+            
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ Connection test success:', result);
+                        hideLoading();
+                        showSuccess('✅ 連接成功！ | Connection successful!');
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ Connection test failed:', error);
+                        hideLoading();
+                        showError('❌ 連接失敗：' + error.message);
+                    })
+                    .getSystemVersion();
+            } catch (error) {
+                console.error('❌ google.script.run error:', error);
+                hideLoading();
+                showError('❌ 呼叫錯誤：' + error.message);
+            }
+        }
+
+        function testInitialize() {
+            console.log('🔘 testInitialize clicked');
+            if (!confirm('測試初始化系統？')) return;
+            
+            showLoading();
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ Initialize success:', result);
+                        hideLoading();
+                        showSuccess('✅ 初始化成功！');
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ Initialize failed:', error);
+                        hideLoading();
+                        showError('❌ 初始化失敗：' + error.message);
+                    })
+                    .initializeSystem();
+            } catch (error) {
+                console.error('❌ Initialize call error:', error);
+                hideLoading();
+                showError('❌ 呼叫初始化錯誤：' + error.message);
+            }
+        }
+
+        function testBatchCreate() {
+            console.log('🔘 testBatchCreate clicked');
+            if (!confirm('測試批量建立成績簿？這可能需要幾分鐘。')) return;
+            
+            showLoading();
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        console.log('✅ Batch create success:', result);
+                        hideLoading();
+                        if (result && result.success) {
+                            showSuccess(`✅ 建立成功：${result.successCount} 個成績簿`);
+                        } else {
+                            showError('❌ 批量建立失敗：' + (result.error || '未知錯誤'));
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('❌ Batch create failed:', error);
+                        hideLoading();
+                        showError('❌ 批量建立失敗：' + error.message);
+                    })
+                    .batchCreateGradebooks();
+            } catch (error) {
+                console.error('❌ Batch create call error:', error);
+                hideLoading();
+                showError('❌ 呼叫批量建立錯誤：' + error.message);
+            }
+        }
+
+        function openProgressAudit() {
+            console.log('🔘 openProgressAudit clicked');
+            showSuccess('✅ 進度稽核功能點擊正常！');
+        }
+
+        // Initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Test dashboard DOM loaded');
+            console.log('Google script available:', typeof google !== 'undefined' && typeof google.script !== 'undefined');
+        });
+
+        console.log('✅ Test dashboard script loaded successfully!');
+    </script>
+</body>
+</html>

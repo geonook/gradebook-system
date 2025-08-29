@@ -4240,6 +4240,15 @@ function doGet(e) {
   try {
     console.log('Web App accessed with parameters:', e.parameters);
     
+    // Check if this is test mode
+    if (e.parameter.test === 'true') {
+      console.log('Loading test dashboard...');
+      return HtmlService.createHtmlOutputFromFile('dashboard_test')
+        .setTitle('Test Dashboard | 測試控制台')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+    }
+    
     // Check if this is HT Dashboard request
     if (e.parameter.page === 'ht' || e.parameter.app === 'ht') {
       return getHTDashboardWebApp();
@@ -4255,6 +4264,7 @@ function doGet(e) {
         <h2>❌ Web App Error</h2>
         <p>Failed to load application: ${error.message}</p>
         <p>Please contact the administrator.</p>
+        <p><strong>Test URL:</strong> <a href="?test=true">載入測試版本</a></p>
       </div>
     `);
   }
