@@ -2287,7 +2287,8 @@
                     if (result.success) {
                         let message = `📊 Code Quality Analysis Complete!\n\n${result.summary}\n\n${result.report}`;
                         if (result.recommendations && result.recommendations.length > 0) {
-                            message += `\n\n🎯 Recommendations:\n${result.recommendations.map(r => `• ${r}`).join('\n')}`;
+                            const recommendationList = result.recommendations.map(r => '• ' + r).join('\n');
+                            message += `\n\n🎯 Recommendations:\n${recommendationList}`;
                         }
                         showSuccess(message);
                     } else {
@@ -2381,15 +2382,24 @@
                     if (result.success) {
                         const resultDiv = document.getElementById('resourceResult');
                         resultDiv.style.display = 'block';
-                        resultDiv.innerHTML = `
+                        let html = `
                             <h4>✅ Resource Created Successfully! | 資源創建成功！</h4>
                             <p><strong>Resource ID:</strong> ${result.resourceId}</p>
                             <p><strong>Type:</strong> ${result.details.type}</p>
                             <p><strong>Message:</strong> ${result.message}</p>
-                            ${result.details.templateUrl ? `<p><a href="${result.details.templateUrl}" target="_blank">📄 Open Template</a></p>` : ''}
-                            ${result.details.docUrl ? `<p><a href="${result.details.docUrl}" target="_blank">📖 Open Documentation</a></p>` : ''}
-                            ${result.details.configUrl ? `<p><a href="${result.details.configUrl}" target="_blank">⚙️ Open Configuration</a></p>` : ''}
                         `;
+                        
+                        if (result.details.templateUrl) {
+                            html += '<p><a href="' + result.details.templateUrl + '" target="_blank">📄 Open Template</a></p>';
+                        }
+                        if (result.details.docUrl) {
+                            html += '<p><a href="' + result.details.docUrl + '" target="_blank">📖 Open Documentation</a></p>';
+                        }
+                        if (result.details.configUrl) {
+                            html += '<p><a href="' + result.details.configUrl + '" target="_blank">⚙️ Open Configuration</a></p>';
+                        }
+                        
+                        resultDiv.innerHTML = html;
                         
                         // Clear form
                         document.getElementById('resourceName').value = '';
