@@ -500,6 +500,35 @@ A:
 2. Modify `FORMATIVE_COUNT` and `SUMMATIVE_COUNT` | 修改 `FORMATIVE_COUNT` 和 `SUMMATIVE_COUNT`
 3. Save and re-run batch creation | 儲存後重新執行批量建立
 
+## 🚨 Known Issues | 已知問題
+
+### **⚠️ Progress Audit Issue (Current)**
+**Problem**: Progress Audit shows 0 teachers analyzed despite finding 57 teachers successfully.
+
+**Root Cause**: File naming format mismatch between creation and search patterns.
+- **Creation**: `2526F1_Ms. Wendy_LT_Gradebook` (includes semester prefix)
+- **Search**: `Ms. Wendy LT Gradebook` (missing semester prefix)
+
+**Status**: 🔧 Identified, needs fixing in next session
+**Reference**: See `docs/PROGRESS_AUDIT_STATUS.md` for detailed analysis
+
+### **⚠️ Web App JavaScript Errors**  
+**Problem**: Browser console shows multiple JavaScript errors:
+- `Unexpected token '<'` at line 1443
+- `openProgressAudit is not defined`
+- `openAssessmentTitleManager is not defined`
+
+**Root Cause**: Duplicate `doGet` functions in Code.gs causing parsing errors.
+
+**Workaround**: Use incognito mode and clear browser cache
+**Status**: 🔧 Needs fixing - remove duplicate doGet function
+
+### **✅ Working Features**
+- ✅ Master Data extraction (57 teachers found)
+- ✅ Teacher-class mapping works correctly
+- ✅ System initialization and folder structure
+- ✅ Batch gradebook creation (when Web App errors resolved)
+
 ## 🎯 System Advantages | 系統優勢
 
 ### For Administrators | 對管理者
