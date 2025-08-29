@@ -1012,6 +1012,109 @@
             showCustomDialog(html);
         }
 
+        // Assessment Title Manager Functions
+        function openAssessmentTitleManager() {
+            console.log('🔘 openAssessmentTitleManager called');
+            document.getElementById('assessmentModal').style.display = 'block';
+            resetAssessmentForm();
+        }
+        
+        function closeAssessmentModal() {
+            console.log('🔘 closeAssessmentModal called');
+            document.getElementById('assessmentModal').style.display = 'none';
+            resetAssessmentForm();
+        }
+        
+        function resetAssessmentForm() {
+            const classSelect = document.getElementById('classSelect');
+            const subjectRadios = document.querySelectorAll('input[name="subject"]');
+            const assessmentSelect = document.getElementById('assessmentSelect');
+            const newTitle = document.getElementById('newTitle');
+            
+            if (classSelect) classSelect.value = '';
+            subjectRadios.forEach(radio => radio.checked = false);
+            if (assessmentSelect) assessmentSelect.value = '';
+            if (newTitle) newTitle.value = '';
+            hideAssessmentResult();
+        }
+        
+        function updateAssessmentTitle() {
+            console.log('🔘 updateAssessmentTitle called');
+            
+            const className = document.getElementById('classSelect').value;
+            const subjectRadios = document.querySelectorAll('input[name="subject"]:checked');
+            const assessmentCode = document.getElementById('assessmentSelect').value;
+            const newTitle = document.getElementById('newTitle').value.trim();
+            
+            // Validation
+            if (!className) {
+                showAssessmentError('Please select a class | 請選擇班級');
+                return;
+            }
+            
+            if (subjectRadios.length === 0) {
+                showAssessmentError('Please select a subject | 請選擇科目');
+                return;
+            }
+            
+            if (!assessmentCode) {
+                showAssessmentError('Please select an assessment | 請選擇評量');
+                return;
+            }
+            
+            if (!newTitle) {
+                showAssessmentError('Please enter a new title | 請輸入新標題');
+                return;
+            }
+            
+            const subjectType = subjectRadios[0].value;
+            
+            showLoading();
+            try {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        hideLoading();
+                        if (result.success) {
+                            showAssessmentSuccess('✅ Assessment title updated successfully! | 評量標題更新成功！');
+                            resetAssessmentForm();
+                        } else {
+                            showAssessmentError('❌ Failed to update title: ' + result.error);
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        hideLoading();
+                        showAssessmentError('❌ Update failed: ' + error.message);
+                    })
+                    .updateAssessmentTitle(className, subjectType, assessmentCode, newTitle);
+            } catch (error) {
+                hideLoading();
+                showAssessmentError('❌ 呼叫更新函數錯誤：' + error.message);
+            }
+        }
+        
+        function showAssessmentSuccess(message) {
+            const result = document.getElementById('assessment-result');
+            if (result) {
+                result.innerHTML = '<div style="color: #155724; background: #d4edda; padding: 10px; border-radius: 5px; margin: 10px 0;">' + message + '</div>';
+                result.style.display = 'block';
+            }
+        }
+        
+        function showAssessmentError(message) {
+            const result = document.getElementById('assessment-result');
+            if (result) {
+                result.innerHTML = '<div style="color: #721c24; background: #f8d7da; padding: 10px; border-radius: 5px; margin: 10px 0;">' + message + '</div>';
+                result.style.display = 'block';
+            }
+        }
+        
+        function hideAssessmentResult() {
+            const result = document.getElementById('assessment-result');
+            if (result) {
+                result.style.display = 'none';
+            }
+        }
+
         function loadSystemStatistics() {
             console.log('📊 Loading system statistics...');
             try {
@@ -1038,6 +1141,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Rebuild dashboard DOM loaded');
             console.log('Google script available:', typeof google !== 'undefined' && typeof google.script !== 'undefined');
+            
+            // Register critical functions globally
+            if (typeof openAssessmentTitleManager === 'function') {
+                window.openAssessmentTitleManager = openAssessmentTitleManager;
+                console.log('✅ openAssessmentTitleManager registered globally');
+            } else {
+                console.error('❌ openAssessmentTitleManager function not found');
+            }
             
             updateTimestamp();
             loadSystemStatistics();
