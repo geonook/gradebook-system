@@ -31,50 +31,87 @@
  */
 function doGet(e) {
   try {
+    console.log('🚀 Starting doGet function...');
+    
+    // Get configuration safely | 安全地獲取配置
+    const config = getSystemConfig();
+    console.log('✅ Configuration loaded successfully');
+    
     // Check for page parameter | 檢查頁面參數
     const page = e.parameter.page;
+    console.log('📄 Page parameter:', page);
     
     if (page === 'ht') {
       // Return HT Dashboard | 返回 HT 控制台
+      console.log('🎯 Loading HT Dashboard...');
       const htmlTemplate = HtmlService.createTemplateFromFile('dashboard_for_HT');
       
       // Add server-side data to template | 將伺服器端資料加入範本
-      htmlTemplate.config = SYSTEM_CONFIG;
+      htmlTemplate.config = config;
       htmlTemplate.timestamp = new Date().toLocaleString();
       htmlTemplate.isWebApp = true;
       
-      return htmlTemplate.evaluate()
+      const output = htmlTemplate.evaluate()
         .setTitle('HT Dashboard | 學年主任控制台')
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+      
+      console.log('✅ HT Dashboard loaded successfully');
+      return output;
+      
     } else {
       // Default: Return main dashboard | 預設：返回主控制台
+      console.log('🎯 Loading Main Dashboard...');
       const htmlTemplate = HtmlService.createTemplateFromFile('dashboard');
       
       // Add server-side data to template | 將伺服器端資料加入範本
-      htmlTemplate.config = SYSTEM_CONFIG;
+      htmlTemplate.config = config;
       htmlTemplate.timestamp = new Date().toLocaleString();
+      htmlTemplate.isWebApp = true;
       
-      return htmlTemplate.evaluate()
+      const output = htmlTemplate.evaluate()
         .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+      
+      console.log('✅ Main Dashboard loaded successfully');
+      return output;
     }
   } catch (error) {
-    console.error('doGet error:', error);
-    // Return a simple error page
+    console.error('❌ Critical doGet error:', error);
+    // Return a comprehensive error page
     return HtmlService.createHtmlOutput(`
       <!DOCTYPE html>
-      <html>
-      <head><title>Error</title></head>
+      <html lang="zh-TW">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>系統錯誤 | System Error</title>
+        <style>
+          body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+          .error { background: #ffebee; border: 1px solid #f44336; padding: 20px; border-radius: 8px; }
+          .error h1 { color: #c62828; margin-top: 0; }
+          .error-details { background: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 4px; font-family: monospace; }
+          .retry-btn { background: #2196F3; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        </style>
+      </head>
       <body>
-        <h1>系統錯誤 | System Error</h1>
-        <p>Error: ${error.message}</p>
-        <p>請檢查系統配置 | Please check system configuration</p>
-        <pre>${error.stack}</pre>
+        <div class="error">
+          <h1>🚨 系統錯誤 | System Error</h1>
+          <p>系統無法正常啟動，請稍後再試或聯繫管理員。<br>
+             System failed to start, please try again later or contact the administrator.</p>
+          <div class="error-details">
+            錯誤詳情 | Error Details:<br>
+            ${error.message}<br><br>
+            時間戳記 | Timestamp: ${new Date().toLocaleString()}
+          </div>
+          <button class="retry-btn" onclick="window.location.reload()">
+            重新載入 | Reload
+          </button>
+        </div>
       </body>
       </html>
-    `);
+    `).setTitle('系統錯誤 | System Error');
   }
 }
 

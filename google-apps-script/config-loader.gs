@@ -282,5 +282,32 @@ function diagnoseConfiguration() {
 }
 
 // ===== GLOBAL CONFIGURATION | 全局配置 =====
-// Initialize and expose the configuration globally | 初始化並全局暴露配置
-const SYSTEM_CONFIG = initializeConfiguration();
+// Configuration will be initialized on demand | 配置將根據需要初始化
+// This prevents initialization errors during script loading | 這防止腳本載入期間的初始化錯誤
+var SYSTEM_CONFIG;
+
+/**
+ * Safely get system configuration | 安全地獲取系統配置
+ * Initializes configuration if not already loaded | 如果尚未載入則初始化配置
+ */
+function getSystemConfig() {
+  try {
+    if (!SYSTEM_CONFIG) {
+      console.log('🔧 Initializing SYSTEM_CONFIG for first time...');
+      SYSTEM_CONFIG = initializeConfiguration();
+    }
+    return SYSTEM_CONFIG;
+  } catch (error) {
+    console.error('❌ Failed to get system configuration:', error);
+    // Return minimal fallback configuration
+    return {
+      SYSTEM_NAME: 'Gradebook System | 成績簿系統',
+      SEMESTER: '2526F1',
+      MAIN_FOLDER_ID: '1w_UJnNthBkcP8wgyrF3rz2St0jZTPZzB',
+      FOLDERS: {
+        MAIN: 'Gradebook System | 成績簿系統',
+        TEACHER_SHEETS: 'Teacher Gradebooks | 老師成績簿'
+      }
+    };
+  }
+}
