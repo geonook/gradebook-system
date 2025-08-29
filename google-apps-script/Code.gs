@@ -4267,16 +4267,7 @@ function getHTDashboardWebApp() {
   try {
     console.log('Loading HT Dashboard Web App...');
     
-    const html = HtmlService.createTemplateFromFile('dashboard_for_HT');
-    
-    // Pass system configuration to the template
-    html.isWebApp = true;
-    html.systemConfig = {
-      mainFolderId: SYSTEM_CONFIG.MAIN_FOLDER_ID,
-      folders: SYSTEM_CONFIG.FOLDERS
-    };
-    
-    const htmlOutput = html.evaluate()
+    const htmlOutput = HtmlService.createHtmlOutputFromFile('dashboard_for_HT')
       .setTitle('HT Dashboard | 學年主任控制台')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
       .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
@@ -4297,16 +4288,7 @@ function getMainDashboardWebApp() {
   try {
     console.log('Loading Main Dashboard Web App...');
     
-    const html = HtmlService.createTemplateFromFile('dashboard');
-    
-    // Pass system configuration to the template
-    html.isWebApp = true;
-    html.systemConfig = {
-      mainFolderId: SYSTEM_CONFIG.MAIN_FOLDER_ID,
-      folders: SYSTEM_CONFIG.FOLDERS
-    };
-    
-    const htmlOutput = html.evaluate()
+    const htmlOutput = HtmlService.createHtmlOutputFromFile('dashboard')
       .setTitle('Gradebook System Dashboard | 成績簿系統控制台')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
       .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
