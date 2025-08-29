@@ -4333,12 +4333,103 @@ function getAllGradebookURLs() {
           }
         }
         
-        // Add to list
+        // Extract grade information for better sorting
+        let grades = [];
+        let primaryGrade = '';
+        
+        if (teacherInfo.isHT && teacherInfo.gradeGroup) {
+          // For HT teachers, extract grades from grade group (e.g., "G1-G2" -> ["G1", "G2"])
+          const gradeMatch = teacherInfo.gradeGroup.match(/G(\d+)(?:-G(\d+))?/);
+          if (gradeMatch) {
+            grades.push(`G${gradeMatch[1]}`);
+            if (gradeMatch[2]) {
+              grades.push(`G${gradeMatch[2]}`);
+            }
+            primaryGrade = grades[0]; // Use first grade as primary
+          }
+        } else {
+          // For regular teachers, extract grade from teacher data cross-reference
+          try {
+            const masterData = getMasterDataSheet();
+            const studentsSheet = masterData.getSheetByName('Students');
+            const data = studentsSheet.getDataRange().getValues();
+            const headers = data[0];
+            
+            // Find relevant columns
+            const ltTeacherCol = headers.findIndex(h => h && (h.includes('LT Teacher') || h.includes('LT老師')));
+            const itTeacherCol = headers.findIndex(h => h && (h.includes('IT Teacher') || h.includes('IT老師')));
+            const gradeCol = headers.findIndex(h => h && (h.includes('Grade') || h.includes('年級')));
+            const classCol = headers.findIndex(h => h && (h.includes('English Class') || h.includes('英文班級') || h.includes('Homeroom') || h.includes('班級')));
+            
+            const teacherGrades = new Set();
+            const teacherClasses = new Set();
+            
+            // Scan student data for this teacher
+            for (let i = 1; i < data.length && i < 1000; i++) { // Limit scan for performance
+              const row = data[i];
+              if (!row[0]) continue;
+              
+              const rowLTTeacher = ltTeacherCol >= 0 ? row[ltTeacherCol] : '';
+              const rowITTeacher = itTeacherCol >= 0 ? row[itTeacherCol] : '';
+              const rowGrade = gradeCol >= 0 ? row[gradeCol] : '';
+              const rowClass = classCol >= 0 ? row[classCol] : '';
+              
+              // Check if this row matches our teacher
+              const isMatch = (teacherInfo.type === 'LT' && rowLTTeacher === teacherInfo.name) ||
+                            (teacherInfo.type === 'IT' && rowITTeacher === teacherInfo.name);
+              
+              if (isMatch && rowGrade) {
+                // Extract grade from various formats
+                let grade = rowGrade.toString().trim();
+                
+                // Handle different grade formats
+                if (grade.match(/^G?\d+$/)) {
+                  // Format: "1", "2", "G1", "G2"
+                  grade = grade.replace(/^G?/, 'G');
+                } else if (grade.match(/^Grade\s*\d+/i)) {
+                  // Format: "Grade 1", "Grade 2"
+                  grade = 'G' + grade.match(/\d+/)[0];
+                }
+                
+                if (grade.match(/^G[1-6]$/)) {
+                  teacherGrades.add(grade);
+                }
+                
+                if (rowClass) {
+                  teacherClasses.add(rowClass.toString().trim());
+                }
+              }
+            }
+            
+            grades = Array.from(teacherGrades).sort();
+            
+            // If no grades found from student data, try to extract from class names
+            if (grades.length === 0 && teacherClasses.size > 0) {
+              Array.from(teacherClasses).forEach(className => {
+                const classGrade = className.match(/G([1-6])/);
+                if (classGrade) {
+                  grades.push(`G${classGrade[1]}`);
+                }
+              });
+              grades = [...new Set(grades)].sort();
+            }
+            
+            primaryGrade = grades[0] || 'Unknown';
+            
+          } catch (error) {
+            console.warn(`Could not extract grade for teacher ${teacherInfo.name}:`, error.message);
+            primaryGrade = 'Unknown';
+          }
+        }
+        
+        // Add to list with enhanced data
         gradebookList.push({
           teacherName: teacherInfo.name,
           teacherType: teacherInfo.type,
           isHT: teacherInfo.isHT,
           gradeGroup: teacherInfo.gradeGroup,
+          grades: grades,
+          primaryGrade: primaryGrade,
           fileName: fileName,
           url: fileUrl,
           fileId: fileId,
@@ -4348,64 +4439,115 @@ function getAllGradebookURLs() {
       }
     }
     
-    // Sort by teacher name and type
+    // Enhanced sorting: Grade → Teacher Type → Teacher Name
     gradebookList.sort((a, b) => {
-      const nameCompare = a.teacherName.localeCompare(b.teacherName);
-      if (nameCompare !== 0) return nameCompare;
-      return a.teacherType.localeCompare(b.teacherType);
+      // First, separate HT teachers (put them at the end)
+      if (a.isHT && !b.isHT) return 1;
+      if (!a.isHT && b.isHT) return -1;
+      
+      // For both regular or both HT teachers
+      if (a.isHT && b.isHT) {
+        // Sort HT teachers by grade group, then by teacher type, then by name
+        const gradeGroupCompare = (a.gradeGroup || '').localeCompare(b.gradeGroup || '');
+        if (gradeGroupCompare !== 0) return gradeGroupCompare;
+        
+        const typeCompare = a.teacherType.localeCompare(b.teacherType);
+        if (typeCompare !== 0) return typeCompare;
+        
+        return a.teacherName.localeCompare(b.teacherName);
+      } else {
+        // Sort regular teachers by primary grade, then by teacher type, then by name
+        const gradeOrder = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'Unknown'];
+        const aGradeIndex = gradeOrder.indexOf(a.primaryGrade);
+        const bGradeIndex = gradeOrder.indexOf(b.primaryGrade);
+        
+        if (aGradeIndex !== bGradeIndex) {
+          return aGradeIndex - bGradeIndex;
+        }
+        
+        // Same grade, sort by teacher type
+        const typeCompare = a.teacherType.localeCompare(b.teacherType);
+        if (typeCompare !== 0) return typeCompare;
+        
+        // Same grade and type, sort by teacher name
+        return a.teacherName.localeCompare(b.teacherName);
+      }
     });
     
     console.log(`✅ Successfully retrieved ${gradebookList.length} gradebook URLs | 成功獲取 ${gradebookList.length} 個成績簿網址`);
     
-    // Format output for display
-    let output = '📊 GRADEBOOK URL LIST | 成績簿網址列表\n';
+    // Format output for display with grade-level grouping
+    let output = '📊 GRADEBOOK URL LIST | 成績簿網址列表 (按年級排序)\n';
     output += '=' .repeat(80) + '\n\n';
     
-    // Group by teacher type
-    const ltTeachers = gradebookList.filter(g => g.teacherType === 'LT' && !g.isHT);
-    const itTeachers = gradebookList.filter(g => g.teacherType === 'IT' && !g.isHT);
+    // Group by grade level
+    const regularTeachers = gradebookList.filter(g => !g.isHT);
     const htTeachers = gradebookList.filter(g => g.isHT);
     
-    // Format LT Teachers
-    if (ltTeachers.length > 0) {
-      output += '📚 LANGUAGE TEACHERS (LT) | 語言教師\n';
-      output += '-' .repeat(40) + '\n';
-      ltTeachers.forEach((teacher, index) => {
-        output += `${index + 1}. ${teacher.teacherName}\n`;
-        output += `   📎 ${teacher.url}\n`;
-        output += `   📅 Created: ${teacher.createdDate} | Last Modified: ${teacher.lastModified}\n\n`;
-      });
-    }
+    // Format regular teachers by grade
+    const gradeOrder = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'Unknown'];
     
-    // Format IT Teachers
-    if (itTeachers.length > 0) {
-      output += '\n💻 INFORMATION TEACHERS (IT) | 資訊教師\n';
-      output += '-' .repeat(40) + '\n';
-      itTeachers.forEach((teacher, index) => {
-        output += `${index + 1}. ${teacher.teacherName}\n`;
-        output += `   📎 ${teacher.url}\n`;
-        output += `   📅 Created: ${teacher.createdDate} | Last Modified: ${teacher.lastModified}\n\n`;
-      });
+    for (const grade of gradeOrder) {
+      const gradeTeachers = regularTeachers.filter(g => g.primaryGrade === grade);
+      if (gradeTeachers.length > 0) {
+        const gradeIcon = grade === 'Unknown' ? '❓' : `🎓`;
+        output += `${gradeIcon} ${grade} TEACHERS | ${grade}教師 (${gradeTeachers.length})\n`;
+        output += '-' .repeat(50) + '\n';
+        
+        gradeTeachers.forEach((teacher, index) => {
+          const typeIcon = teacher.teacherType === 'LT' ? '📚' : '💻';
+          output += `${index + 1}. ${typeIcon} ${teacher.teacherName} (${teacher.teacherType})`;
+          if (teacher.grades && teacher.grades.length > 1) {
+            output += ` - Grades: ${teacher.grades.join(', ')}`;
+          }
+          output += '\n';
+          output += `   📎 ${teacher.url}\n`;
+          output += `   📅 Created: ${teacher.createdDate} | Last Modified: ${teacher.lastModified}\n\n`;
+        });
+        output += '\n';
+      }
     }
     
     // Format HT Teachers
     if (htTeachers.length > 0) {
-      output += '\n👨‍🏫 HEAD TEACHERS (HT) | 學年主任\n';
-      output += '-' .repeat(40) + '\n';
+      output += '👨‍🏫 HEAD TEACHERS (HT) | 學年主任\n';
+      output += '-' .repeat(50) + '\n';
       htTeachers.forEach((teacher, index) => {
-        output += `${index + 1}. ${teacher.teacherName} (${teacher.gradeGroup} ${teacher.teacherType})\n`;
+        const typeIcon = teacher.teacherType === 'LT' ? '📚' : '💻';
+        output += `${index + 1}. ${typeIcon} ${teacher.teacherName} (${teacher.gradeGroup} ${teacher.teacherType})\n`;
         output += `   📎 ${teacher.url}\n`;
         output += `   📅 Created: ${teacher.createdDate} | Last Modified: ${teacher.lastModified}\n\n`;
       });
     }
     
-    // Summary statistics
+    // Summary statistics with grade breakdown
     output += '\n' + '=' .repeat(80) + '\n';
     output += '📈 SUMMARY | 總結\n';
     output += `• Total Gradebooks | 總成績簿數: ${gradebookList.length}\n`;
-    output += `• LT Teachers | LT教師: ${ltTeachers.length}\n`;
-    output += `• IT Teachers | IT教師: ${itTeachers.length}\n`;
-    output += `• HT Teachers | HT教師: ${htTeachers.length}\n`;
+    output += `• Regular Teachers | 一般教師: ${regularTeachers.length}\n`;
+    output += `• HT Teachers | HT教師: ${htTeachers.length}\n\n`;
+    
+    // Grade breakdown
+    output += '📊 GRADE BREAKDOWN | 年級分佈:\n';
+    for (const grade of gradeOrder) {
+      const gradeTeachers = regularTeachers.filter(g => g.primaryGrade === grade);
+      if (gradeTeachers.length > 0) {
+        const ltCount = gradeTeachers.filter(g => g.teacherType === 'LT').length;
+        const itCount = gradeTeachers.filter(g => g.teacherType === 'IT').length;
+        output += `• ${grade}: ${gradeTeachers.length} teachers (${ltCount} LT, ${itCount} IT)\n`;
+      }
+    }
+    
+    if (htTeachers.length > 0) {
+      output += '\n🎯 HT BREAKDOWN | HT分佈:\n';
+      const gradeGroups = [...new Set(htTeachers.map(g => g.gradeGroup))].sort();
+      for (const gradeGroup of gradeGroups) {
+        const groupTeachers = htTeachers.filter(g => g.gradeGroup === gradeGroup);
+        const ltCount = groupTeachers.filter(g => g.teacherType === 'LT').length;
+        const itCount = groupTeachers.filter(g => g.teacherType === 'IT').length;
+        output += `• ${gradeGroup}: ${groupTeachers.length} HT teachers (${ltCount} LT, ${itCount} IT)\n`;
+      }
+    }
     
     // Log the output
     console.log(output);
@@ -4485,10 +4627,12 @@ function exportGradebookURLsToSheet() {
     const exportSheet = SpreadsheetApp.create(`Gradebook URLs Reference - ${timestamp}`);
     const sheet = exportSheet.getActiveSheet();
     
-    // Set headers
+    // Set headers with grade information
     const headers = [
+      'Grade | 年級',
       'Teacher Name | 教師姓名',
       'Type | 類型', 
+      'All Grades | 所有年級',
       'Is HT | 是否為HT',
       'Grade Group | 年級組',
       'Gradebook URL | 成績簿網址',
@@ -4502,10 +4646,12 @@ function exportGradebookURLsToSheet() {
     sheet.getRange(1, 1, 1, headers.length).setBackground('#4285F4');
     sheet.getRange(1, 1, 1, headers.length).setFontColor('#FFFFFF');
     
-    // Add data
+    // Add data with grade information
     const data = result.gradebooks.map(g => [
+      g.primaryGrade || 'Unknown',
       g.teacherName,
       g.teacherType,
+      g.grades && g.grades.length > 0 ? g.grades.join(', ') : (g.primaryGrade || 'Unknown'),
       g.isHT ? 'Yes' : 'No',
       g.gradeGroup || '-',
       g.url,
@@ -4522,9 +4668,88 @@ function exportGradebookURLsToSheet() {
     sheet.autoResizeColumns(1, headers.length);
     sheet.setFrozenRows(1);
     
-    // Add alternating row colors
-    const range = sheet.getRange(2, 1, data.length, headers.length);
-    range.applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY);
+    // Apply grade-based color coding and formatting
+    if (data.length > 0) {
+      const dataRange = sheet.getRange(2, 1, data.length, headers.length);
+      
+      // Grade color scheme
+      const gradeColors = {
+        'G1': '#E3F2FD', // Light Blue
+        'G2': '#E8F5E8', // Light Green
+        'G3': '#FFF3E0', // Light Orange
+        'G4': '#F3E5F5', // Light Purple
+        'G5': '#FFEBEE', // Light Red
+        'G6': '#E0F2F1', // Light Teal
+        'Unknown': '#F5F5F5' // Light Gray
+      };
+      
+      // Apply colors row by row
+      for (let i = 0; i < data.length; i++) {
+        const grade = data[i][0]; // Primary grade is in first column
+        const rowRange = sheet.getRange(i + 2, 1, 1, headers.length);
+        
+        if (gradeColors[grade]) {
+          rowRange.setBackground(gradeColors[grade]);
+        }
+        
+        // Special formatting for HT teachers
+        const isHT = data[i][4] === 'Yes'; // IsHT is in 5th column
+        if (isHT) {
+          rowRange.setFontWeight('bold');
+          rowRange.setBorder(true, true, true, true, false, false, '#4285F4', SpreadsheetApp.BorderStyle.SOLID);
+        }
+      }
+      
+      // Add conditional formatting for URL column to make it more prominent
+      const urlColumn = 7; // Gradebook URL column
+      const urlRange = sheet.getRange(2, urlColumn, data.length, 1);
+      urlRange.setFontColor('#1155CC'); // Blue color for URLs
+      
+      // Make the sheet more readable
+      dataRange.setVerticalAlignment('middle');
+      dataRange.setHorizontalAlignment('left');
+      
+      // Special formatting for the grade column
+      const gradeColumnRange = sheet.getRange(2, 1, data.length, 1);
+      gradeColumnRange.setHorizontalAlignment('center');
+      gradeColumnRange.setFontWeight('bold');
+    }
+    
+    // Add a legend for grade colors
+    const legendStartRow = data.length + 4;
+    sheet.getRange(legendStartRow, 1, 1, 2).setValues([['Grade Color Legend | 年級顏色說明', '']]);
+    sheet.getRange(legendStartRow, 1).setFontWeight('bold').setFontSize(12);
+    
+    const legendData = [
+      ['G1', '藍色 Blue'],
+      ['G2', '綠色 Green'], 
+      ['G3', '橘色 Orange'],
+      ['G4', '紫色 Purple'],
+      ['G5', '紅色 Red'],
+      ['G6', '青色 Teal'],
+      ['HT Teachers | HT教師', '粗體藍框 Bold Blue Border']
+    ];
+    
+    const gradeColors = {
+      'G1': '#E3F2FD',
+      'G2': '#E8F5E8', 
+      'G3': '#FFF3E0',
+      'G4': '#F3E5F5',
+      'G5': '#FFEBEE',
+      'G6': '#E0F2F1'
+    };
+    
+    for (let i = 0; i < legendData.length; i++) {
+      const legendRow = legendStartRow + i + 1;
+      sheet.getRange(legendRow, 1, 1, 2).setValues([legendData[i]]);
+      
+      if (gradeColors[legendData[i][0]]) {
+        sheet.getRange(legendRow, 1, 1, 2).setBackground(gradeColors[legendData[i][0]]);
+      } else if (legendData[i][0].includes('HT')) {
+        sheet.getRange(legendRow, 1, 1, 2).setFontWeight('bold')
+             .setBorder(true, true, true, true, false, false, '#4285F4', SpreadsheetApp.BorderStyle.SOLID);
+      }
+    }
     
     // Move to system folder
     const config = getSystemConfig();
