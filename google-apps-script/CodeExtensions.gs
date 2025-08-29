@@ -11,7 +11,8 @@
  */
 function getMasterDataFile() {
   try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
     
     // Enhanced search function that checks both files and subfolders | 增強的搜尋函數，檢查檔案和子資料夾
     function searchForMasterData(folder, depth = 0) {
@@ -601,8 +602,9 @@ function analyzeClassProgress(classSheet, standards) {
     const finalColumn = findFinalColumn(headers);
     
     // Analyze each assessment group
-    const formativeAnalysis = analyzeAssessmentGroup(data, faColumns, SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE, 'Formative');
-    const summativeAnalysis = analyzeAssessmentGroup(data, saColumns, SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE, 'Summative');
+    const config = getSystemConfig();
+    const formativeAnalysis = analyzeAssessmentGroup(data, faColumns, config.ASSESSMENTS.FORMATIVE_COUNT, 'Formative');
+    const summativeAnalysis = analyzeAssessmentGroup(data, saColumns, config.ASSESSMENTS.SUMMATIVE_COUNT, 'Summative');
     
     // Calculate overall progress
     const formativeProgress = formativeAnalysis.completionRate;
@@ -639,8 +641,9 @@ function analyzeClassProgress(classSheet, standards) {
 
 function getAllTeacherGradebooks() {
   try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(systemFolder, config.FOLDERS.TEACHER_SHEETS);
     const files = teacherGradebooksFolder.getFiles();
     
     const gradebooks = [];
@@ -841,8 +844,9 @@ function identifyProgressIssues(formativeProgress, summativeProgress, standards)
 
 function saveProgressReport(systemSummary) {
   try {
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const progressFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.PROGRESS_REPORTS);
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const progressFolder = getSubFolder(systemFolder, config.FOLDERS.REPORTS);
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const reportName = `Progress Report ${timestamp}`;
@@ -964,8 +968,9 @@ function createSingleGradebook() {
     };
     
     // Get system folders
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(systemFolder, config.FOLDERS.TEACHER_SHEETS);
     
     // Create gradebook
     const gradebook = createTeacherGradebook(teacher, teacherGradebooksFolder);
@@ -1003,8 +1008,9 @@ function createHTGradebooks() {
     }
     
     // Get system folders
-    const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-    const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(systemFolder, config.FOLDERS.TEACHER_SHEETS);
     
     let successCount = 0;
     let errorCount = 0;
@@ -1136,7 +1142,8 @@ function setupHTAssessmentManagementSheet(sheet, htInfo) {
   sheet.getRange(8, 1, 1, headers.length).setFontWeight('bold');
   
   // Add formative assessment rows
-  const formativeCount = SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE;
+  const config = getSystemConfig();
+  const formativeCount = config.ASSESSMENTS.FORMATIVE_COUNT;
   for (let i = 1; i <= formativeCount; i++) {
     const row = 8 + i;
     sheet.getRange(row, 1).setValue('Formative | 形成性評量');
@@ -1147,7 +1154,7 @@ function setupHTAssessmentManagementSheet(sheet, htInfo) {
   }
   
   // Add summative assessment rows
-  const summativeCount = SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE;
+  const summativeCount = config.ASSESSMENTS.SUMMATIVE_COUNT;
   const summativeStartRow = 8 + formativeCount + 1;
   
   for (let i = 1; i <= summativeCount; i++) {
@@ -2040,8 +2047,9 @@ function getAvailableHTOptions() {
     }
     
     // Check if current user is admin | 檢查當前用戶是否為管理員
-    const isAdmin = SYSTEM_CONFIG.ADMIN.ENABLED && 
-                   SYSTEM_CONFIG.ADMIN.ACCOUNTS.some(adminEmail => 
+    const config = getSystemConfig();
+    const isAdmin = config.ADMIN.ENABLED && 
+                   config.ADMIN.ACCOUNTS.some(adminEmail => 
                      adminEmail.toLowerCase() === currentUserEmail.toLowerCase()
                    );
     
@@ -2241,7 +2249,8 @@ function parseFormDataToAssessmentTitles(formData, grades) {
   };
   
   // Parse formative assessments
-  for (let i = 1; i <= SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE; i++) {
+  const config = getSystemConfig();
+  for (let i = 1; i <= config.ASSESSMENTS.FORMATIVE_COUNT; i++) {
     const key = `FA${i}`;
     if (formData[key]) {
       assessmentTitles.formative[key] = formData[key];
@@ -2249,7 +2258,7 @@ function parseFormDataToAssessmentTitles(formData, grades) {
   }
   
   // Parse summative assessments
-  for (let i = 1; i <= SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE; i++) {
+  for (let i = 1; i <= config.ASSESSMENTS.SUMMATIVE_COUNT; i++) {
     const key = `SA${i}`;
     if (formData[key]) {
       assessmentTitles.summative[key] = formData[key];
@@ -2929,9 +2938,10 @@ function checkSystemStatus() {
 
 function showSystemInfo() {
   try {
+    const config = getSystemConfig();
     const systemInfo = {
       version: '2.0.1',
-      semester: SYSTEM_CONFIG.SEMESTER,
+      semester: config.SEMESTER,
       totalGradebooks: 0,
       totalStudents: 0,
       lastUpdated: new Date().toISOString()
@@ -2939,8 +2949,8 @@ function showSystemInfo() {
     
     // Count gradebooks
     try {
-      const systemFolder = DriveApp.getFolderById(SYSTEM_CONFIG.MAIN_FOLDER_ID);
-      const teacherGradebooksFolder = getSubFolder(systemFolder, SYSTEM_CONFIG.FOLDERS.TEACHER_SHEETS);
+      const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+      const teacherGradebooksFolder = getSubFolder(systemFolder, config.FOLDERS.TEACHER_SHEETS);
       const files = teacherGradebooksFolder.getFiles();
       
       while (files.hasNext()) {
@@ -2972,8 +2982,8 @@ function showSystemInfo() {
       `📅 Semester | 學期: ${systemInfo.semester}\n` +
       `📚 Total Gradebooks | 總成績簿數: ${systemInfo.totalGradebooks}\n` +
       `👥 Total Students | 學生總數: ${systemInfo.totalStudents}\n` +
-      `🏫 Assessment Types | 評量類型: FA (${SYSTEM_CONFIG.ASSESSMENTS.FORMATIVE}), SA (${SYSTEM_CONFIG.ASSESSMENTS.SUMMATIVE})\n` +
-      `⚖️ Grade Weights | 成績權重: FA(${SYSTEM_CONFIG.WEIGHTS.FORMATIVE}%), SA(${SYSTEM_CONFIG.WEIGHTS.SUMMATIVE}%), Final(${SYSTEM_CONFIG.WEIGHTS.FINAL}%)\n\n` +
+      `🏫 Assessment Types | 評量類型: FA (${config.ASSESSMENTS.FORMATIVE_COUNT}), SA (${config.ASSESSMENTS.SUMMATIVE_COUNT})\n` +
+      `⚖️ Grade Weights | 成績權重: FA(${config.WEIGHTS.FORMATIVE * 100}%), SA(${config.WEIGHTS.SUMMATIVE * 100}%), Final(${config.WEIGHTS.FINAL * 100}%)\n\n` +
       `🕐 Generated | 生成時間: ${new Date().toLocaleString()}`);
     
   } catch (error) {

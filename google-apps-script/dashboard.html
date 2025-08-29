@@ -1723,14 +1723,24 @@
             google.script.run
                 .withSuccessHandler(function(result) {
                     hideLoading();
-                    showSuccess('✅ System initialized successfully! | 系統初始化成功！');
-                    loadSystemStatistics();
+                    
+                    // Check if result indicates success or failure
+                    if (result && result.success) {
+                        showSuccess('✅ System initialized successfully! | 系統初始化成功！');
+                        console.log('Initialization details:', result.details);
+                        loadSystemStatistics();
+                    } else {
+                        // Backend returned failure result
+                        const errorMsg = result ? result.error : 'Unknown initialization error';
+                        const details = result ? result.details : '';
+                        showError('❌ Initialization failed: ' + errorMsg + ' | 初始化失敗' + (details ? '\n\nDetails: ' + details : ''));
+                    }
                 })
                 .withFailureHandler(function(error) {
                     hideLoading();
                     showError('❌ Initialization failed: ' + error.message + ' | 初始化失敗');
                 })
-                .initializeSystem();
+                .initializeSystemForWebApp();
         }
 
         function checkSystemStatus() {
