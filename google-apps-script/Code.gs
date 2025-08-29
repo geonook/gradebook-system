@@ -4257,6 +4257,185 @@ function openSystemSettings() {
 }
 
 /**
+ * Create a cached map of teacher names to their grade information | 建立教師姓名與年級資訊的快取對應
+ * This dramatically improves performance by reading Master Data only once
+ */
+function createTeacherGradeCache() {
+  try {
+    const masterData = getMasterDataSheet();
+    const studentsSheet = masterData.getSheetByName('Students');
+    const data = studentsSheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find relevant columns
+    const ltTeacherCol = headers.findIndex(h => h && (h.includes('LT Teacher') || h.includes('LT老師')));
+    const itTeacherCol = headers.findIndex(h => h && (h.includes('IT Teacher') || h.includes('IT老師')));
+    const gradeCol = headers.findIndex(h => h && (h.includes('Grade') || h.includes('年級')));
+    const classCol = headers.findIndex(h => h && (h.includes('English Class') || h.includes('英文班級') || h.includes('Homeroom') || h.includes('班級')));
+    
+    if (ltTeacherCol === -1 || itTeacherCol === -1 || gradeCol === -1) {
+      console.warn('⚠️ Some required columns not found in Master Data');
+      return {};
+    }
+    
+    const teacherMap = {};
+    
+    // Process all student records to build teacher-grade relationships
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[0]) continue; // Skip empty rows
+      
+      const rowGrade = gradeCol >= 0 ? row[gradeCol] : '';
+      const rowClass = classCol >= 0 ? row[classCol] : '';
+      const ltTeacher = ltTeacherCol >= 0 ? row[ltTeacherCol] : '';
+      const itTeacher = itTeacherCol >= 0 ? row[itTeacherCol] : '';
+      
+      // Normalize grade format
+      let normalizedGrade = '';
+      if (rowGrade) {
+        const grade = rowGrade.toString().trim();
+        if (grade.match(/^G?\d+$/)) {
+          normalizedGrade = grade.replace(/^G?/, 'G');
+        } else if (grade.match(/^Grade\s*\d+/i)) {
+          normalizedGrade = 'G' + grade.match(/\d+/)[0];
+        }
+        
+        if (!normalizedGrade.match(/^G[1-6]$/)) {
+          normalizedGrade = '';
+        }
+      }
+      
+      // Process LT Teacher
+      if (ltTeacher && normalizedGrade) {
+        const teacherKey = `${ltTeacher}_LT`;
+        if (!teacherMap[teacherKey]) {
+          teacherMap[teacherKey] = {
+            name: ltTeacher,
+            type: 'LT',
+            grades: new Set(),
+            classes: new Set()
+          };
+        }
+        teacherMap[teacherKey].grades.add(normalizedGrade);
+        if (rowClass) {
+          teacherMap[teacherKey].classes.add(rowClass.toString().trim());
+        }
+      }
+      
+      // Process IT Teacher
+      if (itTeacher && normalizedGrade) {
+        const teacherKey = `${itTeacher}_IT`;
+        if (!teacherMap[teacherKey]) {
+          teacherMap[teacherKey] = {
+            name: itTeacher,
+            type: 'IT',
+            grades: new Set(),
+            classes: new Set()
+          };
+        }
+        teacherMap[teacherKey].grades.add(normalizedGrade);
+        if (rowClass) {
+          teacherMap[teacherKey].classes.add(rowClass.toString().trim());
+        }
+      }
+    }
+    
+    // Convert Sets to sorted arrays and determine primary grade
+    Object.keys(teacherMap).forEach(key => {
+      const teacher = teacherMap[key];
+      teacher.grades = Array.from(teacher.grades).sort();
+      teacher.classes = Array.from(teacher.classes).sort();
+      teacher.primaryGrade = teacher.grades[0] || 'Unknown';
+      
+      // If no direct grades found, try extracting from class names
+      if (teacher.grades.length === 0 && teacher.classes.length > 0) {
+        const classGrades = new Set();
+        teacher.classes.forEach(className => {
+          const classGrade = className.match(/G([1-6])/);
+          if (classGrade) {
+            classGrades.add(`G${classGrade[1]}`);
+          }
+        });
+        teacher.grades = Array.from(classGrades).sort();
+        teacher.primaryGrade = teacher.grades[0] || 'Unknown';
+      }
+    });
+    
+    return teacherMap;
+    
+  } catch (error) {
+    console.error('❌ Error creating teacher grade cache:', error.message);
+    return {};
+  }
+}
+
+/**
+ * Find teacher grade with fallback matching strategies | 使用後備匹配策略尋找教師年級
+ * Attempts various name matching approaches to reduce Unknown teachers
+ */
+function findTeacherGradeWithFallback(teacherName, teacherType, teacherGradeMap) {
+  const originalKey = `${teacherName}_${teacherType}`;
+  
+  // Try direct match first
+  if (teacherGradeMap[originalKey]) {
+    return teacherGradeMap[originalKey].primaryGrade;
+  }
+  
+  // Try fuzzy matching strategies
+  const allKeys = Object.keys(teacherGradeMap);
+  
+  // Strategy 1: Case-insensitive exact match
+  const caseInsensitiveMatch = allKeys.find(key => 
+    key.toLowerCase() === originalKey.toLowerCase()
+  );
+  if (caseInsensitiveMatch) {
+    console.log(`🔍 Found case-insensitive match: ${teacherName} → ${caseInsensitiveMatch}`);
+    return teacherGradeMap[caseInsensitiveMatch].primaryGrade;
+  }
+  
+  // Strategy 2: Partial name match (handle middle names, initials)
+  const nameOnlyMatches = allKeys.filter(key => {
+    const keyTeacher = key.split('_')[0];
+    const keyType = key.split('_')[1];
+    
+    if (keyType !== teacherType) return false;
+    
+    // Try various partial matching
+    const teacherWords = teacherName.toLowerCase().split(/\s+/);
+    const keyWords = keyTeacher.toLowerCase().split(/\s+/);
+    
+    // Check if teacher name is contained in key or vice versa
+    const teacherInKey = teacherWords.some(word => keyWords.join(' ').includes(word) && word.length > 2);
+    const keyInTeacher = keyWords.some(word => teacherWords.join(' ').includes(word) && word.length > 2);
+    
+    return teacherInKey || keyInTeacher;
+  });
+  
+  if (nameOnlyMatches.length > 0) {
+    const bestMatch = nameOnlyMatches[0];
+    console.log(`🔍 Found partial match: ${teacherName} → ${bestMatch}`);
+    return teacherGradeMap[bestMatch].primaryGrade;
+  }
+  
+  // Strategy 3: Handle common prefixes (Mr., Ms., Mrs., Dr.)
+  const cleanedName = teacherName.replace(/^(Mr\.?|Ms\.?|Mrs\.?|Dr\.?)\s*/i, '').trim();
+  if (cleanedName !== teacherName) {
+    const cleanedKey = `${cleanedName}_${teacherType}`;
+    const cleanedMatch = allKeys.find(key => 
+      key.toLowerCase() === cleanedKey.toLowerCase() || 
+      key.toLowerCase().includes(cleanedName.toLowerCase())
+    );
+    if (cleanedMatch) {
+      console.log(`🔍 Found cleaned name match: ${teacherName} → ${cleanedMatch}`);
+      return teacherGradeMap[cleanedMatch].primaryGrade;
+    }
+  }
+  
+  console.log(`⚠️ No grade match found for teacher: ${teacherName} (${teacherType})`);
+  return 'Unknown';
+}
+
+/**
  * Get all gradebook URLs with teacher names | 獲取所有成績簿網址與教師名稱
  * Returns a list of all gradebooks with their URLs for quick reference
  */
@@ -4272,6 +4451,11 @@ function getAllGradebookURLs() {
     if (!teacherGradebooksFolder) {
       throw new Error('Teacher Gradebooks folder not found | 找不到教師成績簿資料夾');
     }
+    
+    // Cache Master Data reading - read once for all teachers
+    console.log('📊 Loading Master Data for grade mapping | 載入主控資料以進行年級對應...');
+    const teacherGradeMap = createTeacherGradeCache();
+    console.log(`✅ Cached grade data for ${Object.keys(teacherGradeMap).length} teachers | 已快取 ${Object.keys(teacherGradeMap).length} 位教師的年級資料`);
     
     const gradebookList = [];
     const files = teacherGradebooksFolder.getFiles();
@@ -4333,7 +4517,7 @@ function getAllGradebookURLs() {
           }
         }
         
-        // Extract grade information for better sorting
+        // Extract grade information using cached data
         let grades = [];
         let primaryGrade = '';
         
@@ -4348,77 +4532,17 @@ function getAllGradebookURLs() {
             primaryGrade = grades[0]; // Use first grade as primary
           }
         } else {
-          // For regular teachers, extract grade from teacher data cross-reference
-          try {
-            const masterData = getMasterDataSheet();
-            const studentsSheet = masterData.getSheetByName('Students');
-            const data = studentsSheet.getDataRange().getValues();
-            const headers = data[0];
-            
-            // Find relevant columns
-            const ltTeacherCol = headers.findIndex(h => h && (h.includes('LT Teacher') || h.includes('LT老師')));
-            const itTeacherCol = headers.findIndex(h => h && (h.includes('IT Teacher') || h.includes('IT老師')));
-            const gradeCol = headers.findIndex(h => h && (h.includes('Grade') || h.includes('年級')));
-            const classCol = headers.findIndex(h => h && (h.includes('English Class') || h.includes('英文班級') || h.includes('Homeroom') || h.includes('班級')));
-            
-            const teacherGrades = new Set();
-            const teacherClasses = new Set();
-            
-            // Scan student data for this teacher
-            for (let i = 1; i < data.length && i < 1000; i++) { // Limit scan for performance
-              const row = data[i];
-              if (!row[0]) continue;
-              
-              const rowLTTeacher = ltTeacherCol >= 0 ? row[ltTeacherCol] : '';
-              const rowITTeacher = itTeacherCol >= 0 ? row[itTeacherCol] : '';
-              const rowGrade = gradeCol >= 0 ? row[gradeCol] : '';
-              const rowClass = classCol >= 0 ? row[classCol] : '';
-              
-              // Check if this row matches our teacher
-              const isMatch = (teacherInfo.type === 'LT' && rowLTTeacher === teacherInfo.name) ||
-                            (teacherInfo.type === 'IT' && rowITTeacher === teacherInfo.name);
-              
-              if (isMatch && rowGrade) {
-                // Extract grade from various formats
-                let grade = rowGrade.toString().trim();
-                
-                // Handle different grade formats
-                if (grade.match(/^G?\d+$/)) {
-                  // Format: "1", "2", "G1", "G2"
-                  grade = grade.replace(/^G?/, 'G');
-                } else if (grade.match(/^Grade\s*\d+/i)) {
-                  // Format: "Grade 1", "Grade 2"
-                  grade = 'G' + grade.match(/\d+/)[0];
-                }
-                
-                if (grade.match(/^G[1-6]$/)) {
-                  teacherGrades.add(grade);
-                }
-                
-                if (rowClass) {
-                  teacherClasses.add(rowClass.toString().trim());
-                }
-              }
-            }
-            
-            grades = Array.from(teacherGrades).sort();
-            
-            // If no grades found from student data, try to extract from class names
-            if (grades.length === 0 && teacherClasses.size > 0) {
-              Array.from(teacherClasses).forEach(className => {
-                const classGrade = className.match(/G([1-6])/);
-                if (classGrade) {
-                  grades.push(`G${classGrade[1]}`);
-                }
-              });
-              grades = [...new Set(grades)].sort();
-            }
-            
-            primaryGrade = grades[0] || 'Unknown';
-            
-          } catch (error) {
-            console.warn(`Could not extract grade for teacher ${teacherInfo.name}:`, error.message);
-            primaryGrade = 'Unknown';
+          // For regular teachers, use cached grade data
+          const teacherKey = `${teacherInfo.name}_${teacherInfo.type}`;
+          const cachedData = teacherGradeMap[teacherKey];
+          
+          if (cachedData) {
+            grades = cachedData.grades || [];
+            primaryGrade = cachedData.primaryGrade || 'Unknown';
+          } else {
+            // Try alternate matching approaches for better coverage
+            primaryGrade = findTeacherGradeWithFallback(teacherInfo.name, teacherInfo.type, teacherGradeMap);
+            grades = primaryGrade !== 'Unknown' ? [primaryGrade] : [];
           }
         }
         
