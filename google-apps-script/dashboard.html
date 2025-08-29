@@ -1763,6 +1763,21 @@
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, initializing dashboard...');
+            
+            // Ensure critical functions are available globally
+            if (typeof openProgressAudit === 'function') {
+                window.openProgressAudit = openProgressAudit;
+            }
+            if (typeof openAssessmentTitleManager === 'function') {
+                window.openAssessmentTitleManager = openAssessmentTitleManager;
+            }
+            
+            // Log function availability for debugging
+            console.log('Critical functions check:', {
+                openProgressAudit: typeof window.openProgressAudit,
+                openAssessmentTitleManager: typeof window.openAssessmentTitleManager
+            });
+            
             updateTimestamp();
             loadSystemStatistics();
             setInterval(updateTimestamp, 60000); // Update every minute
@@ -2901,8 +2916,13 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             resetAssessmentForm();
         }
         
-        // Ensure function is available globally
-        window.openAssessmentTitleManager = openAssessmentTitleManager;
+        // Ensure function is available globally with error handling
+        try {
+            window.openAssessmentTitleManager = openAssessmentTitleManager;
+            console.log('✅ openAssessmentTitleManager registered successfully');
+        } catch (error) {
+            console.error('❌ Failed to register openAssessmentTitleManager:', error);
+        }
         
         function closeAssessmentModal() {
             document.getElementById('assessmentModal').style.display = 'none';
@@ -3007,8 +3027,13 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             switchProgressTab('G1');
         }
         
-        // Ensure function is available globally
-        window.openProgressAudit = openProgressAudit;
+        // Ensure function is available globally with error handling
+        try {
+            window.openProgressAudit = openProgressAudit;
+            console.log('✅ openProgressAudit registered successfully');
+        } catch (error) {
+            console.error('❌ Failed to register openProgressAudit:', error);
+        }
         
         // Close Progress Audit Modal
         function closeProgressAuditModal() {
@@ -3319,11 +3344,32 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             }
         }
         
+        // Final function validation and registration
+        function ensureGlobalFunctions() {
+            const functions = [
+                { name: 'openProgressAudit', func: openProgressAudit },
+                { name: 'openAssessmentTitleManager', func: openAssessmentTitleManager }
+            ];
+            
+            functions.forEach(({name, func}) => {
+                if (typeof func === 'function') {
+                    window[name] = func;
+                    console.log(`✅ ${name} registered globally`);
+                } else {
+                    console.error(`❌ ${name} is not a function:`, typeof func);
+                }
+            });
+        }
+
         // Confirm script loaded successfully
         console.log('Dashboard script loaded successfully!');
-        console.log('Functions available:', {
+        ensureGlobalFunctions();
+        
+        // Final verification
+        console.log('Final function availability:', {
             openProgressAudit: typeof window.openProgressAudit,
-            openAssessmentTitleManager: typeof window.openAssessmentTitleManager
+            openAssessmentTitleManager: typeof window.openAssessmentTitleManager,
+            windowFunctions: Object.keys(window).filter(key => key.startsWith('open'))
         });
 
     </script>
