@@ -19,6 +19,7 @@
 - 📊 **Batch Creation** - Create all teacher gradebooks at once | 一鍵批量建立所有老師成績簿
 - 🧮 **Auto Calculation** - Weighted grade formulas pre-configured | 預先設定的加權成績計算公式
 - 🎨 **Professional Format** - Standardized, beautiful layouts | 專業標準化格式
+- 🆕 **Comparison Dashboard** - Class performance comparison and analysis | 班級表現比較和分析系統
 
 ## 📁 Project Structure | 專案結構
 
@@ -251,6 +252,75 @@ HTML 控制台為整個成績簿系統提供現代化、使用者友善的控制
 - Color-coded progress indicators | 彩色進度指示器
 - Teacher progress distribution | 老師進度分布
 - Overall system progress bar | 整體系統進度條
+
+## 📊 Comparison Dashboard | 比較儀表板
+
+**🆕 NEW FEATURE: Class Performance Comparison System!**
+**🆕 新功能：班級表現比較系統！**
+
+The Comparison Dashboard provides a comprehensive system for comparing class performance across all grade levels with dynamic statistics and visual analytics.
+比較儀表板提供全面的系統，用於比較所有年級的班級表現，包含動態統計和視覺分析。
+
+### 🎯 Core Features | 核心功能
+
+#### **📈 Dynamic Class Statistics | 動態班級統計**
+- **Automatic Average Extraction** | **自動平均擷取** - Smart detection of Average rows regardless of class size
+- **Grade Level Integration** | **年級分級整合** - Full G1E1, G1E2, G1E3...G6E3 support
+- **Real-time Data Processing** | **即時資料處理** - Live calculation of class averages and statistics
+
+#### **🔍 Interactive Analysis Tools | 互動分析工具**
+- **Grade Level Filtering** | **年級篩選** - Filter by specific grades (G1-G6)
+- **Multi-criteria Sorting** | **多條件排序** - Sort by class name, grades, or student count
+- **Performance Status Indicators** | **表現狀態指示器** - Color-coded performance levels:
+  - 🟢 **Excellent (≥90%)** | **優異 (≥90%)**
+  - 🟡 **Good (80-89%)** | **良好 (80-89%)**
+  - 🟠 **Normal (60-79%)** | **一般 (60-79%)**
+  - 🔴 **Behind (<60%)** | **落後 (<60%)**
+
+#### **📋 Comprehensive Data Display | 全面資料顯示**
+- **Summary Statistics** | **統計摘要** - Total classes, students, system averages
+- **Detailed Comparison Table** | **詳細比較表格** - Class-by-class performance breakdown
+- **Grade Level Tags** | **年級標籤** - Visual grade level identification with color coding
+- **Bilingual Interface** | **雙語介面** - Complete English/Traditional Chinese support
+
+### 🚀 How to Access | 如何存取
+
+#### **Navigation | 導航**
+1. **Open Dashboard** | **開啟控制台** - Access via menu or Web App URL
+2. **Switch to Comparison View** | **切換至比較檢視** - Click "Comparison Dashboard | 比較面板" button
+3. **Automatic Data Loading** | **自動載入資料** - System automatically loads comparison data
+
+#### **Web App URL | 網頁應用程式網址**
+```
+Main Dashboard: https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec
+```
+
+### 🔧 Technical Implementation | 技術實現
+
+#### **Backend Functions | 後端功能**
+- `extractClassAveragesFromGradebook()` - Core data extraction with dynamic Average row detection
+- `gatherComparisonData()` - Batch comparison data collection from all gradebooks
+- `getComparisonDataForDashboard()` - Dashboard API with summary statistics
+- `mapClassNameToGradeLevel()` - Grade level mapping using existing project terminology
+
+#### **Advanced Features | 進階功能**
+- **Dynamic Average Detection** | **動態平均偵測** - Handles varying student counts per class
+- **Multi-method Fallback** | **多方法備用** - 3-layer Average row detection system
+- **Error Handling** | **錯誤處理** - Comprehensive bilingual error messages
+- **Responsive Design** | **響應式設計** - Mobile-friendly interface
+
+### 🎨 User Experience | 使用者體驗
+
+#### **Dashboard Navigation | 儀表板導航**
+- **Seamless Switching** | **無縫切換** - Toggle between Main and Comparison dashboards
+- **Active State Indicators** | **活躍狀態指示器** - Clear visual feedback for current view
+- **Auto-refresh Capability** | **自動重新整理能力** - Manual data refresh functionality
+
+#### **Visual Design | 視覺設計**
+- **Modern Interface** | **現代化介面** - Clean, professional layout
+- **Color-coded Elements** | **彩色編碼元素** - Grade levels and performance status
+- **Interactive Controls** | **互動控制** - Intuitive filtering and sorting options
+- **Loading Indicators** | **載入指示器** - User-friendly feedback during data processing
 
 ### 🚀 Dashboard Controls | 控制台操作功能
 
@@ -546,6 +616,6 @@ A:
 
 ---
 
-**Version | 版本**: Teacher-Centric Gradebook System v3.1  
-**Updated | 更新日期**: 2024-12-20  
-**Architecture | 技術架構**: 100% Google Ecosystem with Teacher-Centric Structure | 100% Google 生態系統含以老師為中心的結構
+**Version | 版本**: Gradebook System with Comparison Dashboard v4.0  
+**Updated | 更新日期**: 2025-08-30  
+**Architecture | 技術架構**: 100% Google Ecosystem with Class Comparison Analytics | 100% Google 生態系統含班級比較分析功能
