@@ -761,6 +761,256 @@
             color: #6c757d;
             font-size: 0.9rem;
         }
+
+        /* Dashboard Navigation Styles */
+        .dashboard-navigation {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #007bff;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Comparison Dashboard Styles */
+        .comparison-dashboard {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .comparison-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .comparison-header h2 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .comparison-header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .comparison-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .control-group select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        /* Summary Statistics Styles */
+        .comparison-summary {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .comparison-summary h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #2196f3;
+            font-size: 16px;
+        }
+
+        /* Comparison Table Styles */
+        .comparison-table-container {
+            margin-top: 30px;
+        }
+
+        .comparison-table-container h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 14px;
+        }
+
+        .comparison-table thead {
+            background: #f8f9fa;
+        }
+
+        .comparison-table th {
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .comparison-table th:last-child {
+            border-right: none;
+        }
+
+        .comparison-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .comparison-table td:last-child {
+            border-right: none;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status indicators */
+        .status-excellent { color: #28a745; font-weight: bold; }
+        .status-good { color: #ffc107; font-weight: bold; }
+        .status-normal { color: #fd7e14; font-weight: bold; }
+        .status-behind { color: #dc3545; font-weight: bold; }
+
+        /* Grade level tags */
+        .grade-level-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .grade-level-tag.g1 { background: #e91e63; }
+        .grade-level-tag.g2 { background: #9c27b0; }
+        .grade-level-tag.g3 { background: #673ab7; }
+        .grade-level-tag.g4 { background: #3f51b5; }
+        .grade-level-tag.g5 { background: #2196f3; }
+        .grade-level-tag.g6 { background: #009688; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .comparison-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-buttons {
+                justify-content: stretch;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 12px;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px 4px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -780,6 +1030,115 @@
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p>Processing...</p>
+        </div>
+
+        <!-- Dashboard Navigation -->
+        <div class="dashboard-navigation">
+            <div class="nav-buttons">
+                <button id="btn-main-dashboard" class="nav-btn active" onclick="switchToDashboard('main')">
+                    <i class="fas fa-tachometer-alt"></i> Main Dashboard | 主控面板
+                </button>
+                <button id="btn-comparison-dashboard" class="nav-btn" onclick="switchToDashboard('comparison')">
+                    <i class="fas fa-chart-bar"></i> Comparison Dashboard | 比較面板
+                </button>
+            </div>
+        </div>
+
+        <!-- Comparison Dashboard Section -->
+        <div id="comparison-dashboard" class="comparison-dashboard" style="display: none;">
+            <div class="comparison-header">
+                <h2><i class="fas fa-chart-bar"></i> Class Performance Comparison | 班級表現比較</h2>
+                <p class="bilingual">Compare grade statistics and progress across all classes | 比較所有班級的成績統計與進度</p>
+            </div>
+            
+            <!-- Comparison Controls -->
+            <div class="comparison-controls">
+                <div class="control-group">
+                    <label for="grade-level-filter">Grade Level Filter | 年級篩選:</label>
+                    <select id="grade-level-filter" onchange="filterByGradeLevel()">
+                        <option value="all">All Grades | 所有年級</option>
+                        <option value="G1">Grade 1 | 一年級</option>
+                        <option value="G2">Grade 2 | 二年級</option>
+                        <option value="G3">Grade 3 | 三年級</option>
+                        <option value="G4">Grade 4 | 四年級</option>
+                        <option value="G5">Grade 5 | 五年級</option>
+                        <option value="G6">Grade 6 | 六年級</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="sort-method">Sort By | 排序方式:</label>
+                    <select id="sort-method" onchange="sortComparisonData()">
+                        <option value="class-name">Class Name | 班級名稱</option>
+                        <option value="term-grade">Term Grade | 學期成績</option>
+                        <option value="formative">Formative Average | 形成性評量</option>
+                        <option value="summative">Summative Average | 總結性評量</option>
+                        <option value="student-count">Student Count | 學生人數</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="loadComparisonData()">
+                    <i class="fas fa-sync-alt"></i> Refresh Data | 重新整理資料
+                </button>
+            </div>
+            
+            <!-- Comparison Results Loading -->
+            <div id="comparison-loading" class="loading-indicator" style="display: none;">
+                <div class="loading-content">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Loading comparison data... | 正在載入比較資料...</span>
+                </div>
+            </div>
+            
+            <!-- Comparison Results Display -->
+            <div id="comparison-results" class="comparison-results" style="display: none;">
+                <!-- Summary Statistics -->
+                <div class="comparison-summary">
+                    <h3><i class="fas fa-chart-pie"></i> Summary Statistics | 統計摘要</h3>
+                    <div class="summary-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Classes | 總班級數:</span>
+                            <span id="total-classes" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Students | 總學生數:</span>
+                            <span id="total-students" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Class Size | 平均班級人數:</span>
+                            <span id="avg-class-size" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">System Average | 系統平均:</span>
+                            <span id="system-average" class="stat-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class Comparison Table -->
+                <div class="comparison-table-container">
+                    <h3><i class="fas fa-table"></i> Detailed Class Comparison | 班級詳細比較</h3>
+                    <div class="table-wrapper">
+                        <table id="comparison-table" class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Class | 班級</th>
+                                    <th>Grade Level | 年級</th>
+                                    <th>Students | 學生數</th>
+                                    <th>Term Grade | 學期成績</th>
+                                    <th>Formative | 形成性</th>
+                                    <th>Summative | 總結性</th>
+                                    <th>Final | 期末</th>
+                                    <th>Status | 狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparison-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Dashboard Grid -->
@@ -3167,6 +3526,201 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             } else if (event.target === progressModal) {
                 closeProgressAuditModal();
             }
+        }
+
+        // ===== COMPARISON DASHBOARD FUNCTIONS =====
+        
+        // Global variables for comparison dashboard
+        let comparisonData = [];
+        let filteredData = [];
+        
+        // Dashboard navigation function
+        function switchToDashboard(dashboardType) {
+            const mainDashboard = document.querySelector('.dashboard-grid');
+            const comparisonDashboard = document.getElementById('comparison-dashboard');
+            const btnMain = document.getElementById('btn-main-dashboard');
+            const btnComparison = document.getElementById('btn-comparison-dashboard');
+            
+            if (dashboardType === 'main') {
+                // Show main dashboard
+                mainDashboard.style.display = 'grid';
+                comparisonDashboard.style.display = 'none';
+                btnMain.classList.add('active');
+                btnComparison.classList.remove('active');
+            } else if (dashboardType === 'comparison') {
+                // Show comparison dashboard
+                mainDashboard.style.display = 'none';
+                comparisonDashboard.style.display = 'block';
+                btnMain.classList.remove('active');
+                btnComparison.classList.add('active');
+                
+                // Auto-load comparison data when switching to comparison dashboard
+                if (comparisonData.length === 0) {
+                    loadComparisonData();
+                }
+            }
+        }
+        
+        // Load comparison data from backend
+        function loadComparisonData() {
+            // Show loading indicator
+            document.getElementById('comparison-loading').style.display = 'block';
+            document.getElementById('comparison-results').style.display = 'none';
+            
+            // Call backend function to get comparison data
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    document.getElementById('comparison-loading').style.display = 'none';
+                    
+                    if (result.success) {
+                        comparisonData = result.data || [];
+                        filteredData = [...comparisonData];
+                        
+                        // Update summary statistics
+                        updateSummaryStatistics(result.summary);
+                        
+                        // Display comparison table
+                        displayComparisonTable(filteredData);
+                        
+                        // Show results
+                        document.getElementById('comparison-results').style.display = 'block';
+                        
+                        showSuccess('比較資料載入成功 | Comparison data loaded successfully');
+                    } else {
+                        showError('載入比較資料失敗 | Failed to load comparison data: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    document.getElementById('comparison-loading').style.display = 'none';
+                    showError('載入比較資料失敗 | Failed to load comparison data: ' + error.message);
+                })
+                .getComparisonDataForDashboard();
+        }
+        
+        // Update summary statistics display
+        function updateSummaryStatistics(summary) {
+            if (!summary) return;
+            
+            document.getElementById('total-classes').textContent = summary.totalClasses || '0';
+            document.getElementById('total-students').textContent = summary.totalStudents || '0';
+            document.getElementById('avg-class-size').textContent = 
+                summary.averageClassSize ? Math.round(summary.averageClassSize * 10) / 10 : '0';
+            document.getElementById('system-average').textContent = 
+                summary.systemAverage ? Math.round(summary.systemAverage * 10) / 10 + '%' : '0%';
+        }
+        
+        // Display comparison table
+        function displayComparisonTable(data) {
+            const tableBody = document.getElementById('comparison-table-body');
+            tableBody.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #6c757d; font-style: italic;">No data available | 無資料可顯示</td></tr>';
+                return;
+            }
+            
+            data.forEach(classData => {
+                const row = document.createElement('tr');
+                
+                // Determine status class and text
+                const status = getStatusInfo(classData.averages.termGrade);
+                
+                // Create grade level tag
+                const gradeLevel = classData.gradeLevel || 'Unknown';
+                const gradeLevelTag = `<span class="grade-level-tag ${gradeLevel.toLowerCase()}">${gradeLevel}</span>`;
+                
+                row.innerHTML = `
+                    <td><strong>${classData.className}</strong></td>
+                    <td>${gradeLevelTag}</td>
+                    <td>${classData.studentCount || 0}</td>
+                    <td><strong>${formatPercentage(classData.averages.termGrade)}</strong></td>
+                    <td>${formatPercentage(classData.averages.formativeAverage)}</td>
+                    <td>${formatPercentage(classData.averages.summativeAverage)}</td>
+                    <td>${formatPercentage(classData.averages.finalAssessment)}</td>
+                    <td><span class="${status.className}">${status.text}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Get status information for a grade
+        function getStatusInfo(grade) {
+            if (grade == null || isNaN(grade)) {
+                return { className: 'status-normal', text: 'No Data | 無資料' };
+            }
+            
+            if (grade >= 90) {
+                return { className: 'status-excellent', text: '🟢 Excellent | 優異' };
+            } else if (grade >= 80) {
+                return { className: 'status-good', text: '🟡 Good | 良好' };
+            } else if (grade >= 60) {
+                return { className: 'status-normal', text: '🟠 Normal | 一般' };
+            } else {
+                return { className: 'status-behind', text: '🔴 Behind | 落後' };
+            }
+        }
+        
+        // Format percentage with null check
+        function formatPercentage(value) {
+            if (value == null || isNaN(value)) {
+                return 'N/A';
+            }
+            return Math.round(value * 10) / 10 + '%';
+        }
+        
+        // Filter data by grade level
+        function filterByGradeLevel() {
+            const filter = document.getElementById('grade-level-filter').value;
+            
+            if (filter === 'all') {
+                filteredData = [...comparisonData];
+            } else {
+                filteredData = comparisonData.filter(classData => 
+                    classData.gradeLevel && classData.gradeLevel.toLowerCase().startsWith(filter.toLowerCase())
+                );
+            }
+            
+            // Reapply current sort
+            sortComparisonData();
+        }
+        
+        // Sort comparison data
+        function sortComparisonData() {
+            const sortMethod = document.getElementById('sort-method').value;
+            
+            filteredData.sort((a, b) => {
+                switch (sortMethod) {
+                    case 'class-name':
+                        return (a.className || '').localeCompare(b.className || '');
+                    
+                    case 'term-grade':
+                        const gradeA = a.averages.termGrade || 0;
+                        const gradeB = b.averages.termGrade || 0;
+                        return gradeB - gradeA; // Descending order
+                    
+                    case 'formative':
+                        const formA = a.averages.formativeAverage || 0;
+                        const formB = b.averages.formativeAverage || 0;
+                        return formB - formA; // Descending order
+                    
+                    case 'summative':
+                        const summA = a.averages.summativeAverage || 0;
+                        const summB = b.averages.summativeAverage || 0;
+                        return summB - summA; // Descending order
+                    
+                    case 'student-count':
+                        const countA = a.studentCount || 0;
+                        const countB = b.studentCount || 0;
+                        return countB - countA; // Descending order
+                    
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Refresh the table display
+            displayComparisonTable(filteredData);
         }
 
 

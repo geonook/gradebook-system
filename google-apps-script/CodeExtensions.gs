@@ -5558,3 +5558,387 @@ function testCoreFunctions() {
   console.log(`🎯 Core function tests completed: ${results.filter(r => r.success).length}/${results.length} passed`);
   return results;
 }
+
+// ===== COMPARISON DASHBOARD FUNCTIONS | 比較儀表板函數 =====
+
+/**
+ * Extract class averages from a gradebook file | 從成績簿檔案提取班級平均成績
+ * @param {GoogleAppsScript.Spreadsheet.Spreadsheet} gradebookFile - The gradebook spreadsheet
+ * @param {string} className - The class name to extract data for
+ * @returns {Object} Class average data with success status
+ */
+function extractClassAveragesFromGradebook(gradebookFile, className) {
+  try {
+    console.log(`📊 Extracting averages for class: ${className} from gradebook: ${gradebookFile.getName()}`);
+    
+    const sheets = gradebookFile.getSheets();
+    let classSheet = null;
+    
+    // Find the class sheet with flexible matching | 靈活匹配找到班級工作表
+    for (const sheet of sheets) {
+      const sheetName = sheet.getName();
+      if (sheetName.includes(`📚 ${className}`) || 
+          sheetName.includes(className) ||
+          sheetName.endsWith(className)) {
+        classSheet = sheet;
+        break;
+      }
+    }
+    
+    if (!classSheet) {
+      console.warn(`⚠️ Class sheet not found for: ${className}`);
+      return { 
+        success: false, 
+        error: `Class sheet not found: ${className}`,
+        className: className
+      };
+    }
+    
+    // Get all data from the sheet | 取得工作表的所有資料
+    const dataRange = classSheet.getDataRange();
+    const values = dataRange.getValues();
+    
+    if (values.length < 3) {
+      return { 
+        success: false, 
+        error: 'Insufficient data in class sheet',
+        className: className
+      };
+    }
+    
+    // Find the Average row by searching for "Average" text | 搜尋包含 "Average" 文字的列
+    let averageRowIndex = -1;
+    
+    // Method 1: Look for explicit "Average" text in first column
+    for (let i = 2; i < values.length; i++) {
+      if (values[i][0] && values[i][0].toString().toLowerCase().includes('average')) {
+        averageRowIndex = i;
+        console.log(`✅ Found Average row at index ${i} by text search`);
+        break;
+      }
+    }
+    
+    // Method 2: If not found, assume Average is the last row with data
+    if (averageRowIndex === -1) {
+      for (let i = values.length - 1; i >= 2; i--) {
+        // Check if this row has student name (column B) and some scores
+        if (values[i][1] && values[i][1] !== '' && 
+            (values[i][3] || values[i][4] || values[i][5])) { // Has some grade data
+          // Check if next row might be Average (or this is the last row)
+          if (i === values.length - 1 || !values[i + 1][1]) {
+            averageRowIndex = i;
+            console.log(`✅ Found last data row at index ${i}, treating as Average row`);
+            break;
+          }
+        }
+      }
+    }
+    
+    // Method 3: Calculate based on student count (fallback)
+    if (averageRowIndex === -1) {
+      // Count non-empty student names starting from row 3 (index 2)
+      let studentCount = 0;
+      for (let i = 2; i < values.length; i++) {
+        if (values[i][1] && values[i][1] !== '' && 
+            !values[i][1].toString().toLowerCase().includes('average')) {
+          studentCount++;
+        }
+      }
+      
+      if (studentCount > 0) {
+        averageRowIndex = 2 + studentCount; // 2 header rows + student count
+        console.log(`✅ Calculated Average row at index ${averageRowIndex} based on student count: ${studentCount}`);
+      }
+    }
+    
+    if (averageRowIndex === -1 || averageRowIndex >= values.length) {
+      return { 
+        success: false, 
+        error: 'Average row not found or invalid',
+        className: className
+      };
+    }
+    
+    const averageRow = values[averageRowIndex];
+    const studentCount = Math.max(0, averageRowIndex - 2); // Subtract header rows
+    
+    // Extract averages based on standard column positions | 根據標準欄位位置提取平均成績
+    // Column mapping: D=Term Grade, E=Formative Avg, F=Summative Avg, G=Final Assessment
+    // H-O=F.A.1-8, P-S=S.A.1-4, T=Final
+    
+    const result = {
+      success: true,
+      className: className,
+      sheetName: classSheet.getName(),
+      studentCount: studentCount,
+      averageRowIndex: averageRowIndex,
+      averages: {
+        termGrade: parseFloat(averageRow[3]) || 0,           // Column D
+        formativeAverage: parseFloat(averageRow[4]) || 0,    // Column E  
+        summativeAverage: parseFloat(averageRow[5]) || 0,    // Column F
+        finalAssessment: parseFloat(averageRow[6]) || 0,     // Column G
+        individualScores: {
+          fa1: parseFloat(averageRow[7]) || 0,   // Column H - F.A.1
+          fa2: parseFloat(averageRow[8]) || 0,   // Column I - F.A.2
+          fa3: parseFloat(averageRow[9]) || 0,   // Column J - F.A.3
+          fa4: parseFloat(averageRow[10]) || 0,  // Column K - F.A.4
+          fa5: parseFloat(averageRow[11]) || 0,  // Column L - F.A.5
+          fa6: parseFloat(averageRow[12]) || 0,  // Column M - F.A.6
+          fa7: parseFloat(averageRow[13]) || 0,  // Column N - F.A.7
+          fa8: parseFloat(averageRow[14]) || 0,  // Column O - F.A.8
+          sa1: parseFloat(averageRow[15]) || 0,  // Column P - S.A.1
+          sa2: parseFloat(averageRow[16]) || 0,  // Column Q - S.A.2
+          sa3: parseFloat(averageRow[17]) || 0,  // Column R - S.A.3
+          sa4: parseFloat(averageRow[18]) || 0,  // Column S - S.A.4
+          final: parseFloat(averageRow[19]) || 0 // Column T - Final
+        }
+      }
+    };
+    
+    console.log(`✅ Successfully extracted averages for ${className}: Term=${result.averages.termGrade}, Students=${studentCount}`);
+    return result;
+    
+  } catch (error) {
+    console.error(`❌ Error extracting averages for ${className}:`, error);
+    return { 
+      success: false, 
+      error: error.message,
+      className: className
+    };
+  }
+}
+
+/**
+ * Map class name to grade level using existing project logic | 使用現有專案邏輯將班級名稱映射到年級分級
+ * @param {string} className - The class name (e.g., "G1 Achievers")
+ * @returns {string} Grade level (e.g., "G1E1")
+ */
+function mapClassNameToGradeLevel(className) {
+  try {
+    // Use existing logic from the project | 使用專案中現有的邏輯
+    if (!className) return 'Unknown';
+    
+    // Extract grade from class name (G1, G2, etc.)
+    const gradeMatch = className.match(/G(\d)/);
+    if (!gradeMatch) return 'Unknown';
+    
+    const grade = `G${gradeMatch[1]}`;
+    
+    // Map class names to levels based on existing patterns | 根據現有模式將班級名稱映射到分級
+    // This follows the same logic used in the existing codebase
+    if (className.includes('Achievers') || className.includes('Builders')) return `${grade}E1`;
+    if (className.includes('Creators') || className.includes('Dreamers')) return `${grade}E2`;  
+    if (className.includes('Explorers') || className.includes('Pioneers')) return `${grade}E3`;
+    
+    // Fallback patterns | 備用模式
+    if (className.includes('Trailblazers') || className.includes('Discoverers')) return `${grade}E1`;
+    if (className.includes('Adventurers') || className.includes('Innovators')) return `${grade}E2`;
+    if (className.includes('Navigators') || className.includes('Inventors')) return `${grade}E3`;
+    if (className.includes('Voyagers') || className.includes('Guardians')) return `${grade}E3`;
+    if (className.includes('Pathfinders') || className.includes('Seekers')) return `${grade}E1`;
+    if (className.includes('Visionaries')) return `${grade}E3`;
+    
+    // Default to E1 if no specific pattern matches | 如果沒有特定模式匹配則預設為 E1
+    return `${grade}E1`;
+    
+  } catch (error) {
+    console.error('❌ Error mapping class name to grade level:', error);
+    return 'Unknown';
+  }
+}
+
+/**
+ * Gather comparison data based on type and target | 根據類型和目標收集比較資料
+ * @param {string} comparisonType - Type of comparison: 'within-grade', 'cross-level', 'grade-overview'  
+ * @param {string} targetLevel - Target level for comparison (e.g., 'G1E1')
+ * @returns {Array} Array of class comparison data
+ */
+function gatherComparisonData(comparisonType, targetLevel = null) {
+  try {
+    console.log(`📊 Gathering comparison data: ${comparisonType} for ${targetLevel || 'all'}`);
+    
+    const allGradebooks = getAllTeacherGradebooks();
+    const comparisonResults = [];
+    let processedFiles = 0;
+    let successfulExtractions = 0;
+    
+    console.log(`📚 Found ${allGradebooks.length} gradebook files to process`);
+    
+    for (const gradebookFile of allGradebooks) {
+      try {
+        processedFiles++;
+        console.log(`📖 Processing gradebook ${processedFiles}/${allGradebooks.length}: ${gradebookFile.getName()}`);
+        
+        const sheets = gradebookFile.getSheets();
+        
+        for (const sheet of sheets) {
+          const sheetName = sheet.getName();
+          
+          // Skip non-class sheets | 跳過非班級工作表
+          if (!sheetName.startsWith('📚 ')) continue;
+          
+          const className = sheetName.replace('📚 ', '').trim();
+          if (!className) continue;
+          
+          // Map class to grade level | 將班級映射到年級分級
+          const classLevel = mapClassNameToGradeLevel(className);
+          if (classLevel === 'Unknown') {
+            console.warn(`⚠️ Could not determine level for class: ${className}`);
+            continue;
+          }
+          
+          // Determine if this class should be included in comparison | 判斷此班級是否應包含在比較中
+          let shouldInclude = false;
+          switch (comparisonType) {
+            case 'within-grade':
+              shouldInclude = classLevel === targetLevel;
+              break;
+            case 'cross-level':
+              if (targetLevel) {
+                const targetGrade = targetLevel.substring(0, 2); // Extract G1, G2, etc.
+                shouldInclude = classLevel.startsWith(targetGrade);
+              }
+              break;
+            case 'grade-overview':
+              shouldInclude = true; // Include all classes
+              break;
+            default:
+              console.warn(`⚠️ Unknown comparison type: ${comparisonType}`);
+              continue;
+          }
+          
+          if (shouldInclude) {
+            console.log(`✅ Including ${className} (${classLevel}) in comparison`);
+            
+            // Extract average data for this class | 為此班級提取平均資料
+            const averageData = extractClassAveragesFromGradebook(gradebookFile, className);
+            
+            if (averageData.success) {
+              successfulExtractions++;
+              
+              // Add additional metadata | 添加額外的元資料
+              comparisonResults.push({
+                level: classLevel,
+                className: className,
+                gradebookName: gradebookFile.getName(),
+                gradebookId: gradebookFile.getId(),
+                ...averageData
+              });
+              
+              console.log(`  📈 Successfully extracted data: Term Grade = ${averageData.averages.termGrade}`);
+            } else {
+              console.warn(`  ⚠️ Failed to extract data for ${className}: ${averageData.error}`);
+            }
+          }
+        }
+      } catch (fileError) {
+        console.error(`❌ Error processing gradebook ${gradebookFile.getName()}:`, fileError);
+      }
+    }
+    
+    console.log(`🎯 Comparison data collection completed:`);
+    console.log(`   📁 Files processed: ${processedFiles}`);
+    console.log(`   ✅ Successful extractions: ${successfulExtractions}`);
+    console.log(`   📊 Total results: ${comparisonResults.length}`);
+    
+    // Sort results by term grade (descending) | 按學期成績降序排序
+    comparisonResults.sort((a, b) => {
+      const gradeA = a.averages?.termGrade || 0;
+      const gradeB = b.averages?.termGrade || 0;
+      return gradeB - gradeA;
+    });
+    
+    return comparisonResults;
+    
+  } catch (error) {
+    console.error('❌ Error gathering comparison data:', error);
+    return [];
+  }
+}
+
+/**
+ * Dashboard-compatible wrapper for comparison data | 儀表板相容的比較資料包裝器
+ * @param {string} comparisonType - Type of comparison
+ * @param {string} targetLevel - Target level for comparison  
+ * @returns {Object} Formatted data for dashboard consumption
+ */
+function getComparisonDataForDashboard(comparisonType, targetLevel = null) {
+  try {
+    console.log(`🎯 Getting comparison data for dashboard: ${comparisonType}, ${targetLevel}`);
+    
+    const startTime = new Date();
+    const rawData = gatherComparisonData(comparisonType, targetLevel);
+    const endTime = new Date();
+    
+    // Calculate summary statistics | 計算摘要統計
+    const totalClasses = rawData.length;
+    const validGrades = rawData.filter(item => item.averages && item.averages.termGrade > 0);
+    
+    let averageTermGrade = 0;
+    let averageStudentCount = 0;
+    let statusCounts = { excellent: 0, good: 0, normal: 0, behind: 0 };
+    
+    if (validGrades.length > 0) {
+      averageTermGrade = validGrades.reduce((sum, item) => sum + item.averages.termGrade, 0) / validGrades.length;
+      averageStudentCount = rawData.reduce((sum, item) => sum + (item.studentCount || 0), 0) / rawData.length;
+      
+      // Count status categories | 計算狀態分類
+      validGrades.forEach(item => {
+        const grade = item.averages.termGrade;
+        if (grade >= 90) statusCounts.excellent++;
+        else if (grade >= 80) statusCounts.good++;
+        else if (grade >= 60) statusCounts.normal++;
+        else statusCounts.behind++;
+      });
+    }
+    
+    const result = {
+      success: true,
+      comparisonType: comparisonType,
+      targetLevel: targetLevel,
+      timestamp: new Date().toISOString(),
+      executionTime: endTime - startTime,
+      summary: {
+        totalClasses: totalClasses,
+        validGrades: validGrades.length,
+        averageTermGrade: Math.round(averageTermGrade * 10) / 10,
+        averageStudentCount: Math.round(averageStudentCount * 10) / 10,
+        statusCounts: statusCounts
+      },
+      classes: rawData.map(item => ({
+        level: item.level,
+        className: item.className,
+        sheetName: item.sheetName,
+        studentCount: item.studentCount,
+        gradebookName: item.gradebookName,
+        averages: item.averages,
+        status: getPerformanceStatus(item.averages?.termGrade || 0)
+      }))
+    };
+    
+    console.log(`✅ Dashboard data prepared: ${totalClasses} classes, ${validGrades.length} with valid grades`);
+    return result;
+    
+  } catch (error) {
+    console.error('❌ Error preparing dashboard comparison data:', error);
+    return {
+      success: false,
+      error: error.message,
+      comparisonType: comparisonType,
+      targetLevel: targetLevel,
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+/**
+ * Get performance status based on grade | 根據成績獲取表現狀態
+ * @param {number} grade - The grade score
+ * @returns {string} Status with emoji and bilingual text
+ */
+function getPerformanceStatus(grade) {
+  if (grade >= 90) return '🟢 優秀 Excellent';
+  if (grade >= 80) return '🟡 良好 Good';  
+  if (grade >= 60) return '🟠 普通 Normal';
+  return '🔴 落後 Behind';
+}
