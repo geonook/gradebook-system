@@ -1252,6 +1252,9 @@
                     <button class="btn btn-warning" onclick="openProgressAudit()">
                         <i class="fas fa-clipboard-check"></i> Progress Audit | 進度稽核
                     </button>
+                    <button class="btn btn-info" onclick="runComparisonDashboardDiagnosis()">
+                        <i class="fas fa-bug"></i> Diagnose Comparison Dashboard | 診斷比較面板
+                    </button>
                 </div>
             </div>
 
@@ -3276,6 +3279,61 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
             resetProgressAuditForm();
             // Default to G1 tab
             switchProgressTab('G1');
+        }
+        
+        // Run Comparison Dashboard Diagnosis
+        function runComparisonDashboardDiagnosis() {
+            showLoading();
+            showSuccess('🔍 Starting comprehensive diagnosis... | 開始綜合診斷...', 3000);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    
+                    if (result.success) {
+                        const summary = result.summary;
+                        const diagnosisInfo = `
+🔍 Comparison Dashboard Diagnosis Results | 比較面板診斷結果:
+===========================================================
+
+📊 SUMMARY | 摘要:
+• Gradebook Files Found | 找到成績簿檔案: ${summary.gradebookFilesFound}
+• Total Teachers | 總教師數: ${summary.totalTeachers}  
+• Total Classes | 總班級數: ${summary.totalClasses}
+• Has Errors | 有錯誤: ${summary.hasErrors ? '是' : '否'}
+
+🔧 DIAGNOSIS DETAILS | 診斷詳情:
+• Timestamp | 時間戳: ${result.diagnosis.timestamp}
+• Basic Data Check | 基本資料檢查: ${result.diagnosis.basicData ? (result.diagnosis.basicData.error ? '❌ Failed' : '✅ Passed') : '⚠️ Skipped'}
+• Gradebook Files | 成績簿檔案: ${result.diagnosis.gradebookFiles ? (result.diagnosis.gradebookFiles.error ? '❌ Failed' : '✅ Found ' + result.diagnosis.gradebookFiles.count + ' files') : '⚠️ Skipped'}
+• Progress Data | 進度資料: ${result.diagnosis.progressData ? (result.diagnosis.progressData.error ? '❌ Failed' : '✅ Analyzed') : '⚠️ Skipped'}
+• Worksheet Analysis | 工作表分析: ${result.diagnosis.worksheetAnalysis ? (result.diagnosis.worksheetAnalysis.error ? '❌ Failed' : '✅ Completed') : '⚠️ Skipped'}
+
+📝 RECOMMENDATIONS | 建議:
+${summary.totalClasses === 168 && summary.totalClasses > 50 ? '⚠️ Class count seems abnormally high (168). Check worksheet filtering logic.' : ''}
+${summary.gradebookFilesFound === 0 ? '❌ No gradebook files found. Check file location and permissions.' : ''}
+${summary.hasErrors ? '❌ Errors detected. Check console logs for detailed error messages.' : '✅ No major errors detected.'}
+
+===========================================================
+📋 Check browser console (F12) for detailed logs
+📋 檢查瀏覽器控制台 (F12) 取得詳細日誌
+`;
+                        
+                        showResult(diagnosisInfo);
+                        
+                        // Also log structured data to console for debugging
+                        console.log('🔍 Structured Diagnosis Data:', result.diagnosis);
+                        
+                    } else {
+                        showError(`❌ Diagnosis failed: ${result.error || 'Unknown error'}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError(`❌ Diagnosis execution failed: ${error.message}`);
+                    console.error('Diagnosis execution error:', error);
+                })
+                .diagnoseComparisonDashboardIssues();
         }
         
         // Close Progress Audit Modal
