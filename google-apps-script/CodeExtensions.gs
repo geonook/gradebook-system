@@ -5959,3 +5959,222 @@ function getPerformanceStatus(grade) {
   if (grade >= 60) return '🟠 普通 Normal';
   return '🔴 落後 Behind';
 }
+
+/**
+ * Comprehensive diagnosis function for Comparison Dashboard issues
+ * 比較面板問題的綜合診斷函數
+ */
+function diagnoseComparisonDashboardIssues() {
+  try {
+    console.log('🔍 Starting comprehensive Comparison Dashboard diagnosis...');
+    console.log('🔍 開始比較面板綜合診斷...');
+    
+    const diagnosis = {
+      timestamp: new Date().toISOString(),
+      basicData: null,
+      gradebookFiles: null,
+      progressData: null,
+      worksheetAnalysis: null
+    };
+    
+    // Phase 1: Basic system check
+    console.log('\n📋 Phase 1: Basic System Check | 階段一：基本系統檢查');
+    try {
+      diagnosis.basicData = debugBasicData();
+      console.log('✅ Basic data check completed | 基本資料檢查完成');
+    } catch (error) {
+      console.error('❌ Basic data check failed:', error);
+      diagnosis.basicData = { error: error.message };
+    }
+    
+    // Phase 2: Gradebook files analysis
+    console.log('\n📚 Phase 2: Gradebook Files Analysis | 階段二：成績簿文件分析');
+    try {
+      const gradebooks = getAllTeacherGradebooks();
+      diagnosis.gradebookFiles = {
+        count: gradebooks.length,
+        files: gradebooks.map(file => ({
+          name: file.getName(),
+          id: file.getId(),
+          url: file.getUrl()
+        }))
+      };
+      console.log(`📊 Found ${gradebooks.length} teacher gradebook files | 找到 ${gradebooks.length} 個教師成績簿檔案`);
+      
+      // Log first few filenames for reference
+      gradebooks.slice(0, 5).forEach((file, index) => {
+        console.log(`  ${index + 1}. ${file.getName()}`);
+      });
+      if (gradebooks.length > 5) {
+        console.log(`  ... and ${gradebooks.length - 5} more files | ...還有 ${gradebooks.length - 5} 個檔案`);
+      }
+      
+    } catch (error) {
+      console.error('❌ Gradebook files analysis failed:', error);
+      diagnosis.gradebookFiles = { error: error.message };
+    }
+    
+    // Phase 3: Progress statistics
+    console.log('\n📈 Phase 3: Progress Statistics | 階段三：進度統計');
+    try {
+      const progressResult = batchCheckAllProgress();
+      if (progressResult.success) {
+        diagnosis.progressData = progressResult.data;
+        console.log(`📊 Progress Analysis Results | 進度分析結果:`);
+        console.log(`  - Total Teachers | 總教師數: ${progressResult.data.totalTeachers}`);
+        console.log(`  - Total Classes | 總班級數: ${progressResult.data.totalClasses}`);
+        console.log(`  - Teachers with Data | 有資料的教師: ${progressResult.data.teachers.length}`);
+      } else {
+        diagnosis.progressData = { error: progressResult.error };
+        console.error('❌ Progress analysis failed:', progressResult.error);
+      }
+    } catch (error) {
+      console.error('❌ Progress statistics failed:', error);
+      diagnosis.progressData = { error: error.message };
+    }
+    
+    // Phase 4: Detailed worksheet analysis
+    console.log('\n📝 Phase 4: Worksheet Analysis | 階段四：工作表分析');
+    try {
+      const worksheetData = analyzeWorksheetStructure();
+      diagnosis.worksheetAnalysis = worksheetData;
+    } catch (error) {
+      console.error('❌ Worksheet analysis failed:', error);
+      diagnosis.worksheetAnalysis = { error: error.message };
+    }
+    
+    // Summary
+    console.log('\n🎯 Diagnosis Summary | 診斷摘要:');
+    console.log('==================================================');
+    if (diagnosis.gradebookFiles && !diagnosis.gradebookFiles.error) {
+      console.log(`📚 Gradebook Files Found | 找到成績簿檔案: ${diagnosis.gradebookFiles.count}`);
+    }
+    if (diagnosis.progressData && !diagnosis.progressData.error) {
+      console.log(`👥 Teachers | 教師數: ${diagnosis.progressData.totalTeachers}`);
+      console.log(`📚 Classes | 班級數: ${diagnosis.progressData.totalClasses}`);
+    }
+    console.log('==================================================');
+    
+    return {
+      success: true,
+      diagnosis: diagnosis,
+      summary: {
+        gradebookFilesFound: diagnosis.gradebookFiles ? (diagnosis.gradebookFiles.count || 0) : 0,
+        totalTeachers: diagnosis.progressData ? (diagnosis.progressData.totalTeachers || 0) : 0,
+        totalClasses: diagnosis.progressData ? (diagnosis.progressData.totalClasses || 0) : 0,
+        hasErrors: Boolean(
+          (diagnosis.basicData && diagnosis.basicData.error) ||
+          (diagnosis.gradebookFiles && diagnosis.gradebookFiles.error) ||
+          (diagnosis.progressData && diagnosis.progressData.error) ||
+          (diagnosis.worksheetAnalysis && diagnosis.worksheetAnalysis.error)
+        )
+      }
+    };
+    
+  } catch (error) {
+    console.error('❌ Comprehensive diagnosis failed:', error);
+    return {
+      success: false,
+      error: `Comprehensive diagnosis failed: ${error.message} | 綜合診斷失敗: ${error.message}`
+    };
+  }
+}
+
+/**
+ * Analyze worksheet structure in teacher gradebooks
+ * 分析教師成績簿中的工作表結構
+ */
+function analyzeWorksheetStructure() {
+  try {
+    console.log('🔍 Analyzing worksheet structure | 分析工作表結構...');
+    
+    const gradebooks = getAllTeacherGradebooks();
+    const worksheetAnalysis = {
+      totalGradebooks: gradebooks.length,
+      totalWorksheets: 0,
+      classWorksheets: 0,
+      nonClassWorksheets: 0,
+      gradebookDetails: [],
+      sheetNamingPatterns: {}
+    };
+    
+    // Analyze first 3 gradebooks for detailed structure
+    const sampleSize = Math.min(3, gradebooks.length);
+    console.log(`📋 Analyzing ${sampleSize} sample gradebooks for detailed structure | 分析 ${sampleSize} 個樣本成績簿的詳細結構`);
+    
+    for (let i = 0; i < sampleSize; i++) {
+      const gradebook = gradebooks[i];
+      const sheets = gradebook.getSheets();
+      
+      const gradebookDetail = {
+        name: gradebook.getName(),
+        totalSheets: sheets.length,
+        classSheets: [],
+        nonClassSheets: []
+      };
+      
+      worksheetAnalysis.totalWorksheets += sheets.length;
+      
+      sheets.forEach(sheet => {
+        const sheetName = sheet.getName();
+        
+        if (sheetName.startsWith('📚 ')) {
+          // This is a class sheet
+          worksheetAnalysis.classWorksheets++;
+          gradebookDetail.classSheets.push(sheetName);
+          
+          // Track naming patterns
+          const className = sheetName.replace('📚 ', '').trim();
+          if (className) {
+            const pattern = className.match(/G\d/);
+            if (pattern) {
+              const grade = pattern[0];
+              worksheetAnalysis.sheetNamingPatterns[grade] = 
+                (worksheetAnalysis.sheetNamingPatterns[grade] || 0) + 1;
+            }
+          }
+        } else {
+          // Non-class sheet
+          worksheetAnalysis.nonClassWorksheets++;
+          gradebookDetail.nonClassSheets.push(sheetName);
+        }
+      });
+      
+      worksheetAnalysis.gradebookDetails.push(gradebookDetail);
+      
+      console.log(`📖 ${gradebook.getName()}:`);
+      console.log(`  - Total sheets | 總工作表: ${sheets.length}`);
+      console.log(`  - Class sheets | 班級工作表: ${gradebookDetail.classSheets.length}`);
+      console.log(`  - Class sheet names | 班級工作表名稱: ${gradebookDetail.classSheets.join(', ')}`);
+    }
+    
+    // Calculate totals for all gradebooks (quick count)
+    console.log('📊 Calculating totals for all gradebooks | 計算所有成績簿的總計...');
+    for (let i = sampleSize; i < gradebooks.length; i++) {
+      const gradebook = gradebooks[i];
+      const sheets = gradebook.getSheets();
+      worksheetAnalysis.totalWorksheets += sheets.length;
+      
+      sheets.forEach(sheet => {
+        if (sheet.getName().startsWith('📚 ')) {
+          worksheetAnalysis.classWorksheets++;
+        } else {
+          worksheetAnalysis.nonClassWorksheets++;
+        }
+      });
+    }
+    
+    console.log(`📊 Worksheet Analysis Results | 工作表分析結果:`);
+    console.log(`  - Total gradebooks | 總成績簿數: ${worksheetAnalysis.totalGradebooks}`);
+    console.log(`  - Total worksheets | 總工作表數: ${worksheetAnalysis.totalWorksheets}`);
+    console.log(`  - Class worksheets | 班級工作表數: ${worksheetAnalysis.classWorksheets}`);
+    console.log(`  - Non-class worksheets | 非班級工作表數: ${worksheetAnalysis.nonClassWorksheets}`);
+    console.log(`  - Grade distribution | 年級分佈:`, JSON.stringify(worksheetAnalysis.sheetNamingPatterns));
+    
+    return worksheetAnalysis;
+    
+  } catch (error) {
+    console.error('❌ Worksheet analysis failed:', error);
+    throw error;
+  }
+}
