@@ -3594,7 +3594,7 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                     document.getElementById('comparison-loading').style.display = 'none';
                     showError('載入比較資料失敗 | Failed to load comparison data: ' + error.message);
                 })
-                .getComparisonDataForDashboard();
+                .getComparisonDataForDashboard('grade-overview', null);
         }
         
         // Update summary statistics display

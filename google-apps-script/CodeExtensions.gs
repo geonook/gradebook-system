@@ -5866,6 +5866,23 @@ function getComparisonDataForDashboard(comparisonType, targetLevel = null) {
   try {
     console.log(`🎯 Getting comparison data for dashboard: ${comparisonType}, ${targetLevel}`);
     
+    // Parameter validation | 參數驗證
+    if (!comparisonType) {
+      console.error('❌ Missing comparisonType parameter');
+      return {
+        success: false,
+        error: 'Missing comparisonType parameter | 缺少 comparisonType 參數',
+        data: [],
+        summary: {
+          totalClasses: 0,
+          totalStudents: 0,
+          averageClassSize: 0,
+          systemAverage: 0,
+          statusCounts: { excellent: 0, good: 0, normal: 0, behind: 0 }
+        }
+      };
+    }
+    
     const startTime = new Date();
     const rawData = gatherComparisonData(comparisonType, targetLevel);
     const endTime = new Date();
