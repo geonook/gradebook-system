@@ -5810,6 +5810,177 @@ function gatherComparisonData(comparisonType, targetLevel = null) {
     console.log(`📊 Gathering comparison data: ${comparisonType} for ${targetLevel || 'all'}`);
     
     const allGradebooks = getAllTeacherGradebooks();
+    console.log(`📚 Found ${allGradebooks.length} gradebook files to process`);
+    
+    // Use optimized batch processing for improved performance | 使用優化的批次處理以提升效能
+    return processGradebooksInBatches(allGradebooks, comparisonType, targetLevel);
+    
+  } catch (error) {
+    console.error('❌ Error gathering comparison data:', error);
+    return [];
+  }
+}
+
+/**
+ * Process gradebooks in optimized batches for better performance | 以優化批次處理成績簿以提升效能
+ * @param {Array} gradebooks - Array of gradebook files
+ * @param {string} comparisonType - Type of comparison
+ * @param {string} targetLevel - Target level for comparison
+ * @returns {Array} Array of class comparison data
+ */
+function processGradebooksInBatches(gradebooks, comparisonType, targetLevel) {
+  const BATCH_SIZE = 10; // Process 10 gradebooks at a time | 一次處理10個成績簿
+  const comparisonResults = [];
+  let processedFiles = 0;
+  let successfulExtractions = 0;
+  
+  console.log(`🚀 Starting batch processing with batch size: ${BATCH_SIZE}`);
+  
+  // Process gradebooks in batches | 批次處理成績簿
+  for (let i = 0; i < gradebooks.length; i += BATCH_SIZE) {
+    const batch = gradebooks.slice(i, i + BATCH_SIZE);
+    const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+    const totalBatches = Math.ceil(gradebooks.length / BATCH_SIZE);
+    
+    console.log(`📦 Processing batch ${batchNumber}/${totalBatches} (${batch.length} files)`);
+    
+    // Process each gradebook in the current batch | 處理當前批次中的每個成績簿
+    for (const gradebookFile of batch) {
+      try {
+        processedFiles++;
+        
+        const batchResults = processGradebookFile(gradebookFile, comparisonType, targetLevel, processedFiles, gradebooks.length);
+        successfulExtractions += batchResults.successCount;
+        comparisonResults.push(...batchResults.results);
+        
+        // Brief pause between files to prevent script timeout | 文件間短暫暫停以防止腳本超時
+        if (processedFiles % 5 === 0) {
+          Utilities.sleep(50); // 50ms pause every 5 files
+        }
+        
+      } catch (fileError) {
+        console.error(`❌ Error processing gradebook ${gradebookFile.getName()}:`, fileError);
+      }
+    }
+    
+    // Progress update after each batch | 每個批次後的進度更新
+    const progressPercent = Math.round((i + batch.length) / gradebooks.length * 100);
+    console.log(`🎯 Batch ${batchNumber} completed. Progress: ${progressPercent}% (${processedFiles}/${gradebooks.length})`);
+    
+    // Longer pause between batches | 批次間較長暫停
+    if (i + BATCH_SIZE < gradebooks.length) {
+      Utilities.sleep(100); // 100ms pause between batches
+    }
+  }
+  
+  console.log(`🎯 Batch processing completed:`);
+  console.log(`   📁 Files processed: ${processedFiles}`);
+  console.log(`   ✅ Successful extractions: ${successfulExtractions}`);
+  console.log(`   📊 Total results: ${comparisonResults.length}`);
+  
+  // Sort results by term grade (descending) | 按學期成績降序排序
+  comparisonResults.sort((a, b) => {
+    const gradeA = a.averages?.termGrade || 0;
+    const gradeB = b.averages?.termGrade || 0;
+    return gradeB - gradeA;
+  });
+  
+  return comparisonResults;
+}
+
+/**
+ * Process a single gradebook file and extract class data | 處理單一成績簿文件並提取班級資料
+ * @param {File} gradebookFile - The gradebook file to process
+ * @param {string} comparisonType - Type of comparison
+ * @param {string} targetLevel - Target level for comparison
+ * @param {number} fileIndex - Current file index for progress
+ * @param {number} totalFiles - Total number of files
+ * @returns {Object} Results object with success count and extracted data
+ */
+function processGradebookFile(gradebookFile, comparisonType, targetLevel, fileIndex, totalFiles) {
+  const results = [];
+  let successCount = 0;
+  
+  console.log(`📖 Processing (${fileIndex}/${totalFiles}): ${gradebookFile.getName()}`);
+  
+  const sheets = gradebookFile.getSheets();
+  
+  // Pre-filter sheets to reduce processing time | 預先過濾工作表以減少處理時間
+  const classSheets = sheets.filter(sheet => {
+    const sheetName = sheet.getName();
+    return sheetName.startsWith('📚 ') && sheetName.replace('📚 ', '').trim() !== '';
+  });
+  
+  console.log(`  📋 Found ${classSheets.length} class sheets in ${gradebookFile.getName()}`);
+  
+  for (const sheet of classSheets) {
+    const sheetName = sheet.getName();
+    const className = sheetName.replace('📚 ', '').trim();
+    
+    // Map class to grade level | 將班級映射到年級分級
+    const classLevel = mapClassNameToGradeLevel(className);
+    if (classLevel === 'Unknown') {
+      continue; // Skip unknown classes to improve performance | 跳過未知班級以提升效能
+    }
+    
+    // Determine if this class should be included in comparison | 判斷此班級是否應包含在比較中
+    const shouldInclude = shouldIncludeClassInComparison(comparisonType, targetLevel, classLevel);
+    
+    if (shouldInclude) {
+      // Extract average data for this class | 為此班級提取平均資料
+      const averageData = extractClassAveragesFromGradebook(gradebookFile, className);
+      
+      if (averageData.success) {
+        successCount++;
+        
+        // Add additional metadata | 添加額外的元資料
+        results.push({
+          level: classLevel,
+          className: className,
+          gradebookName: gradebookFile.getName(),
+          gradebookId: gradebookFile.getId(),
+          ...averageData
+        });
+      }
+    }
+  }
+  
+  return { results, successCount };
+}
+
+/**
+ * Determine if a class should be included in comparison based on type and level | 根據類型和級別判斷班級是否應包含在比較中
+ * @param {string} comparisonType - Type of comparison
+ * @param {string} targetLevel - Target level
+ * @param {string} classLevel - Current class level
+ * @returns {boolean} Whether to include the class
+ */
+function shouldIncludeClassInComparison(comparisonType, targetLevel, classLevel) {
+  switch (comparisonType) {
+    case 'within-grade':
+      return classLevel === targetLevel;
+    case 'cross-level':
+      if (targetLevel) {
+        const targetGrade = targetLevel.substring(0, 2); // Extract G1, G2, etc.
+        return classLevel.startsWith(targetGrade);
+      }
+      return false;
+    case 'grade-overview':
+      return true; // Include all classes
+    default:
+      return false;
+  }
+}
+
+/**
+ * Legacy function maintained for compatibility | 為兼容性維護的舊函數
+ * @deprecated Use gatherComparisonData() instead
+ */
+function gatherComparisonDataLegacy(comparisonType, targetLevel = null) {
+  try {
+    console.log(`📊 Gathering comparison data (legacy): ${comparisonType} for ${targetLevel || 'all'}`);
+    
+    const allGradebooks = getAllTeacherGradebooks();
     const comparisonResults = [];
     let processedFiles = 0;
     let successfulExtractions = 0;

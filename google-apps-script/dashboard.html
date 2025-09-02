@@ -636,8 +636,40 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             color: #6c757d;
+        }
+        
+        .loading-text {
+            text-align: left;
+        }
+        
+        .loading-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #007bff;
+            min-width: 35px;
         }
         
         .loading-content i {
@@ -919,6 +951,150 @@
             border-radius: 8px;
             border: 1px solid #dee2e6;
         }
+        
+        /* Virtual Scrolling Styles */
+        .virtual-table-wrapper {
+            position: relative;
+            height: 600px; /* Fixed height for virtual scrolling */
+            overflow: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .virtual-table-container {
+            position: relative;
+            min-height: 100%;
+        }
+        
+        .virtual-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 14px;
+        }
+        
+        .virtual-spacer {
+            width: 100%;
+            background: transparent;
+        }
+        
+        .virtual-row {
+            display: table-row;
+        }
+        
+        /* Performance optimization class */
+        .performance-mode .comparison-table tbody {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* Skeleton Loading Styles */
+        .skeleton-row {
+            background: #f8f9fa;
+            animation: skeleton-loading 1.5s ease-in-out infinite alternate;
+        }
+        
+        .skeleton-row td {
+            padding: 15px 8px;
+            border-bottom: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .skeleton-cell {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+            height: 16px;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .skeleton-cell.wide {
+            width: 80%;
+        }
+        
+        .skeleton-cell.medium {
+            width: 60%;
+        }
+        
+        .skeleton-cell.narrow {
+            width: 40%;
+        }
+        
+        .skeleton-cell.tag {
+            width: 50px;
+            height: 20px;
+            border-radius: 12px;
+        }
+        
+        @keyframes skeleton-shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        @keyframes skeleton-loading {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.7;
+            }
+        }
+        
+        /* Skeleton summary cards */
+        .skeleton-summary-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            animation: skeleton-loading 1.5s ease-in-out infinite alternate;
+        }
+        
+        .skeleton-summary-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .skeleton-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        
+        .skeleton-text-group {
+            flex: 1;
+        }
+        
+        .skeleton-title {
+            width: 70%;
+            height: 14px;
+            background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-value {
+            width: 50%;
+            height: 24px;
+            background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
 
         .comparison-table {
             width: 100%;
@@ -1086,7 +1262,15 @@
             <div id="comparison-loading" class="loading-indicator" style="display: none;">
                 <div class="loading-content">
                     <i class="fas fa-spinner fa-spin"></i>
-                    <span>Loading comparison data... | 正在載入比較資料...</span>
+                    <div class="loading-text">
+                        <span id="loading-message">Loading comparison data... | 正在載入比較資料...</span>
+                        <div class="loading-progress" style="margin-top: 8px;">
+                            <div class="progress-bar">
+                                <div id="progress-bar-fill" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div id="progress-text" class="progress-text">0%</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -3826,24 +4010,183 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
             }
         }
         
+        // Update loading progress
+        function updateLoadingProgress(percentage, message) {
+            document.getElementById('progress-bar-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = Math.round(percentage) + '%';
+            if (message) {
+                document.getElementById('loading-message').textContent = message;
+            }
+        }
+        
+        // Simulate progress updates since Google Apps Script doesn't support real-time progress
+        function startProgressSimulation() {
+            let progress = 0;
+            const stages = [
+                { percent: 20, message: 'Accessing gradebook files... | 正在存取成績簿檔案...' },
+                { percent: 40, message: 'Processing class data... | 正在處理班級資料...' },
+                { percent: 60, message: 'Calculating averages... | 正在計算平均成績...' },
+                { percent: 80, message: 'Generating statistics... | 正在產生統計資料...' },
+                { percent: 95, message: 'Finalizing results... | 正在完成結果...' }
+            ];
+            
+            let currentStage = 0;
+            const interval = setInterval(() => {
+                if (currentStage < stages.length) {
+                    const stage = stages[currentStage];
+                    progress += (stage.percent - progress) * 0.1; // Smooth progress
+                    updateLoadingProgress(progress, stage.message);
+                    
+                    if (progress >= stage.percent - 2) {
+                        currentStage++;
+                    }
+                }
+            }, 200);
+            
+            return interval;
+        }
+        
+        // Show skeleton loading for immediate visual feedback
+        function showSkeletonLoading() {
+            const resultsDiv = document.getElementById('comparison-results');
+            resultsDiv.style.display = 'block';
+            
+            // Create skeleton summary cards
+            createSkeletonSummaryCards();
+            
+            // Create skeleton table
+            createSkeletonTable();
+        }
+        
+        // Create skeleton loading for summary statistics cards
+        function createSkeletonSummaryCards() {
+            const summaryContainer = document.querySelector('.comparison-summary');
+            if (!summaryContainer) return;
+            
+            // Save original content
+            summaryContainer.setAttribute('data-original-content', summaryContainer.innerHTML);
+            
+            // Create skeleton cards
+            const skeletonHTML = `
+                <div class="col-md-6 col-xl-3 mb-3">
+                    <div class="skeleton-summary-card">
+                        <div class="skeleton-summary-content">
+                            <div class="skeleton-icon"></div>
+                            <div class="skeleton-text-group">
+                                <div class="skeleton-title"></div>
+                                <div class="skeleton-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-3">
+                    <div class="skeleton-summary-card">
+                        <div class="skeleton-summary-content">
+                            <div class="skeleton-icon"></div>
+                            <div class="skeleton-text-group">
+                                <div class="skeleton-title"></div>
+                                <div class="skeleton-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-3">
+                    <div class="skeleton-summary-card">
+                        <div class="skeleton-summary-content">
+                            <div class="skeleton-icon"></div>
+                            <div class="skeleton-text-group">
+                                <div class="skeleton-title"></div>
+                                <div class="skeleton-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-3">
+                    <div class="skeleton-summary-card">
+                        <div class="skeleton-summary-content">
+                            <div class="skeleton-icon"></div>
+                            <div class="skeleton-text-group">
+                                <div class="skeleton-title"></div>
+                                <div class="skeleton-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            summaryContainer.innerHTML = skeletonHTML;
+        }
+        
+        // Create skeleton loading for comparison table
+        function createSkeletonTable() {
+            const tableBody = document.getElementById('comparison-table-body');
+            if (!tableBody) return;
+            
+            // Clear existing content
+            tableBody.innerHTML = '';
+            
+            // Create skeleton rows (show 10 skeleton rows)
+            for (let i = 0; i < 10; i++) {
+                const skeletonRow = document.createElement('tr');
+                skeletonRow.className = 'skeleton-row';
+                
+                skeletonRow.innerHTML = `
+                    <td><div class="skeleton-cell wide"></div></td>
+                    <td><div class="skeleton-cell tag"></div></td>
+                    <td><div class="skeleton-cell narrow"></div></td>
+                    <td><div class="skeleton-cell medium"></div></td>
+                    <td><div class="skeleton-cell medium"></div></td>
+                    <td><div class="skeleton-cell medium"></div></td>
+                    <td><div class="skeleton-cell medium"></div></td>
+                    <td><div class="skeleton-cell wide"></div></td>
+                `;
+                
+                tableBody.appendChild(skeletonRow);
+            }
+        }
+        
+        // Hide skeleton loading and restore real content
+        function hideSkeletonLoading() {
+            // Restore summary cards original content
+            const summaryContainer = document.querySelector('.comparison-summary');
+            if (summaryContainer && summaryContainer.hasAttribute('data-original-content')) {
+                summaryContainer.innerHTML = summaryContainer.getAttribute('data-original-content');
+                summaryContainer.removeAttribute('data-original-content');
+            }
+            
+            // Table content will be replaced by displayComparisonTable function
+        }
+        
         // Load comparison data from backend
         function loadComparisonData() {
+            // Show skeleton loading immediately for better perceived performance
+            showSkeletonLoading();
+            
             // Show loading indicator
             document.getElementById('comparison-loading').style.display = 'block';
             document.getElementById('comparison-results').style.display = 'none';
             
+            // Reset progress
+            updateLoadingProgress(0, 'Initializing data loading... | 正在初始化資料載入...');
+            
+            // Simulate progress updates (since we can't get real-time progress from Google Apps Script)
+            const progressTimer = startProgressSimulation();
+            
             // Call backend function to get comparison data
             google.script.run
                 .withSuccessHandler(function(result) {
-                    document.getElementById('comparison-loading').style.display = 'none';
+                    clearInterval(progressTimer);
+                    updateLoadingProgress(100, 'Complete! | 完成！');
+                    setTimeout(() => {
+                        document.getElementById('comparison-loading').style.display = 'none';
+                    }, 500);
                     
                     if (result.success) {
-                        console.log('📊 Comparison Dashboard Data Received:', result);
-                        console.log('📋 Summary Data:', result.summary);
-                        console.log('🎯 Classes Data Length:', result.classes?.length || 0);
-                        if (result.classes && result.classes.length > 0) {
-                            console.log('📝 Sample Class Data:', result.classes[0]);
-                        }
+                        // Hide skeleton loading and restore real content
+                        hideSkeletonLoading();
+                        
+                        // Minimal logging for production performance
+                        console.log(`✅ Loaded ${result.classes?.length || 0} classes successfully`);
                         
                         comparisonData = result.classes || [];
                         filteredData = [...comparisonData];
@@ -3864,6 +4207,7 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                     }
                 })
                 .withFailureHandler(function(error) {
+                    clearInterval(progressTimer);
                     document.getElementById('comparison-loading').style.display = 'none';
                     showError('載入比較資料失敗 | Failed to load comparison data: ' + error.message);
                 })
@@ -3882,45 +4226,164 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                 summary.systemAverage ? Math.round(summary.systemAverage * 10) / 10 + '%' : '0%';
         }
         
-        // Display comparison table
+        // Global variables for virtual scrolling
+        let virtualScrollData = [];
+        let virtualScrollConfig = {
+            rowHeight: 45, // Estimated row height in pixels
+            visibleRows: 0,
+            startIndex: 0,
+            endIndex: 0,
+            bufferSize: 5, // Extra rows to render for smooth scrolling
+            useVirtualScrolling: true // Performance mode toggle
+        };
+        
+        // Display comparison table with virtual scrolling for performance
         function displayComparisonTable(data) {
-            console.log('📊 Displaying comparison table with data:', data);
-            console.log('📋 Data length:', data?.length || 0);
+            // Store data globally for virtual scrolling
+            virtualScrollData = data || [];
             
             const tableBody = document.getElementById('comparison-table-body');
             tableBody.innerHTML = '';
             
-            if (!data || data.length === 0) {
-                console.log('⚠️ No data available for table display');
+            if (virtualScrollData.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #6c757d; font-style: italic;">No data available | 無資料可顯示</td></tr>';
                 return;
             }
             
-            console.log('✅ Rendering', data.length, 'rows in comparison table');
+            // Determine if we should use virtual scrolling (for datasets > 50 rows)
+            const shouldUseVirtualScrolling = virtualScrollData.length > 50;
+            virtualScrollConfig.useVirtualScrolling = shouldUseVirtualScrolling;
             
-            data.forEach(classData => {
-                const row = document.createElement('tr');
-                
-                // Determine status class and text
-                const status = getStatusInfo(classData.averages.termGrade);
-                
-                // Create grade level tag  
-                const gradeLevel = classData.level || classData.gradeLevel || 'Unknown';
-                const gradeLevelTag = `<span class="grade-level-tag ${gradeLevel.toLowerCase()}">${gradeLevel}</span>`;
-                
-                row.innerHTML = `
-                    <td><strong>${classData.className}</strong></td>
-                    <td>${gradeLevelTag}</td>
-                    <td>${classData.studentCount || 0}</td>
-                    <td><strong>${formatPercentage(classData.averages.termGrade)}</strong></td>
-                    <td>${formatPercentage(classData.averages.formativeAverage)}</td>
-                    <td>${formatPercentage(classData.averages.summativeAverage)}</td>
-                    <td>${formatPercentage(classData.averages.finalAssessment)}</td>
-                    <td><span class="${status.className}">${status.text}</span></td>
-                `;
-                
+            if (shouldUseVirtualScrolling) {
+                console.log(`📊 Enabling virtual scrolling for ${virtualScrollData.length} rows`);
+                initializeVirtualScrolling();
+            } else {
+                console.log(`📊 Using traditional rendering for ${virtualScrollData.length} rows`);
+                renderAllRows();
+            }
+        }
+        
+        // Initialize virtual scrolling setup
+        function initializeVirtualScrolling() {
+            const tableContainer = document.querySelector('.table-wrapper');
+            const table = document.getElementById('comparison-table');
+            
+            // Replace table wrapper with virtual scroll wrapper
+            const virtualWrapper = document.createElement('div');
+            virtualWrapper.className = 'virtual-table-wrapper';
+            
+            const virtualContainer = document.createElement('div');
+            virtualContainer.className = 'virtual-table-container';
+            
+            // Calculate total height based on row count
+            const totalHeight = virtualScrollData.length * virtualScrollConfig.rowHeight;
+            virtualContainer.style.height = totalHeight + 'px';
+            
+            // Move table into virtual container
+            virtualContainer.appendChild(table);
+            virtualWrapper.appendChild(virtualContainer);
+            
+            // Replace original wrapper
+            tableContainer.parentNode.replaceChild(virtualWrapper, tableContainer);
+            
+            // Add scroll event listener
+            virtualWrapper.addEventListener('scroll', handleVirtualScroll);
+            
+            // Calculate visible rows
+            virtualScrollConfig.visibleRows = Math.ceil(virtualWrapper.clientHeight / virtualScrollConfig.rowHeight);
+            
+            // Initial render
+            updateVirtualScrollView(0);
+        }
+        
+        // Handle virtual scroll events
+        function handleVirtualScroll(event) {
+            const scrollTop = event.target.scrollTop;
+            updateVirtualScrollView(scrollTop);
+        }
+        
+        // Update the virtual scroll view based on scroll position
+        function updateVirtualScrollView(scrollTop) {
+            // Calculate which rows should be visible
+            const startIndex = Math.max(0, Math.floor(scrollTop / virtualScrollConfig.rowHeight) - virtualScrollConfig.bufferSize);
+            const endIndex = Math.min(virtualScrollData.length, startIndex + virtualScrollConfig.visibleRows + (virtualScrollConfig.bufferSize * 2));
+            
+            virtualScrollConfig.startIndex = startIndex;
+            virtualScrollConfig.endIndex = endIndex;
+            
+            // Render visible rows
+            renderVirtualRows(startIndex, endIndex, scrollTop);
+        }
+        
+        // Render only the visible rows for virtual scrolling
+        function renderVirtualRows(startIndex, endIndex, scrollTop) {
+            const tableBody = document.getElementById('comparison-table-body');
+            const table = document.getElementById('comparison-table');
+            
+            // Clear current rows
+            tableBody.innerHTML = '';
+            
+            // Add top spacer
+            if (startIndex > 0) {
+                const topSpacer = document.createElement('tr');
+                topSpacer.className = 'virtual-spacer';
+                topSpacer.style.height = (startIndex * virtualScrollConfig.rowHeight) + 'px';
+                topSpacer.innerHTML = '<td colspan="8"></td>';
+                tableBody.appendChild(topSpacer);
+            }
+            
+            // Render visible rows
+            for (let i = startIndex; i < endIndex; i++) {
+                if (i < virtualScrollData.length) {
+                    const row = createTableRow(virtualScrollData[i]);
+                    row.className = 'virtual-row';
+                    tableBody.appendChild(row);
+                }
+            }
+            
+            // Add bottom spacer
+            if (endIndex < virtualScrollData.length) {
+                const bottomSpacer = document.createElement('tr');
+                bottomSpacer.className = 'virtual-spacer';
+                bottomSpacer.style.height = ((virtualScrollData.length - endIndex) * virtualScrollConfig.rowHeight) + 'px';
+                bottomSpacer.innerHTML = '<td colspan="8"></td>';
+                tableBody.appendChild(bottomSpacer);
+            }
+        }
+        
+        // Traditional rendering for smaller datasets
+        function renderAllRows() {
+            const tableBody = document.getElementById('comparison-table-body');
+            
+            virtualScrollData.forEach(classData => {
+                const row = createTableRow(classData);
                 tableBody.appendChild(row);
             });
+        }
+        
+        // Create a single table row (used by both rendering methods)
+        function createTableRow(classData) {
+            const row = document.createElement('tr');
+            
+            // Determine status class and text
+            const status = getStatusInfo(classData.averages.termGrade);
+            
+            // Create grade level tag  
+            const gradeLevel = classData.level || classData.gradeLevel || 'Unknown';
+            const gradeLevelTag = `<span class="grade-level-tag ${gradeLevel.toLowerCase()}">${gradeLevel}</span>`;
+            
+            row.innerHTML = `
+                <td><strong>${classData.className}</strong></td>
+                <td>${gradeLevelTag}</td>
+                <td>${classData.studentCount || 0}</td>
+                <td><strong>${formatPercentage(classData.averages.termGrade)}</strong></td>
+                <td>${formatPercentage(classData.averages.formativeAverage)}</td>
+                <td>${formatPercentage(classData.averages.summativeAverage)}</td>
+                <td>${formatPercentage(classData.averages.finalAssessment)}</td>
+                <td><span class="${status.className}">${status.text}</span></td>
+            `;
+            
+            return row;
         }
         
         // Get status information for a grade
@@ -3952,9 +4415,6 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
         function filterByGradeLevel() {
             const filter = document.getElementById('grade-level-filter').value;
             
-            console.log('📊 Filtering by grade level:', filter);
-            console.log('📋 Original data length:', comparisonData.length);
-            
             if (filter === 'all') {
                 filteredData = [...comparisonData];
                 // Restore original summary for "All Grades" | 恢復"所有年級"的原始摘要
@@ -3964,15 +4424,9 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
             } else {
                 filteredData = comparisonData.filter(classData => {
                     const grade = classData.level || classData.gradeLevel || '';
-                    const matches = grade && grade.toLowerCase().startsWith(filter.toLowerCase());
-                    if (matches) {
-                        console.log(`✅ Matched: ${classData.className} (${grade})`);
-                    }
-                    return matches;
+                    return grade && grade.toLowerCase().startsWith(filter.toLowerCase());
                 });
             }
-            
-            console.log('🎯 Filtered data length:', filteredData.length);
             
             // Recalculate summary statistics for filtered data (only for specific grades)
             if (filter !== 'all') {
@@ -3986,7 +4440,6 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
         
         // Recalculate summary statistics for filtered data | 為過濾後的數據重新計算統計摘要
         function recalculateFilteredSummary(data) {
-            console.log('📊 Recalculating summary for', data.length, 'classes');
             
             if (!data || data.length === 0) {
                 return {
@@ -4045,7 +4498,6 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                 statusCounts: statusCounts
             };
             
-            console.log('📋 Filtered summary calculated:', result);
             return result;
         }
         
