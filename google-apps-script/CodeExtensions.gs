@@ -5970,9 +5970,31 @@ function getComparisonDataForDashboard(comparisonType, targetLevel = null) {
       const termGradeClasses = validGrades.filter(item => item.averages.termGrade > 0);
       if (termGradeClasses.length > 0) {
         averageTermGrade = termGradeClasses.reduce((sum, item) => sum + item.averages.termGrade, 0) / termGradeClasses.length;
+      } else {
+        // If no Term Grades available, calculate from primary grades | 如果沒有可用的學期成績，從主要成績計算
+        const primaryGrades = validGrades.map(item => {
+          let primaryGrade = item.averages.termGrade || 0;
+          if (primaryGrade === 0 && item.averages) {
+            if (item.averages.formativeAverage > 0 && item.averages.summativeAverage > 0) {
+              primaryGrade = (item.averages.formativeAverage * 0.6 + item.averages.summativeAverage * 0.4);
+            } else if (item.averages.summativeAverage > 0) {
+              primaryGrade = item.averages.summativeAverage;
+            } else if (item.averages.formativeAverage > 0) {
+              primaryGrade = item.averages.formativeAverage;
+            }
+          }
+          return primaryGrade;
+        }).filter(grade => grade > 0);
+        
+        if (primaryGrades.length > 0) {
+          averageTermGrade = primaryGrades.reduce((sum, grade) => sum + grade, 0) / primaryGrades.length;
+        }
       }
       
-      averageStudentCount = rawData.reduce((sum, item) => sum + (item.studentCount || 0), 0) / rawData.length;
+      // Calculate average class size from classes with students | 從有學生的班級計算平均班級大小
+      const classesWithStudents = rawData.filter(item => item.studentCount > 0);
+      averageStudentCount = classesWithStudents.length > 0 ? 
+        classesWithStudents.reduce((sum, item) => sum + item.studentCount, 0) / classesWithStudents.length : 0;
       
       // Enhanced status counting: use best available grade | 增強的狀態計數：使用最佳可用成績
       validGrades.forEach(item => {

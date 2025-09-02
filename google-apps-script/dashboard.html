@@ -3837,7 +3837,14 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                     document.getElementById('comparison-loading').style.display = 'none';
                     
                     if (result.success) {
-                        comparisonData = result.data || [];
+                        console.log('📊 Comparison Dashboard Data Received:', result);
+                        console.log('📋 Summary Data:', result.summary);
+                        console.log('🎯 Classes Data Length:', result.classes?.length || 0);
+                        if (result.classes && result.classes.length > 0) {
+                            console.log('📝 Sample Class Data:', result.classes[0]);
+                        }
+                        
+                        comparisonData = result.classes || [];
                         filteredData = [...comparisonData];
                         
                         // Update summary statistics
@@ -3875,13 +3882,19 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
         
         // Display comparison table
         function displayComparisonTable(data) {
+            console.log('📊 Displaying comparison table with data:', data);
+            console.log('📋 Data length:', data?.length || 0);
+            
             const tableBody = document.getElementById('comparison-table-body');
             tableBody.innerHTML = '';
             
             if (!data || data.length === 0) {
+                console.log('⚠️ No data available for table display');
                 tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #6c757d; font-style: italic;">No data available | 無資料可顯示</td></tr>';
                 return;
             }
+            
+            console.log('✅ Rendering', data.length, 'rows in comparison table');
             
             data.forEach(classData => {
                 const row = document.createElement('tr');
@@ -3889,8 +3902,8 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                 // Determine status class and text
                 const status = getStatusInfo(classData.averages.termGrade);
                 
-                // Create grade level tag
-                const gradeLevel = classData.gradeLevel || 'Unknown';
+                // Create grade level tag  
+                const gradeLevel = classData.level || classData.gradeLevel || 'Unknown';
                 const gradeLevelTag = `<span class="grade-level-tag ${gradeLevel.toLowerCase()}">${gradeLevel}</span>`;
                 
                 row.innerHTML = `
@@ -3940,9 +3953,10 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
             if (filter === 'all') {
                 filteredData = [...comparisonData];
             } else {
-                filteredData = comparisonData.filter(classData => 
-                    classData.gradeLevel && classData.gradeLevel.toLowerCase().startsWith(filter.toLowerCase())
-                );
+                filteredData = comparisonData.filter(classData => {
+                    const grade = classData.level || classData.gradeLevel || '';
+                    return grade && grade.toLowerCase().startsWith(filter.toLowerCase());
+                });
             }
             
             // Reapply current sort
