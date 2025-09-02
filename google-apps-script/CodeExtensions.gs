@@ -6527,3 +6527,213 @@ function debugAverageRowDataExtraction() {
     };
   }
 }
+
+/**
+ * Debug function to analyze actual column positions in Average rows
+ * 調試函數分析 Average 行中的實際列位置
+ */
+function debugColumnPositions() {
+  try {
+    console.log('🔍 Starting column position analysis | 開始列位置分析...');
+    
+    const gradebooks = getAllTeacherGradebooks();
+    const debugResults = {
+      timestamp: new Date().toISOString(),
+      totalGradebooks: gradebooks.length,
+      analyzedGradebooks: 0,
+      totalSheetsAnalyzed: 0,
+      columnAnalysisSamples: []
+    };
+    
+    // Analyze first 2 gradebooks in detail for column structure
+    const sampleSize = Math.min(2, gradebooks.length);
+    console.log(`📋 Analyzing ${sampleSize} gradebooks for column position analysis | 分析 ${sampleSize} 個成績簿進行列位置分析`);
+    
+    for (let g = 0; g < sampleSize; g++) {
+      const gradebook = gradebooks[g];
+      const gradebookName = gradebook.getName();
+      console.log(`\n📖 Analyzing column positions in gradebook ${g + 1}/${sampleSize}: ${gradebookName}`);
+      
+      const sheets = gradebook.getSheets();
+      const gradebookSample = {
+        name: gradebookName,
+        totalSheets: sheets.length,
+        sheetColumnAnalysis: []
+      };
+      
+      // Find class sheets (those starting with 📚) - analyze first 2 per gradebook
+      let sheetsAnalyzed = 0;
+      for (const sheet of sheets) {
+        const sheetName = sheet.getName();
+        if (sheetName.startsWith('📚 ') && sheetsAnalyzed < 2) {
+          const className = sheetName.replace('📚 ', '').trim();
+          
+          try {
+            console.log(`  📝 Analyzing column structure in class sheet: ${sheetName}`);
+            
+            const dataRange = sheet.getDataRange();
+            const values = dataRange.getValues();
+            
+            if (values.length < 3) {
+              console.log(`    ⚠️ Insufficient data in ${sheetName}`);
+              continue;
+            }
+            
+            // Use the same Average row detection logic as the main function
+            let averageRowIndex = -1;
+            
+            // Method 1: Look for explicit "Average" text in first column
+            for (let i = 2; i < values.length; i++) {
+              if (values[i][0] && values[i][0].toString().toLowerCase().includes('average')) {
+                averageRowIndex = i;
+                break;
+              }
+            }
+            
+            // Method 2: If not found, assume Average is the last row with data
+            if (averageRowIndex === -1) {
+              for (let i = values.length - 1; i >= 2; i--) {
+                if (values[i][1] && values[i][1] !== '' && 
+                    (values[i][3] || values[i][4] || values[i][5])) {
+                  if (i === values.length - 1 || !values[i + 1][1]) {
+                    averageRowIndex = i;
+                    break;
+                  }
+                }
+              }
+            }
+            
+            // Method 3: Calculate based on student count (fallback)
+            if (averageRowIndex === -1) {
+              let studentCount = 0;
+              for (let i = 2; i < values.length; i++) {
+                if (values[i][1] && values[i][1] !== '' && 
+                    !values[i][1].toString().toLowerCase().includes('average')) {
+                  studentCount++;
+                }
+              }
+              if (studentCount > 0) {
+                averageRowIndex = 2 + studentCount;
+              }
+            }
+            
+            if (averageRowIndex === -1 || averageRowIndex >= values.length) {
+              console.log(`    ❌ Could not find Average row in ${sheetName}`);
+              continue;
+            }
+            
+            const averageRow = values[averageRowIndex];
+            const headerRow1 = values[0] || [];
+            const headerRow2 = values[1] || [];
+            
+            const sheetAnalysis = {
+              sheetName: sheetName,
+              className: className,
+              totalRows: values.length,
+              totalColumns: averageRow.length,
+              averageRowIndex: averageRowIndex,
+              headerAnalysis: {
+                row1: headerRow1.slice(0, 20).map((cell, idx) => ({ col: idx, value: cell })),
+                row2: headerRow2.slice(0, 20).map((cell, idx) => ({ col: idx, value: cell }))
+              },
+              averageRowData: [],
+              potentialGradeColumns: []
+            };
+            
+            // Analyze each column in the Average row
+            for (let col = 0; col < Math.min(averageRow.length, 20); col++) {
+              const cellValue = averageRow[col];
+              const cellAnalysis = {
+                column: col,
+                columnLetter: String.fromCharCode(65 + col), // A, B, C, D, etc.
+                value: cellValue,
+                type: typeof cellValue,
+                isNumeric: !isNaN(parseFloat(cellValue)) && isFinite(cellValue),
+                numericValue: parseFloat(cellValue) || null,
+                isEmpty: cellValue === '' || cellValue === null || cellValue === undefined,
+                header1: headerRow1[col] || '',
+                header2: headerRow2[col] || ''
+              };
+              
+              // Flag potential grade columns (numeric values between 0 and 100)
+              if (cellAnalysis.isNumeric && cellAnalysis.numericValue > 0 && cellAnalysis.numericValue <= 100) {
+                cellAnalysis.isPotentialGrade = true;
+                sheetAnalysis.potentialGradeColumns.push({
+                  column: col,
+                  letter: cellAnalysis.columnLetter,
+                  value: cellAnalysis.numericValue,
+                  header1: cellAnalysis.header1,
+                  header2: cellAnalysis.header2
+                });
+              }
+              
+              sheetAnalysis.averageRowData.push(cellAnalysis);
+            }
+            
+            console.log(`    📊 Found ${sheetAnalysis.potentialGradeColumns.length} potential grade columns in ${className}`);
+            sheetAnalysis.potentialGradeColumns.forEach(col => {
+              console.log(`      Column ${col.letter} (${col.column}): ${col.value} [${col.header1}/${col.header2}]`);
+            });
+            
+            gradebookSample.sheetColumnAnalysis.push(sheetAnalysis);
+            debugResults.totalSheetsAnalyzed++;
+            sheetsAnalyzed++;
+            
+          } catch (sheetError) {
+            console.error(`    ❌ Error analyzing column positions in ${sheetName}:`, sheetError.message);
+          }
+        }
+      }
+      
+      debugResults.columnAnalysisSamples.push(gradebookSample);
+      debugResults.analyzedGradebooks++;
+    }
+    
+    // Summary
+    console.log('\n🎯 Column Position Analysis Summary | 列位置分析摘要:');
+    console.log('==============================================================');
+    console.log(`📚 Gradebooks Analyzed | 分析的成績簿: ${debugResults.analyzedGradebooks}`);
+    console.log(`📝 Sheets Analyzed | 分析的工作表: ${debugResults.totalSheetsAnalyzed}`);
+    
+    // Aggregate potential grade columns across all sheets
+    const allPotentialColumns = [];
+    debugResults.columnAnalysisSamples.forEach(gradebook => {
+      gradebook.sheetColumnAnalysis.forEach(sheet => {
+        sheet.potentialGradeColumns.forEach(col => {
+          allPotentialColumns.push({
+            gradebook: gradebook.name,
+            sheet: sheet.sheetName,
+            column: col.column,
+            letter: col.letter,
+            value: col.value,
+            header1: col.header1,
+            header2: col.header2
+          });
+        });
+      });
+    });
+    
+    console.log(`📊 Total Potential Grade Columns Found | 找到的潛在成績列總數: ${allPotentialColumns.length}`);
+    
+    return {
+      success: true,
+      debugResults: debugResults,
+      allPotentialColumns: allPotentialColumns,
+      summary: {
+        totalAnalyzed: debugResults.totalSheetsAnalyzed,
+        potentialGradeColumnsFound: allPotentialColumns.length,
+        avgGradeColumnsPerSheet: debugResults.totalSheetsAnalyzed > 0 ? Math.round(allPotentialColumns.length / debugResults.totalSheetsAnalyzed * 100) / 100 : 0,
+        recommendedColumns: allPotentialColumns.length > 0 ? 
+          `Check columns: ${[...new Set(allPotentialColumns.map(c => c.letter))].sort().join(', ')}` : 
+          'No potential grade columns found'
+      }
+    };
+    
+  } catch (error) {
+    console.error('❌ Column position analysis failed:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
