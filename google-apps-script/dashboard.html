@@ -3292,34 +3292,33 @@ ${result.length === 0 ? '⚠️ No students were assigned to any teachers!' : '�
                     
                     if (result.success) {
                         const summary = result.summary;
+                        // Format diagnosis info as HTML for better modal display
                         const diagnosisInfo = `
-🔍 Comparison Dashboard Diagnosis Results | 比較面板診斷結果:
+<div style="font-family: monospace; line-height: 1.6; white-space: pre-wrap;">🔍 <strong>Comparison Dashboard Diagnosis Results | 比較面板診斷結果</strong>
 ===========================================================
 
-📊 SUMMARY | 摘要:
-• Gradebook Files Found | 找到成績簿檔案: ${summary.gradebookFilesFound}
-• Total Teachers | 總教師數: ${summary.totalTeachers}  
-• Total Classes | 總班級數: ${summary.totalClasses}
-• Has Errors | 有錯誤: ${summary.hasErrors ? '是' : '否'}
+📊 <strong>SUMMARY | 摘要:</strong>
+• Gradebook Files Found | 找到成績簿檔案: <span style="color: ${summary.gradebookFilesFound > 0 ? 'green' : 'red'}; font-weight: bold;">${summary.gradebookFilesFound}</span>
+• Total Teachers | 總教師數: <span style="color: ${summary.totalTeachers > 0 ? 'green' : 'red'}; font-weight: bold;">${summary.totalTeachers}</span>
+• Total Classes | 總班級數: <span style="color: ${summary.totalClasses > 0 ? (summary.totalClasses > 100 ? 'orange' : 'green') : 'red'}; font-weight: bold;">${summary.totalClasses}</span>
+• Has Errors | 有錯誤: <span style="color: ${summary.hasErrors ? 'red' : 'green'}; font-weight: bold;">${summary.hasErrors ? '是' : '否'}</span>
 
-🔧 DIAGNOSIS DETAILS | 診斷詳情:
+🔧 <strong>DIAGNOSIS DETAILS | 診斷詳情:</strong>
 • Timestamp | 時間戳: ${result.diagnosis.timestamp}
-• Basic Data Check | 基本資料檢查: ${result.diagnosis.basicData ? (result.diagnosis.basicData.error ? '❌ Failed' : '✅ Passed') : '⚠️ Skipped'}
-• Gradebook Files | 成績簿檔案: ${result.diagnosis.gradebookFiles ? (result.diagnosis.gradebookFiles.error ? '❌ Failed' : '✅ Found ' + result.diagnosis.gradebookFiles.count + ' files') : '⚠️ Skipped'}
-• Progress Data | 進度資料: ${result.diagnosis.progressData ? (result.diagnosis.progressData.error ? '❌ Failed' : '✅ Analyzed') : '⚠️ Skipped'}
-• Worksheet Analysis | 工作表分析: ${result.diagnosis.worksheetAnalysis ? (result.diagnosis.worksheetAnalysis.error ? '❌ Failed' : '✅ Completed') : '⚠️ Skipped'}
+• Basic Data Check | 基本資料檢查: ${result.diagnosis.basicData ? (result.diagnosis.basicData.error ? '<span style="color: red;">❌ Failed</span>' : '<span style="color: green;">✅ Passed</span>') : '<span style="color: orange;">⚠️ Skipped</span>'}
+• Gradebook Files | 成績簿檔案: ${result.diagnosis.gradebookFiles ? (result.diagnosis.gradebookFiles.error ? '<span style="color: red;">❌ Failed</span>' : '<span style="color: green;">✅ Found ' + result.diagnosis.gradebookFiles.count + ' files</span>') : '<span style="color: orange;">⚠️ Skipped</span>'}
+• Progress Data | 進度資料: ${result.diagnosis.progressData ? (result.diagnosis.progressData.error ? '<span style="color: red;">❌ Failed</span>' : '<span style="color: green;">✅ Analyzed</span>') : '<span style="color: orange;">⚠️ Skipped</span>'}
+• Worksheet Analysis | 工作表分析: ${result.diagnosis.worksheetAnalysis ? (result.diagnosis.worksheetAnalysis.error ? '<span style="color: red;">❌ Failed</span>' : '<span style="color: green;">✅ Completed</span>') : '<span style="color: orange;">⚠️ Skipped</span>'}
 
-📝 RECOMMENDATIONS | 建議:
-${summary.totalClasses === 168 && summary.totalClasses > 50 ? '⚠️ Class count seems abnormally high (168). Check worksheet filtering logic.' : ''}
-${summary.gradebookFilesFound === 0 ? '❌ No gradebook files found. Check file location and permissions.' : ''}
-${summary.hasErrors ? '❌ Errors detected. Check console logs for detailed error messages.' : '✅ No major errors detected.'}
+📝 <strong>RECOMMENDATIONS | 建議:</strong>
+${summary.totalClasses === 168 && summary.totalClasses > 50 ? '<span style="color: orange;">⚠️ Class count seems abnormally high (168). Check worksheet filtering logic.</span>\n' : ''}${summary.gradebookFilesFound === 0 ? '<span style="color: red;">❌ No gradebook files found. Check file location and permissions.</span>\n' : ''}${summary.hasErrors ? '<span style="color: red;">❌ Errors detected. Check console logs for detailed error messages.</span>' : '<span style="color: green;">✅ No major errors detected.</span>'}
 
 ===========================================================
 📋 Check browser console (F12) for detailed logs
-📋 檢查瀏覽器控制台 (F12) 取得詳細日誌
+📋 檢查瀏覽器控制台 (F12) 取得詳細日誌</div>
 `;
                         
-                        showResult(diagnosisInfo);
+                        showModal('🔍 Comparison Dashboard Diagnosis | 比較面板診斷', diagnosisInfo);
                         
                         // Also log structured data to console for debugging
                         console.log('🔍 Structured Diagnosis Data:', result.diagnosis);
