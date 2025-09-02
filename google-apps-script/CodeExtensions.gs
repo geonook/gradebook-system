@@ -6379,3 +6379,151 @@ function debugAverageRowDetection() {
     };
   }
 }
+
+/**
+ * Debug function to check actual data extraction from Average rows
+ * 調試函數檢查從 Average 行實際提取的數據
+ */
+function debugAverageRowDataExtraction() {
+  try {
+    console.log('🔍 Starting Average row data extraction debugging | 開始 Average 行數據提取調試...');
+    
+    const gradebooks = getAllTeacherGradebooks();
+    const debugResults = {
+      timestamp: new Date().toISOString(),
+      totalGradebooks: gradebooks.length,
+      analyzedGradebooks: 0,
+      totalSheetsAnalyzed: 0,
+      successfulExtractions: 0,
+      failedExtractions: 0,
+      zeroDataExtractions: 0,
+      extractionSamples: []
+    };
+    
+    // Analyze first 3 gradebooks in detail for data extraction debugging
+    const sampleSize = Math.min(3, gradebooks.length);
+    console.log(`📋 Analyzing ${sampleSize} gradebooks for data extraction debugging | 分析 ${sampleSize} 個成績簿進行數據提取調試`);
+    
+    for (let g = 0; g < sampleSize; g++) {
+      const gradebook = gradebooks[g];
+      const gradebookName = gradebook.getName();
+      console.log(`\n📖 Analyzing data extraction from gradebook ${g + 1}/${sampleSize}: ${gradebookName}`);
+      
+      const sheets = gradebook.getSheets();
+      const gradebookSample = {
+        name: gradebookName,
+        totalSheets: sheets.length,
+        classSheetExtractions: []
+      };
+      
+      // Find class sheets (those starting with 📚)
+      for (const sheet of sheets) {
+        const sheetName = sheet.getName();
+        if (sheetName.startsWith('📚 ')) {
+          const className = sheetName.replace('📚 ', '').trim();
+          
+          try {
+            console.log(`  📝 Testing data extraction from class sheet: ${sheetName}`);
+            
+            // Use the actual extraction function to get data
+            const extractionResult = extractClassAveragesFromGradebook(gradebook, className);
+            
+            const extractionSample = {
+              sheetName: sheetName,
+              className: className,
+              extractionSuccess: extractionResult.success,
+              extractionError: extractionResult.error || null,
+              studentCount: extractionResult.studentCount || 0,
+              averageRowIndex: extractionResult.averageRowIndex || -1,
+              extractedData: null,
+              dataAnalysis: {
+                hasValidTermGrade: false,
+                hasValidFormativeAvg: false,
+                hasValidSummativeAvg: false,
+                nonZeroValues: 0,
+                allValuesZero: true
+              }
+            };
+            
+            if (extractionResult.success && extractionResult.averages) {
+              extractionSample.extractedData = {
+                termGrade: extractionResult.averages.termGrade,
+                formativeAverage: extractionResult.averages.formativeAverage,
+                summativeAverage: extractionResult.averages.summativeAverage,
+                finalAssessment: extractionResult.averages.finalAssessment
+              };
+              
+              // Analyze extracted data quality
+              const averages = extractionResult.averages;
+              extractionSample.dataAnalysis.hasValidTermGrade = averages.termGrade > 0;
+              extractionSample.dataAnalysis.hasValidFormativeAvg = averages.formativeAverage > 0;
+              extractionSample.dataAnalysis.hasValidSummativeAvg = averages.summativeAverage > 0;
+              
+              const nonZeroCount = [
+                averages.termGrade,
+                averages.formativeAverage,
+                averages.summativeAverage,
+                averages.finalAssessment
+              ].filter(val => val > 0).length;
+              
+              extractionSample.dataAnalysis.nonZeroValues = nonZeroCount;
+              extractionSample.dataAnalysis.allValuesZero = nonZeroCount === 0;
+              
+              if (nonZeroCount === 0) {
+                debugResults.zeroDataExtractions++;
+                console.log(`    ⚠️ All extracted values are zero for ${className}`);
+              } else {
+                console.log(`    ✅ Valid data extracted for ${className}: Term=${averages.termGrade}, Form=${averages.formativeAverage}, Summ=${averages.summativeAverage}`);
+              }
+              
+              debugResults.successfulExtractions++;
+            } else {
+              debugResults.failedExtractions++;
+              console.log(`    ❌ Data extraction failed for ${className}: ${extractionResult.error}`);
+            }
+            
+            gradebookSample.classSheetExtractions.push(extractionSample);
+            debugResults.totalSheetsAnalyzed++;
+            
+          } catch (sheetError) {
+            console.error(`    ❌ Error during data extraction for ${sheetName}:`, sheetError.message);
+            debugResults.failedExtractions++;
+          }
+        }
+      }
+      
+      debugResults.extractionSamples.push(gradebookSample);
+      debugResults.analyzedGradebooks++;
+    }
+    
+    // Summary
+    console.log('\n🎯 Average Row Data Extraction Debug Summary | Average 行數據提取調試摘要:');
+    console.log('==============================================================');
+    console.log(`📚 Gradebooks Analyzed | 分析的成績簿: ${debugResults.analyzedGradebooks}`);
+    console.log(`📝 Sheets Analyzed | 分析的工作表: ${debugResults.totalSheetsAnalyzed}`);
+    console.log(`✅ Successful Extractions | 成功提取: ${debugResults.successfulExtractions}`);
+    console.log(`❌ Failed Extractions | 失敗提取: ${debugResults.failedExtractions}`);
+    console.log(`⚠️ Zero Data Extractions | 零數據提取: ${debugResults.zeroDataExtractions}`);
+    console.log(`📊 Success Rate | 成功率: ${debugResults.totalSheetsAnalyzed > 0 ? Math.round((debugResults.successfulExtractions / debugResults.totalSheetsAnalyzed) * 100) : 0}%`);
+    console.log(`📊 Valid Data Rate | 有效數據率: ${debugResults.successfulExtractions > 0 ? Math.round(((debugResults.successfulExtractions - debugResults.zeroDataExtractions) / debugResults.successfulExtractions) * 100) : 0}%`);
+    
+    return {
+      success: true,
+      debugResults: debugResults,
+      summary: {
+        totalAnalyzed: debugResults.totalSheetsAnalyzed,
+        successRate: debugResults.totalSheetsAnalyzed > 0 ? Math.round((debugResults.successfulExtractions / debugResults.totalSheetsAnalyzed) * 100) : 0,
+        validDataRate: debugResults.successfulExtractions > 0 ? Math.round(((debugResults.successfulExtractions - debugResults.zeroDataExtractions) / debugResults.successfulExtractions) * 100) : 0,
+        zeroDataCount: debugResults.zeroDataExtractions,
+        mainIssue: debugResults.zeroDataExtractions > debugResults.successfulExtractions * 0.5 ? 'Most extractions return zero values - check column positions' : 'Data extraction working normally'
+      }
+    };
+    
+  } catch (error) {
+    console.error('❌ Average row data extraction debugging failed:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}

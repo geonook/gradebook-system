@@ -1258,6 +1258,9 @@
                     <button class="btn btn-warning" onclick="debugAverageRowDetection()">
                         <i class="fas fa-microscope"></i> Debug Average Row Detection | 調試平均行檢測
                     </button>
+                    <button class="btn btn-danger" onclick="debugAverageRowDataExtraction()">
+                        <i class="fas fa-chart-line"></i> Debug Data Extraction | 調試數據提取
+                    </button>
                 </div>
             </div>
 
@@ -3392,6 +3395,63 @@ ${summary.successRate < 100 ? '<span style="color: orange;">⚠️ Some Average 
                     console.error('Average row debugging execution error:', error);
                 })
                 .debugAverageRowDetection();
+        }
+        
+        // Debug Average Row Data Extraction
+        function debugAverageRowDataExtraction() {
+            showLoading();
+            showSuccess('📊 Starting data extraction debugging... | 開始數據提取調試...', 3000);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    
+                    if (result.success) {
+                        const summary = result.summary;
+                        const debugInfo = `
+<div style="font-family: monospace; line-height: 1.6; white-space: pre-wrap;">📊 <strong>Average Row Data Extraction Debug Results | Average 行數據提取調試結果</strong>
+===========================================================
+
+📊 <strong>SUMMARY | 摘要:</strong>
+• Total Sheets Analyzed | 分析的工作表總數: <span style="color: blue; font-weight: bold;">${summary.totalAnalyzed}</span>
+• Success Rate | 成功率: <span style="color: ${summary.successRate > 80 ? 'green' : summary.successRate > 50 ? 'orange' : 'red'}; font-weight: bold;">${summary.successRate}%</span>
+• Valid Data Rate | 有效數據率: <span style="color: ${summary.validDataRate > 80 ? 'green' : summary.validDataRate > 50 ? 'orange' : 'red'}; font-weight: bold;">${summary.validDataRate}%</span>
+• Zero Data Count | 零數據計數: <span style="color: ${summary.zeroDataCount > 0 ? 'red' : 'green'}; font-weight: bold;">${summary.zeroDataCount}</span>
+
+🔧 <strong>DETAILED ANALYSIS | 詳細分析:</strong>
+• Gradebooks Analyzed | 分析的成績簿: ${result.debugResults.analyzedGradebooks}
+• Total Sheets Analyzed | 總工作表數: ${result.debugResults.totalSheetsAnalyzed}
+• Successful Extractions | 成功提取: <span style="color: green;">${result.debugResults.successfulExtractions}</span>
+• Failed Extractions | 失敗提取: <span style="color: red;">${result.debugResults.failedExtractions}</span>
+• Zero Data Extractions | 零數據提取: <span style="color: ${result.debugResults.zeroDataExtractions > 0 ? 'red' : 'green'};">${result.debugResults.zeroDataExtractions}</span>
+
+🎯 <strong>MAIN ISSUE | 主要問題:</strong>
+<span style="color: ${summary.validDataRate < 50 ? 'red' : summary.validDataRate < 80 ? 'orange' : 'green'}; font-weight: bold;">${summary.mainIssue}</span>
+
+${summary.validDataRate < 50 ? '<span style="color: red;">🚨 CRITICAL: Most data extractions return zero values. Column positions in extractClassAveragesFromGradebook() may be incorrect.</span>' : ''}
+${summary.validDataRate >= 50 && summary.validDataRate < 80 ? '<span style="color: orange;">⚠️ Some data extractions return zero values. Verify column mapping.</span>' : ''}
+${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction is working well!</span>' : ''}
+
+===========================================================
+📋 Check browser console (F12) for detailed extraction data
+📋 檢查瀏覽器控制台 (F12) 取得詳細的提取數據</div>
+`;
+                        
+                        showModal('📊 Data Extraction Debug | 數據提取調試', debugInfo);
+                        
+                        // Also log detailed results to console for debugging
+                        console.log('📊 Detailed Data Extraction Results:', result.debugResults);
+                        
+                    } else {
+                        showError(`❌ Data extraction debugging failed: ${result.error || 'Unknown error'}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError(`❌ Data extraction debugging execution failed: ${error.message}`);
+                    console.error('Data extraction debugging execution error:', error);
+                })
+                .debugAverageRowDataExtraction();
         }
         
         // Close Progress Audit Modal
