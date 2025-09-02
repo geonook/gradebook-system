@@ -1261,6 +1261,9 @@
                     <button class="btn btn-danger" onclick="debugAverageRowDataExtraction()">
                         <i class="fas fa-chart-line"></i> Debug Data Extraction | 調試數據提取
                     </button>
+                    <button class="btn btn-info" onclick="debugColumnPositions()">
+                        <i class="fas fa-table"></i> Debug Column Positions | 調試列位置
+                    </button>
                 </div>
             </div>
 
@@ -3452,6 +3455,91 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                     console.error('Data extraction debugging execution error:', error);
                 })
                 .debugAverageRowDataExtraction();
+        }
+        
+        // Debug Column Positions
+        function debugColumnPositions() {
+            showLoading();
+            showSuccess('🔍 Starting column position analysis... | 開始列位置分析...', 3000);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    
+                    if (result.success) {
+                        showSuccess('✅ Column position analysis completed successfully!');
+                        
+                        // Display detailed results
+                        let html = '<div class="debug-results-container">';
+                        html += '<h3>🔍 Column Position Analysis Results | 列位置分析結果</h3>';
+                        
+                        html += '<div class="debug-summary">';
+                        html += `<p><strong>📋 Gradebooks Analyzed | 分析的成績簿:</strong> ${result.data.totalGradebooks}</p>`;
+                        html += `<p><strong>📊 Analysis Summary | 分析摘要:</strong></p>`;
+                        html += '</div>';
+                        
+                        if (result.data.analysis && result.data.analysis.length > 0) {
+                            result.data.analysis.forEach((gradebook, index) => {
+                                html += `<div class="gradebook-analysis border p-3 mb-3">`;
+                                html += `<h4>📚 ${gradebook.gradebookName}</h4>`;
+                                
+                                if (gradebook.headers) {
+                                    html += `<h5>📝 Header Row Analysis | 表頭行分析</h5>`;
+                                    html += `<div class="header-analysis">`;
+                                    gradebook.headers.forEach((header, colIndex) => {
+                                        const columnLetter = String.fromCharCode(65 + colIndex);
+                                        html += `<span class="badge badge-secondary mr-1">${columnLetter}: ${header}</span>`;
+                                    });
+                                    html += `</div>`;
+                                }
+                                
+                                if (gradebook.averageData) {
+                                    html += `<h5 class="mt-3">📊 Average Row Data | 平均行數據</h5>`;
+                                    html += `<div class="average-data">`;
+                                    gradebook.averageData.forEach((value, colIndex) => {
+                                        const columnLetter = String.fromCharCode(65 + colIndex);
+                                        const isNumeric = !isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 100;
+                                        const badgeClass = isNumeric ? 'badge-success' : 'badge-light';
+                                        html += `<span class="badge ${badgeClass} mr-1">${columnLetter}: ${value}</span>`;
+                                    });
+                                    html += `</div>`;
+                                }
+                                
+                                if (gradebook.potentialGradeColumns && gradebook.potentialGradeColumns.length > 0) {
+                                    html += `<h5 class="mt-3">🎯 Potential Grade Columns | 潛在成績列</h5>`;
+                                    html += `<div class="potential-columns">`;
+                                    gradebook.potentialGradeColumns.forEach(col => {
+                                        html += `<span class="badge badge-warning mr-1">Column ${col.column} (${col.letter}): ${col.value}</span>`;
+                                    });
+                                    html += `</div>`;
+                                }
+                                
+                                html += `</div>`;
+                            });
+                        }
+                        
+                        if (result.data.recommendations) {
+                            html += '<div class="recommendations mt-4 p-3 border-left border-primary bg-light">';
+                            html += '<h4>💡 Recommendations | 建議</h4>';
+                            result.data.recommendations.forEach(rec => {
+                                html += `<p>• ${rec}</p>`;
+                            });
+                            html += '</div>';
+                        }
+                        
+                        html += '</div>';
+                        
+                        document.getElementById('comparison-dashboard-container').innerHTML = html;
+                    } else {
+                        showError(`❌ Column position analysis failed: ${result.error}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError(`❌ Column position analysis execution failed: ${error.message}`);
+                    console.error('Column position analysis execution error:', error);
+                })
+                .debugColumnPositions();
         }
         
         // Close Progress Audit Modal
