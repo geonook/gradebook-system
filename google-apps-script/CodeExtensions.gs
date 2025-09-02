@@ -5666,17 +5666,69 @@ function extractClassAveragesFromGradebook(gradebookFile, className) {
     // Column mapping: D=Term Grade, E=Formative Avg, F=Summative Avg, G=Final Assessment
     // H-O=F.A.1-8, P-S=S.A.1-4, T=Final
     
+    // Enhanced grade extraction with detailed logging | 增強的成績提取與詳細日誌記錄
+    const rawTermGrade = averageRow[3];
+    const rawFormativeAvg = averageRow[4];
+    const rawSummativeAvg = averageRow[5];
+    const rawFinalAssessment = averageRow[6];
+    
+    console.log(`📊 Raw values for ${className}:`, {
+      termGrade: rawTermGrade,
+      formativeAvg: rawFormativeAvg,
+      summativeAvg: rawSummativeAvg,
+      finalAssessment: rawFinalAssessment
+    });
+    
+    // Parse numeric values with enhanced handling | 解析數值並增強處理
+    let termGrade = 0;
+    let formativeAverage = 0;
+    let summativeAverage = 0;
+    let finalAssessment = 0;
+    
+    // Handle Term Grade (may be empty string from formula if dependencies not met)
+    if (rawTermGrade !== '' && rawTermGrade !== null && rawTermGrade !== undefined) {
+      termGrade = parseFloat(rawTermGrade) || 0;
+    }
+    
+    // Handle Formative Average
+    if (rawFormativeAvg !== '' && rawFormativeAvg !== null && rawFormativeAvg !== undefined) {
+      formativeAverage = parseFloat(rawFormativeAvg) || 0;
+    }
+    
+    // Handle Summative Average
+    if (rawSummativeAvg !== '' && rawSummativeAvg !== null && rawSummativeAvg !== undefined) {
+      summativeAverage = parseFloat(rawSummativeAvg) || 0;
+    }
+    
+    // Handle Final Assessment
+    if (rawFinalAssessment !== '' && rawFinalAssessment !== null && rawFinalAssessment !== undefined) {
+      finalAssessment = parseFloat(rawFinalAssessment) || 0;
+    }
+    
+    console.log(`✅ Parsed values for ${className}:`, {
+      termGrade: termGrade,
+      formativeAverage: formativeAverage,
+      summativeAverage: summativeAverage,
+      finalAssessment: finalAssessment
+    });
+
     const result = {
       success: true,
       className: className,
       sheetName: classSheet.getName(),
       studentCount: studentCount,
       averageRowIndex: averageRowIndex,
+      rawData: {
+        termGrade: rawTermGrade,
+        formativeAvg: rawFormativeAvg,
+        summativeAvg: rawSummativeAvg,
+        finalAssessment: rawFinalAssessment
+      },
       averages: {
-        termGrade: parseFloat(averageRow[3]) || 0,           // Column D
-        formativeAverage: parseFloat(averageRow[4]) || 0,    // Column E  
-        summativeAverage: parseFloat(averageRow[5]) || 0,    // Column F
-        finalAssessment: parseFloat(averageRow[6]) || 0,     // Column G
+        termGrade: termGrade,                                  // Column D
+        formativeAverage: formativeAverage,                    // Column E  
+        summativeAverage: summativeAverage,                    // Column F
+        finalAssessment: finalAssessment,                      // Column G
         individualScores: {
           fa1: parseFloat(averageRow[7]) || 0,   // Column H - F.A.1
           fa2: parseFloat(averageRow[8]) || 0,   // Column I - F.A.2
