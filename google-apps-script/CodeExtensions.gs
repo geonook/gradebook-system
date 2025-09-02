@@ -6178,3 +6178,204 @@ function analyzeWorksheetStructure() {
     throw error;
   }
 }
+
+/**
+ * Debug function to analyze Average row detection issues
+ * 調試函數用於分析 Average 行檢測問題
+ */
+function debugAverageRowDetection() {
+  try {
+    console.log('🔍 Starting Average row detection debugging | 開始 Average 行檢測調試...');
+    
+    const gradebooks = getAllTeacherGradebooks();
+    const debugResults = {
+      timestamp: new Date().toISOString(),
+      totalGradebooks: gradebooks.length,
+      analyzedGradebooks: 0,
+      totalSheetsAnalyzed: 0,
+      averageRowFound: 0,
+      averageRowNotFound: 0,
+      detectionMethods: {
+        method1_textSearch: 0,
+        method2_lastDataRow: 0,
+        method3_calculatedPosition: 0,
+        none: 0
+      },
+      sampleAnalysis: []
+    };
+    
+    // Analyze first 3 gradebooks in detail for debugging
+    const sampleSize = Math.min(3, gradebooks.length);
+    console.log(`📋 Analyzing ${sampleSize} gradebooks for detailed Average row analysis | 分析 ${sampleSize} 個成績簿進行詳細 Average 行分析`);
+    
+    for (let g = 0; g < sampleSize; g++) {
+      const gradebook = gradebooks[g];
+      const gradebookName = gradebook.getName();
+      console.log(`\n📖 Analyzing gradebook ${g + 1}/${sampleSize}: ${gradebookName}`);
+      
+      const sheets = gradebook.getSheets();
+      const gradebookAnalysis = {
+        name: gradebookName,
+        totalSheets: sheets.length,
+        classSheets: [],
+        sheetAnalysis: []
+      };
+      
+      // Find class sheets (those starting with 📚)
+      for (const sheet of sheets) {
+        const sheetName = sheet.getName();
+        if (sheetName.startsWith('📚 ')) {
+          gradebookAnalysis.classSheets.push(sheetName);
+          
+          try {
+            console.log(`  📝 Analyzing class sheet: ${sheetName}`);
+            
+            const dataRange = sheet.getDataRange();
+            const values = dataRange.getValues();
+            
+            const sheetAnalysis = {
+              sheetName: sheetName,
+              className: sheetName.replace('📚 ', '').trim(),
+              totalRows: values.length,
+              totalColumns: values[0] ? values[0].length : 0,
+              headerRows: [],
+              dataRows: [],
+              averageRowDetection: {
+                method1: null, // Text search
+                method2: null, // Last data row
+                method3: null, // Calculated position
+                finalResult: null
+              },
+              actualAverageRowIndex: -1
+            };
+            
+            // Capture first few rows for analysis
+            for (let i = 0; i < Math.min(5, values.length); i++) {
+              sheetAnalysis.headerRows.push({
+                index: i,
+                data: values[i].slice(0, 8) // First 8 columns
+              });
+            }
+            
+            // Capture last few rows for analysis
+            for (let i = Math.max(values.length - 3, 5); i < values.length; i++) {
+              sheetAnalysis.dataRows.push({
+                index: i,
+                data: values[i].slice(0, 8) // First 8 columns
+              });
+            }
+            
+            // Test Average row detection methods
+            let averageRowIndex = -1;
+            
+            // Method 1: Look for explicit "Average" text in first column
+            for (let i = 2; i < values.length; i++) {
+              if (values[i][0] && values[i][0].toString().toLowerCase().includes('average')) {
+                sheetAnalysis.averageRowDetection.method1 = i;
+                averageRowIndex = i;
+                debugResults.detectionMethods.method1_textSearch++;
+                console.log(`    ✅ Method 1: Found Average row at index ${i} (text search)`);
+                break;
+              }
+            }
+            
+            // Method 2: If not found, assume Average is the last row with data
+            if (averageRowIndex === -1) {
+              for (let i = values.length - 1; i >= 2; i--) {
+                // Check if this row has student name (column B) and some scores
+                if (values[i][1] && values[i][1] !== '' && 
+                    (values[i][3] || values[i][4] || values[i][5])) {
+                  // Check if next row might be Average (or this is the last row)
+                  if (i === values.length - 1 || !values[i + 1][1]) {
+                    sheetAnalysis.averageRowDetection.method2 = i;
+                    averageRowIndex = i;
+                    debugResults.detectionMethods.method2_lastDataRow++;
+                    console.log(`    ✅ Method 2: Found last data row at index ${i} (assuming Average)`);
+                    break;
+                  }
+                }
+              }
+            }
+            
+            // Method 3: Calculate based on student count (fallback)
+            if (averageRowIndex === -1) {
+              // Count non-empty student names starting from row 3 (index 2)
+              let studentCount = 0;
+              for (let i = 2; i < values.length; i++) {
+                if (values[i][1] && values[i][1] !== '' && 
+                    !values[i][1].toString().toLowerCase().includes('average')) {
+                  studentCount++;
+                }
+              }
+              
+              if (studentCount > 0) {
+                averageRowIndex = 2 + studentCount; // 2 header rows + student count
+                sheetAnalysis.averageRowDetection.method3 = averageRowIndex;
+                debugResults.detectionMethods.method3_calculatedPosition++;
+                console.log(`    ✅ Method 3: Calculated Average row at index ${averageRowIndex} (student count: ${studentCount})`);
+              }
+            }
+            
+            if (averageRowIndex === -1) {
+              debugResults.detectionMethods.none++;
+              debugResults.averageRowNotFound++;
+              console.log(`    ❌ No Average row found in ${sheetName}`);
+            } else {
+              sheetAnalysis.actualAverageRowIndex = averageRowIndex;
+              sheetAnalysis.averageRowDetection.finalResult = averageRowIndex;
+              debugResults.averageRowFound++;
+              
+              // Log the actual Average row data for verification
+              if (averageRowIndex < values.length) {
+                console.log(`    📊 Average row data:`, values[averageRowIndex].slice(0, 8));
+              }
+            }
+            
+            gradebookAnalysis.sheetAnalysis.push(sheetAnalysis);
+            debugResults.totalSheetsAnalyzed++;
+            
+          } catch (sheetError) {
+            console.error(`    ❌ Error analyzing sheet ${sheetName}:`, sheetError.message);
+          }
+        }
+      }
+      
+      debugResults.sampleAnalysis.push(gradebookAnalysis);
+      debugResults.analyzedGradebooks++;
+    }
+    
+    // Summary
+    console.log('\n🎯 Average Row Detection Debug Summary | Average 行檢測調試摘要:');
+    console.log('==============================================================');
+    console.log(`📚 Gradebooks Analyzed | 分析的成績簿: ${debugResults.analyzedGradebooks}`);
+    console.log(`📝 Sheets Analyzed | 分析的工作表: ${debugResults.totalSheetsAnalyzed}`);
+    console.log(`✅ Average Rows Found | 找到 Average 行: ${debugResults.averageRowFound}`);
+    console.log(`❌ Average Rows Not Found | 未找到 Average 行: ${debugResults.averageRowNotFound}`);
+    console.log(`📊 Success Rate | 成功率: ${debugResults.totalSheetsAnalyzed > 0 ? Math.round((debugResults.averageRowFound / debugResults.totalSheetsAnalyzed) * 100) : 0}%`);
+    
+    console.log('\n🔧 Detection Methods Performance | 檢測方法表現:');
+    console.log(`  Method 1 (Text Search) | 文字搜尋: ${debugResults.detectionMethods.method1_textSearch}`);
+    console.log(`  Method 2 (Last Data Row) | 最後數據行: ${debugResults.detectionMethods.method2_lastDataRow}`);
+    console.log(`  Method 3 (Calculated Position) | 計算位置: ${debugResults.detectionMethods.method3_calculatedPosition}`);
+    console.log(`  None Worked | 無方法成功: ${debugResults.detectionMethods.none}`);
+    
+    return {
+      success: true,
+      debugResults: debugResults,
+      summary: {
+        totalAnalyzed: debugResults.totalSheetsAnalyzed,
+        successRate: debugResults.totalSheetsAnalyzed > 0 ? Math.round((debugResults.averageRowFound / debugResults.totalSheetsAnalyzed) * 100) : 0,
+        mostSuccessfulMethod: Object.keys(debugResults.detectionMethods).reduce((a, b) => 
+          debugResults.detectionMethods[a] > debugResults.detectionMethods[b] ? a : b
+        )
+      }
+    };
+    
+  } catch (error) {
+    console.error('❌ Average row detection debugging failed:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}

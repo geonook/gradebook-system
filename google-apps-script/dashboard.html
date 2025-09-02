@@ -1255,6 +1255,9 @@
                     <button class="btn btn-info" onclick="runComparisonDashboardDiagnosis()">
                         <i class="fas fa-bug"></i> Diagnose Comparison Dashboard | 診斷比較面板
                     </button>
+                    <button class="btn btn-warning" onclick="debugAverageRowDetection()">
+                        <i class="fas fa-microscope"></i> Debug Average Row Detection | 調試平均行檢測
+                    </button>
                 </div>
             </div>
 
@@ -3333,6 +3336,62 @@ ${summary.totalClasses === 168 && summary.totalClasses > 50 ? '<span style="colo
                     console.error('Diagnosis execution error:', error);
                 })
                 .diagnoseComparisonDashboardIssues();
+        }
+        
+        // Debug Average Row Detection
+        function debugAverageRowDetection() {
+            showLoading();
+            showSuccess('🔬 Starting Average row detection debugging... | 開始 Average 行檢測調試...', 3000);
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    
+                    if (result.success) {
+                        const summary = result.summary;
+                        const debugInfo = `
+<div style="font-family: monospace; line-height: 1.6; white-space: pre-wrap;">🔬 <strong>Average Row Detection Debug Results | Average 行檢測調試結果</strong>
+===========================================================
+
+📊 <strong>SUMMARY | 摘要:</strong>
+• Total Sheets Analyzed | 分析的工作表總數: <span style="color: blue; font-weight: bold;">${summary.totalAnalyzed}</span>
+• Success Rate | 成功率: <span style="color: ${summary.successRate > 80 ? 'green' : summary.successRate > 50 ? 'orange' : 'red'}; font-weight: bold;">${summary.successRate}%</span>
+• Most Successful Method | 最成功的方法: <span style="color: green; font-weight: bold;">${summary.mostSuccessfulMethod}</span>
+
+🔧 <strong>DETECTION METHODS PERFORMANCE | 檢測方法表現:</strong>
+• Method 1 (Text Search) | 文字搜尋: <span style="color: ${result.debugResults.detectionMethods.method1_textSearch > 0 ? 'green' : 'red'}; font-weight: bold;">${result.debugResults.detectionMethods.method1_textSearch}</span>
+• Method 2 (Last Data Row) | 最後數據行: <span style="color: ${result.debugResults.detectionMethods.method2_lastDataRow > 0 ? 'green' : 'red'}; font-weight: bold;">${result.debugResults.detectionMethods.method2_lastDataRow}</span>
+• Method 3 (Calculated Position) | 計算位置: <span style="color: ${result.debugResults.detectionMethods.method3_calculatedPosition > 0 ? 'green' : 'red'}; font-weight: bold;">${result.debugResults.detectionMethods.method3_calculatedPosition}</span>
+• None Worked | 無方法成功: <span style="color: ${result.debugResults.detectionMethods.none > 0 ? 'red' : 'green'}; font-weight: bold;">${result.debugResults.detectionMethods.none}</span>
+
+📈 <strong>DETAILED ANALYSIS | 詳細分析:</strong>
+• Gradebooks Analyzed | 分析的成績簿: ${result.debugResults.analyzedGradebooks}
+• Total Sheets Analyzed | 總工作表數: ${result.debugResults.totalSheetsAnalyzed}
+• Average Rows Found | 找到 Average 行: <span style="color: green;">${result.debugResults.averageRowFound}</span>
+• Average Rows Not Found | 未找到 Average 行: <span style="color: red;">${result.debugResults.averageRowNotFound}</span>
+
+${summary.successRate < 100 ? '<span style="color: orange;">⚠️ Some Average rows could not be detected. Check browser console (F12) for detailed analysis.</span>' : '<span style="color: green;">✅ All Average rows detected successfully!</span>'}
+
+===========================================================
+📋 Check browser console (F12) for detailed sheet-by-sheet analysis
+📋 檢查瀏覽器控制台 (F12) 取得詳細的工作表逐一分析</div>
+`;
+                        
+                        showModal('🔬 Average Row Detection Debug | Average 行檢測調試', debugInfo);
+                        
+                        // Also log detailed results to console for debugging
+                        console.log('🔬 Detailed Average Row Detection Results:', result.debugResults);
+                        
+                    } else {
+                        showError(`❌ Average row debugging failed: ${result.error || 'Unknown error'}`);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    hideLoading();
+                    showError(`❌ Average row debugging execution failed: ${error.message}`);
+                    console.error('Average row debugging execution error:', error);
+                })
+                .debugAverageRowDetection();
         }
         
         // Close Progress Audit Modal
