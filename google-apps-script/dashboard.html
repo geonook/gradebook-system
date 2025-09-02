@@ -3797,6 +3797,7 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
         // Global variables for comparison dashboard
         let comparisonData = [];
         let filteredData = [];
+        let originalSummary = null; // Store original summary for "All Grades" | 儲存原始摘要供"所有年級"使用
         
         // Dashboard navigation function
         function switchToDashboard(dashboardType) {
@@ -3846,6 +3847,7 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
                         
                         comparisonData = result.classes || [];
                         filteredData = [...comparisonData];
+                        originalSummary = result.summary; // Store original summary | 儲存原始摘要
                         
                         // Update summary statistics
                         updateSummaryStatistics(result.summary);
@@ -3950,17 +3952,101 @@ ${summary.validDataRate >= 80 ? '<span style="color: green;">✅ Data extraction
         function filterByGradeLevel() {
             const filter = document.getElementById('grade-level-filter').value;
             
+            console.log('📊 Filtering by grade level:', filter);
+            console.log('📋 Original data length:', comparisonData.length);
+            
             if (filter === 'all') {
                 filteredData = [...comparisonData];
+                // Restore original summary for "All Grades" | 恢復"所有年級"的原始摘要
+                if (originalSummary) {
+                    updateSummaryStatistics(originalSummary);
+                }
             } else {
                 filteredData = comparisonData.filter(classData => {
                     const grade = classData.level || classData.gradeLevel || '';
-                    return grade && grade.toLowerCase().startsWith(filter.toLowerCase());
+                    const matches = grade && grade.toLowerCase().startsWith(filter.toLowerCase());
+                    if (matches) {
+                        console.log(`✅ Matched: ${classData.className} (${grade})`);
+                    }
+                    return matches;
                 });
+            }
+            
+            console.log('🎯 Filtered data length:', filteredData.length);
+            
+            // Recalculate summary statistics for filtered data (only for specific grades)
+            if (filter !== 'all') {
+                const filteredSummary = recalculateFilteredSummary(filteredData);
+                updateSummaryStatistics(filteredSummary);
             }
             
             // Reapply current sort
             sortComparisonData();
+        }
+        
+        // Recalculate summary statistics for filtered data | 為過濾後的數據重新計算統計摘要
+        function recalculateFilteredSummary(data) {
+            console.log('📊 Recalculating summary for', data.length, 'classes');
+            
+            if (!data || data.length === 0) {
+                return {
+                    totalClasses: 0,
+                    totalStudents: 0,
+                    averageClassSize: 0,
+                    systemAverage: 0,
+                    statusCounts: { excellent: 0, good: 0, normal: 0, behind: 0 }
+                };
+            }
+            
+            // Calculate totals | 計算總計
+            const totalClasses = data.length;
+            const totalStudents = data.reduce((sum, item) => sum + (item.studentCount || 0), 0);
+            const classesWithStudents = data.filter(item => item.studentCount > 0);
+            const averageClassSize = classesWithStudents.length > 0 ? 
+                totalStudents / classesWithStudents.length : 0;
+            
+            // Calculate system average using available grades | 使用可用成績計算系統平均
+            const gradesForAverage = [];
+            const statusCounts = { excellent: 0, good: 0, normal: 0, behind: 0 };
+            
+            data.forEach(item => {
+                let primaryGrade = item.primaryGrade || item.averages?.termGrade || 0;
+                
+                // If no primary grade, calculate from available data | 如果沒有主要成績，從可用數據計算
+                if (primaryGrade === 0 && item.averages) {
+                    if (item.averages.formativeAverage > 0 && item.averages.summativeAverage > 0) {
+                        primaryGrade = (item.averages.formativeAverage * 0.6 + item.averages.summativeAverage * 0.4);
+                    } else if (item.averages.summativeAverage > 0) {
+                        primaryGrade = item.averages.summativeAverage;
+                    } else if (item.averages.formativeAverage > 0) {
+                        primaryGrade = item.averages.formativeAverage;
+                    }
+                }
+                
+                if (primaryGrade > 0) {
+                    gradesForAverage.push(primaryGrade);
+                }
+                
+                // Count status categories | 計算狀態分類
+                if (primaryGrade >= 90) statusCounts.excellent++;
+                else if (primaryGrade >= 80) statusCounts.good++;
+                else if (primaryGrade >= 60) statusCounts.normal++;
+                else statusCounts.behind++;
+            });
+            
+            const systemAverage = gradesForAverage.length > 0 ? 
+                gradesForAverage.reduce((sum, grade) => sum + grade, 0) / gradesForAverage.length : 0;
+            
+            const result = {
+                totalClasses: totalClasses,
+                totalStudents: totalStudents,
+                averageClassSize: Math.round(averageClassSize * 10) / 10,
+                systemAverage: Math.round(systemAverage * 10) / 10,
+                statusCounts: statusCounts
+            };
+            
+            console.log('📋 Filtered summary calculated:', result);
+            return result;
         }
         
         // Sort comparison data
