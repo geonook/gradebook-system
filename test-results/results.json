@@ -10,9 +10,7 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "actualWorkers": 3
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -44,9 +42,7 @@
         "outputDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/test-results/output",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 3
-        },
+        "metadata": {},
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/tests",
@@ -54,15 +50,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/test-results/output",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 3
-        },
+        "metadata": {},
         "id": "firefox",
         "name": "firefox",
         "testDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/tests",
@@ -70,15 +64,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/test-results/output",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 3
-        },
+        "metadata": {},
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/tests",
@@ -86,15 +78,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/test-results/output",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 3
-        },
+        "metadata": {},
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/tests",
@@ -102,15 +92,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/test-results/output",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {
-          "actualWorkers": 3
-        },
+        "metadata": {},
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/Users/chenzehong/Desktop/gradebook check/gradebook-system/tests",
@@ -118,7 +106,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       }
     ],
     "shard": null,
@@ -128,306 +116,17 @@
     "workers": 5,
     "webServer": null
   },
-  "suites": [
+  "suites": [],
+  "errors": [
     {
-      "title": "ai-generated/connection-test.spec.js",
-      "file": "ai-generated/connection-test.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Gradebook System Connection Test",
-          "file": "ai-generated/connection-test.spec.js",
-          "line": 8,
-          "column": 6,
-          "specs": [
-            {
-              "title": "Should connect to gradebook system and analyze response",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 9765,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Testing connection to gradebook system...\n"
-                        },
-                        {
-                          "text": "Page Title: Apps Script  |  Google for Developers\n"
-                        },
-                        {
-                          "text": "Page URL: https://developers.google.com/apps-script/\n"
-                        },
-                        {
-                          "text": "Body content length: \u001b[33m38078\u001b[39m\n"
-                        },
-                        {
-                          "text": "Found h1 elements: \u001b[33m1\u001b[39m\n"
-                        },
-                        {
-                          "text": "H1 1: \n    Google\n    \n  Workspace\n"
-                        },
-                        {
-                          "text": "Found dashboard-related elements: \u001b[33m0\u001b[39m\n"
-                        },
-                        {
-                          "text": "Found buttons: \u001b[33m16\u001b[39m\n"
-                        },
-                        {
-                          "text": "Button 1: \n        \n"
-                        },
-                        {
-                          "text": "Button 2: \n"
-                        },
-                        {
-                          "text": "Button 3: \n"
-                        },
-                        {
-                          "text": "Button 4: More\n"
-                        },
-                        {
-                          "text": "Button 5: \n"
-                        },
-                        {
-                          "text": "Found gradebook indicators: \u001b[33m0\u001b[39m\n"
-                        },
-                        {
-                          "text": "Final content length: \u001b[33m38078\u001b[39m\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-09T04:10:46.695Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e0dd536868567cc93f35-5151efe0241093d1bc68",
-              "file": "ai-generated/connection-test.spec.js",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "Should test direct gradebook URL access",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 13399,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Testing direct gradebook URL access...\n"
-                        },
-                        {
-                          "text": "Direct URL Page Title: Sign in - Google Accounts\n"
-                        },
-                        {
-                          "text": "Direct URL Page URL: https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&followup=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&ifkv=AdBytiNOcuJFrQSyllgg8-QSVFZePWnwYGyT9JN2Xqa4rsSqMJAEVRUtjynsOTszGG2_IgmcFU2gfw&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-432706780%3A1752034250554854\n"
-                        },
-                        {
-                          "text": "URL was redirected from: https://script.google.com/macros/s/AKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI/exec\n"
-                        },
-                        {
-                          "text": "URL redirected to: https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&followup=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbwQD6FGVvt3R4_L5RGS8BB7yapJlE8S9gd4E8HyJRI%2Fexec&ifkv=AdBytiNOcuJFrQSyllgg8-QSVFZePWnwYGyT9JN2Xqa4rsSqMJAEVRUtjynsOTszGG2_IgmcFU2gfw&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-432706780%3A1752034250554854\n"
-                        },
-                        {
-                          "text": "Found error messages: \u001b[33m0\u001b[39m\n"
-                        },
-                        {
-                          "text": "Found loading indicators: \u001b[33m0\u001b[39m\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-09T04:10:46.695Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e0dd536868567cc93f35-529a3048497bbfa58f67",
-              "file": "ai-generated/connection-test.spec.js",
-              "line": 77,
-              "column": 3
-            },
-            {
-              "title": "Should analyze page structure for gradebook elements",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 14891,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Analyzing page structure...\n"
-                        },
-                        {
-                          "text": "\nh1 elements (1):\n"
-                        },
-                        {
-                          "text": "  1. Text: \"\n    Google\n    \n  Workspace\" | Class: \"devsite-product-name\"\n"
-                        },
-                        {
-                          "text": "\nh2 elements (1):\n"
-                        },
-                        {
-                          "text": "  1. Text: \"\n      \n    \n        Develop high quality solution\" | Class: \"N/A\"\n"
-                        },
-                        {
-                          "text": "\nh3: Found 11 elements (showing first 3):\n"
-                        },
-                        {
-                          "text": "  1. \"\n      \n    \n        Automate & extend Google Work\"\n"
-                        },
-                        {
-                          "text": "  2. \"\n      \n  \n    \n        Automations\n      \n  \n  \n \"\n"
-                        },
-                        {
-                          "text": "  3. \"\n      \n  \n    \n        Custom functions\n      \n  \"\n"
-                        },
-                        {
-                          "text": "\nbutton: Found 16 elements (showing first 3):\n"
-                        },
-                        {
-                          "text": "  1. \"\n        \"\n"
-                        },
-                        {
-                          "text": "  2. \"N/A\"\n"
-                        },
-                        {
-                          "text": "  3. \"N/A\"\n"
-                        },
-                        {
-                          "text": "\ninput elements (2):\n"
-                        },
-                        {
-                          "text": "  1. Text: \"N/A\" | Class: \"devsite-search-field devsite-search-query\"\n"
-                        },
-                        {
-                          "text": "  2. Text: \"N/A\" | Class: \"N/A\"\n"
-                        },
-                        {
-                          "text": "\nform elements (1):\n"
-                        },
-                        {
-                          "text": "  1. Text: \"\n    \n      \n      \n        \n          \n          \" | Class: \"devsite-search-form\"\n"
-                        },
-                        {
-                          "text": "\ntable elements (1):\n"
-                        },
-                        {
-                          "text": "  1. Text: \"\n      \n      \n      \n        Want to see Apps Scr\" | Class: \"N/A\"\n"
-                        },
-                        {
-                          "text": "\n=== ELEMENT ANALYSIS SUMMARY ===\n"
-                        },
-                        {
-                          "text": "h1: 1 elements\n"
-                        },
-                        {
-                          "text": "h2: 1 elements\n"
-                        },
-                        {
-                          "text": "h3: 11 elements\n"
-                        },
-                        {
-                          "text": "button: 16 elements\n"
-                        },
-                        {
-                          "text": "input: 2 elements\n"
-                        },
-                        {
-                          "text": "select: 0 elements\n"
-                        },
-                        {
-                          "text": "form: 1 elements\n"
-                        },
-                        {
-                          "text": "table: 1 elements\n"
-                        },
-                        {
-                          "text": "div[class*=\"card\"]: 0 elements\n"
-                        },
-                        {
-                          "text": "div[class*=\"dashboard\"]: 0 elements\n"
-                        },
-                        {
-                          "text": "div[class*=\"system\"]: 0 elements\n"
-                        },
-                        {
-                          "text": "div[class*=\"gradebook\"]: 0 elements\n"
-                        },
-                        {
-                          "text": "span[class*=\"status\"]: 0 elements\n"
-                        },
-                        {
-                          "text": "span[class*=\"indicator\"]: 0 elements\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-09T04:10:46.695Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e0dd536868567cc93f35-42e721a7f46659b5ae84",
-              "file": "ai-generated/connection-test.spec.js",
-              "line": 123,
-              "column": 3
-            }
-          ]
-        }
-      ]
+      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
+      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
     }
   ],
-  "errors": [],
   "stats": {
-    "startTime": "2025-07-09T04:10:46.397Z",
-    "duration": 17294.943000000003,
-    "expected": 3,
+    "startTime": "2025-09-02T06:46:47.088Z",
+    "duration": 7.0849999999999795,
+    "expected": 0,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

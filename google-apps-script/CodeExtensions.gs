@@ -5941,22 +5941,59 @@ function getComparisonDataForDashboard(comparisonType, targetLevel = null) {
     
     // Calculate summary statistics | 計算摘要統計
     const totalClasses = rawData.length;
-    const validGrades = rawData.filter(item => item.averages && item.averages.termGrade > 0);
+    
+    // Enhanced filtering: include classes with any valid grade data | 增強的過濾：包含任何有效成績數據的班級
+    const validGrades = rawData.filter(item => {
+      if (!item.averages) return false;
+      
+      // Check if any grade component is valid | 檢查是否有任何成績組成部分有效
+      const hasTermGrade = item.averages.termGrade > 0;
+      const hasFormativeAvg = item.averages.formativeAverage > 0;
+      const hasSummativeAvg = item.averages.summativeAverage > 0;
+      const hasStudents = item.studentCount > 0;
+      
+      return hasStudents && (hasTermGrade || hasFormativeAvg || hasSummativeAvg);
+    });
+    
+    console.log(`📊 Data filtering results: ${validGrades.length}/${totalClasses} classes have valid data`);
+    console.log(`   - Classes with Term Grade: ${rawData.filter(item => item.averages?.termGrade > 0).length}`);
+    console.log(`   - Classes with Formative Avg: ${rawData.filter(item => item.averages?.formativeAverage > 0).length}`);
+    console.log(`   - Classes with Summative Avg: ${rawData.filter(item => item.averages?.summativeAverage > 0).length}`);
+    console.log(`   - Classes with students: ${rawData.filter(item => item.studentCount > 0).length}`);
     
     let averageTermGrade = 0;
     let averageStudentCount = 0;
     let statusCounts = { excellent: 0, good: 0, normal: 0, behind: 0 };
     
     if (validGrades.length > 0) {
-      averageTermGrade = validGrades.reduce((sum, item) => sum + item.averages.termGrade, 0) / validGrades.length;
+      // Calculate average using available term grades only | 僅使用可用的學期成績計算平均值
+      const termGradeClasses = validGrades.filter(item => item.averages.termGrade > 0);
+      if (termGradeClasses.length > 0) {
+        averageTermGrade = termGradeClasses.reduce((sum, item) => sum + item.averages.termGrade, 0) / termGradeClasses.length;
+      }
+      
       averageStudentCount = rawData.reduce((sum, item) => sum + (item.studentCount || 0), 0) / rawData.length;
       
-      // Count status categories | 計算狀態分類
+      // Enhanced status counting: use best available grade | 增強的狀態計數：使用最佳可用成績
       validGrades.forEach(item => {
-        const grade = item.averages.termGrade;
-        if (grade >= 90) statusCounts.excellent++;
-        else if (grade >= 80) statusCounts.good++;
-        else if (grade >= 60) statusCounts.normal++;
+        let primaryGrade = item.averages.termGrade;
+        
+        // If Term Grade is 0, use Formative or Summative average as fallback | 如果學期成績為0，使用形成性或總結性平均分作為後備
+        if (primaryGrade === 0) {
+          if (item.averages.formativeAverage > 0 && item.averages.summativeAverage > 0) {
+            // Calculate weighted average if both are available | 如果兩者都可用則計算加權平均
+            primaryGrade = (item.averages.formativeAverage * 0.6 + item.averages.summativeAverage * 0.4);
+          } else if (item.averages.summativeAverage > 0) {
+            primaryGrade = item.averages.summativeAverage;
+          } else if (item.averages.formativeAverage > 0) {
+            primaryGrade = item.averages.formativeAverage;
+          }
+        }
+        
+        // Count status based on primary grade | 根據主要成績計算狀態
+        if (primaryGrade >= 90) statusCounts.excellent++;
+        else if (primaryGrade >= 80) statusCounts.good++;
+        else if (primaryGrade >= 60) statusCounts.normal++;
         else statusCounts.behind++;
       });
     }
@@ -5969,20 +6006,38 @@ function getComparisonDataForDashboard(comparisonType, targetLevel = null) {
       executionTime: endTime - startTime,
       summary: {
         totalClasses: totalClasses,
-        validGrades: validGrades.length,
-        averageTermGrade: Math.round(averageTermGrade * 10) / 10,
-        averageStudentCount: Math.round(averageStudentCount * 10) / 10,
+        validClasses: validGrades.length,
+        totalStudents: rawData.reduce((sum, item) => sum + (item.studentCount || 0), 0),
+        averageClassSize: Math.round(averageStudentCount * 10) / 10,
+        systemAverage: Math.round(averageTermGrade * 10) / 10,
         statusCounts: statusCounts
       },
-      classes: rawData.map(item => ({
-        level: item.level,
-        className: item.className,
-        sheetName: item.sheetName,
-        studentCount: item.studentCount,
-        gradebookName: item.gradebookName,
-        averages: item.averages,
-        status: getPerformanceStatus(item.averages?.termGrade || 0)
-      }))
+      classes: rawData.map(item => {
+        // Enhanced status calculation: use best available grade | 增強的狀態計算：使用最佳可用成績
+        let primaryGrade = item.averages?.termGrade || 0;
+        
+        if (primaryGrade === 0 && item.averages) {
+          if (item.averages.formativeAverage > 0 && item.averages.summativeAverage > 0) {
+            // Calculate weighted average if both are available | 如果兩者都可用則計算加權平均
+            primaryGrade = (item.averages.formativeAverage * 0.6 + item.averages.summativeAverage * 0.4);
+          } else if (item.averages.summativeAverage > 0) {
+            primaryGrade = item.averages.summativeAverage;
+          } else if (item.averages.formativeAverage > 0) {
+            primaryGrade = item.averages.formativeAverage;
+          }
+        }
+        
+        return {
+          level: item.level,
+          className: item.className,
+          sheetName: item.sheetName,
+          studentCount: item.studentCount,
+          gradebookName: item.gradebookName,
+          averages: item.averages,
+          primaryGrade: Math.round(primaryGrade * 10) / 10,
+          status: getPerformanceStatus(primaryGrade)
+        };
+      })
     };
     
     console.log(`✅ Dashboard data prepared: ${totalClasses} classes, ${validGrades.length} with valid grades`);
