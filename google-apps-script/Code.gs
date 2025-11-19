@@ -2544,6 +2544,8 @@ function setupTeacherInfoSheet(sheet, teacher = null) {
   // Clear sheet | 清空工作表
   sheet.clear();
   
+  const config = getSystemConfig();
+  
   // Title | 標題
   sheet.getRange('A1:D1').merge().setValue('📋 Gradebook Info');
   sheet.getRange('A1').setFontSize(18).setFontWeight('bold').setHorizontalAlignment('center');
