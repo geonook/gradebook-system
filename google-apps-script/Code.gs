@@ -1868,8 +1868,11 @@ function batchCreateGradebooks() {
     let errorCount = 0;
     const errors = [];
     
-    // Get HT data for checking during creation - group by grade pairs
-    const htData = getHTData();
+    // Get teacher emails
+    const teacherEmails = getTeacherEmails();
+    console.log(`📧 Found ${teacherEmails.size} teacher emails`);
+    
+    // Get HT data
     const htTeachers = [];
     if (htData && Object.keys(htData).length > 0) {
       // Define grade groups and find unique HTs
@@ -1920,6 +1923,13 @@ function batchCreateGradebooks() {
     for (let i = 0; i < teacherData.length; i++) {
       const teacher = teacherData[i];
       try {
+        // Add email to teacher object if available
+        if (teacherEmails.has(teacher.name)) {
+          teacher.email = teacherEmails.get(teacher.name);
+          console.log(`📧 Matched email for ${teacher.name}: ${teacher.email}`);
+        } else {
+          console.log(`⚠️ No email found for teacher: ${teacher.name}`);
+        }
         
         // Check if this teacher is an HT
         const htInfo = htTeachers.find(ht => ht.name === teacher.name);
