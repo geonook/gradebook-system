@@ -911,19 +911,19 @@ function createMasterDataSheet(systemFolder) {
   }
   
   // Setup Auto-Generated Teachers sheet | 設定自動生成老師資料工作表
-  const teachersSheet = masterSheet.insertSheet('Auto-Generated Teachers | 自動生成老師');
+  const autoTeachersSheet = masterSheet.insertSheet('Auto-Generated Teachers | 自動生成老師');
   
   // Explanation header | 說明標題
-  teachersSheet.getRange('A1:F1').merge().setValue('📝 This sheet is AUTO-GENERATED from student data | 此工作表從學生資料自動生成');
-  teachersSheet.getRange('A1').setFontSize(14).setFontWeight('bold').setHorizontalAlignment('center');
-  teachersSheet.getRange('A1:F1').setBackground('#FFC107').setFontColor('#000');
+  autoTeachersSheet.getRange('A1:F1').merge().setValue('📝 This sheet is AUTO-GENERATED from student data | 此工作表從學生資料自動生成');
+  autoTeachersSheet.getRange('A1').setFontSize(14).setFontWeight('bold').setHorizontalAlignment('center');
+  autoTeachersSheet.getRange('A1:F1').setBackground('#FFC107').setFontColor('#000');
   
-  teachersSheet.getRange('A2:F2').merge().setValue('Do NOT edit manually. Teachers are extracted from Students sheet. | 請勿手動編輯。老師資訊從學生工作表中提取。');
-  teachersSheet.getRange('A2').setFontStyle('italic').setHorizontalAlignment('center');
-  teachersSheet.getRange('A2:F2').setBackground('#FFF3C4');
+  autoTeachersSheet.getRange('A2:F2').merge().setValue('Do NOT edit manually. Teachers are extracted from Students sheet. | 請勿手動編輯。老師資訊從學生工作表中提取。');
+  autoTeachersSheet.getRange('A2').setFontStyle('italic').setHorizontalAlignment('center');
+  autoTeachersSheet.getRange('A2:F2').setBackground('#FFF3C4');
   
   // Bilingual headers for auto-generated teachers | 自動生成老師資料雙語標題
-  const teacherHeaders = [
+  const autoTeacherHeaders = [
     'Teacher Name | 老師姓名',
     'Subject | 科目',
     'Classes | 班級',
