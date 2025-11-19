@@ -2153,10 +2153,11 @@ function extractTeacherData(masterDataSheet) {
     
     // Add LT teacher
     if (ltTeacher) {
-      const key = `${ltTeacher}_LT`;
+      const name = String(ltTeacher).trim();
+      const key = `${name}_LT`;
       if (!teacherMap.has(key)) {
         teacherMap.set(key, {
-          name: ltTeacher,
+          name: name,
           type: 'LT',
           classes: new Set()
         });
@@ -2167,10 +2168,11 @@ function extractTeacherData(masterDataSheet) {
     
     // Add IT teacher
     if (itTeacher) {
-      const key = `${itTeacher}_IT`;
+      const name = String(itTeacher).trim();
+      const key = `${name}_IT`;
       if (!teacherMap.has(key)) {
         teacherMap.set(key, {
-          name: itTeacher,
+          name: name,
           type: 'IT',
           classes: new Set()
         });
@@ -5571,14 +5573,18 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
       try {
         // Find teacher's gradebook
         const gradebook = findTeacherGradebookByName(teacher, subjectType);
-        if (!gradebook) {
-          const error = `${teacher}: Gradebook not found | 找不到成績簿`;
-          errors.push(error);
-          console.warn(error);
-          return;
+        // Create gradebooks
+    for (const teacher of teacherData) {
+      try {
+        // Add email to teacher object if available
+        if (teacherEmails.has(teacher.name)) {
+          teacher.email = teacherEmails.get(teacher.name);
+          console.log(`📧 Matched email for ${teacher.name}: ${teacher.email}`);
+        } else {
+          console.log(`⚠️ No email found for teacher: ${teacher.name}`);
         }
         
-        console.log(`✅ Found gradebook for ${teacher}: ${gradebook.getName()}`);
+        console.log(`Creating gradebook for ${teacher.name} (${teacher.type})...`);getName()}`);
         
         // Update assessment titles in all relevant class sheets for this teacher
         targetClassNames.forEach(actualClassName => {
