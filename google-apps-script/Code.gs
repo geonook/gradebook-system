@@ -5790,6 +5790,60 @@ function getAssessmentColumnIndex(assessmentCode) {
 }
 
 /**
+ * Debug function to check teacher permission matching | 偵錯函數：檢查教師權限對應
+ */
+function debugTeacherPermissions() {
+  try {
+    console.log('🔍 Starting Permission Debug | 開始權限偵錯...');
+    
+    // 1. Get Master Data
+    const masterData = getMasterDataSheet();
+    if (!masterData) {
+      console.error('❌ Master Data sheet not found | 找不到主控資料表');
+      return;
+    }
+    
+    // 2. Get Teachers from Students sheet
+    console.log('📊 Reading Students sheet... | 讀取學生資料表...');
+    const teachersFromStudents = extractTeacherData(masterData);
+    console.log(`Found ${teachersFromStudents.length} teachers in Students sheet. | 在學生資料表中找到 ${teachersFromStudents.length} 位老師`);
+    
+    // 3. Get Emails from Teachers sheet
+    console.log('📧 Reading Teachers sheet... | 讀取教師資料表...');
+    const teacherEmails = getTeacherEmails();
+    console.log(`Found ${teacherEmails.size} emails in Teachers sheet. | 在教師資料表中找到 ${teacherEmails.size} 筆 Email`);
+    
+    // 4. Compare
+    console.log('\n📋 Matching Results | 比對結果:');
+    let matchCount = 0;
+    let missCount = 0;
+    
+    teachersFromStudents.forEach(teacher => {
+      const name = teacher.name;
+      const hasEmail = teacherEmails.has(name);
+      
+      if (hasEmail) {
+        console.log(`✅ MATCH | 成功: "${name}" -> ${teacherEmails.get(name)}`);
+        matchCount++;
+      } else {
+        console.log(`❌ MISSING | 失敗: "${name}" (No email found in Teachers sheet | 教師資料表中無此 Email)`);
+        // Check for potential near matches (case insensitive)
+        for (const [emailName, email] of teacherEmails) {
+          if (emailName.toLowerCase() === name.toLowerCase()) {
+             console.log(`   💡 Hint: Found similar name "${emailName}" in Teachers sheet. Check casing/spaces. | 提示：發現相似名稱 "${emailName}"，請檢查大小寫或空白`);
+          }
+        }
+        missCount++;
+      }
+    });
+    
+    console.log(`\n🏁 Summary: ${matchCount} matched, ${missCount} missing.`);
+    
+  } catch (error) {
+    console.error('❌ Debug failed:', error);
+  }
+}
+/**
  * Debug function to check basic data access and format
  * 調試函數：檢查基本數據訪問和格式
  */
