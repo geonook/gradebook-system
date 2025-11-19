@@ -4044,8 +4044,8 @@ function showMessage(title, message) {
     const ui = SpreadsheetApp.getUi();
     ui.alert(title, message, ui.ButtonSet.OK);
   } catch (error) {
-    console.error('Error showing message dialog:', error);
-    console.error('Original message:', title, message);
+    // UI not available (e.g. running from editor), just log it
+    console.log(`[UI Message] ${title}: ${message}`);
   }
 }
 

@@ -20,13 +20,13 @@ function loadExternalConfig() {
       SYSTEM: {
         NAME: 'Gradebook Management System | 成績簿管理系統',
         VERSION: '2.0.0',
-        SEMESTER: '2526F1',
-        LAST_UPDATED: '2025-07-09'
+        SEMESTER: 'Fall_term2',
+        LAST_UPDATED: '2025-11-19'
       },
       
       // Google Drive Configuration | Google Drive 配置
       GOOGLE_DRIVE: {
-        MAIN_FOLDER_ID: '1w_UJnNthBkcP8wgyrF3rz2St0jZTPZzB',
+        MAIN_FOLDER_ID: '1aYwfyZSMO27eGU31Sx6I7H5sBYy2Yr0J',
         FOLDERS: {
           MAIN: 'Gradebook System | 成績簿系統',
           TEACHER_SHEETS: 'Teacher Gradebooks | 老師成績簿',
