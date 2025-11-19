@@ -5863,11 +5863,15 @@ function populateTerm2Links() {
         
         // Create link text (prefer LT, fallback to IT)
         let linkUrl = links.LT || links.IT;
+        let linkType = links.LT ? 'LT' : 'IT';
         
         if (linkUrl) {
+          // Create display text: Fall_term2_[Teacher Name]_[LT/IT]_Gradebook
+          const displayText = `Fall_term2_${teacherName}_${linkType}_Gradebook`;
+          
           // Set hyperlink formula
           const cell = trackingSheet.getRange(i + 1, term2Col + 1);
-          cell.setFormula(`=HYPERLINK("${linkUrl}", "📚 Gradebook")`);
+          cell.setFormula(`=HYPERLINK("${linkUrl}", "${displayText}")`);
           updateCount++;
           console.log(`✅ Updated link for ${teacherName}`);
         }
