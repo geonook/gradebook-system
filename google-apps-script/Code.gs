@@ -5797,6 +5797,103 @@ function getAssessmentColumnIndex(assessmentCode) {
 }
 
 /**
+ * Populate Term2 gradebook links in tracking spreadsheet | 在追蹤表格中填入 Term2 成績簿連結
+ */
+function populateTerm2Links() {
+  try {
+    console.log('🔗 Starting to populate Term2 links...');
+    
+    // Target spreadsheet ID
+    const trackingSheetId = '1vZdc2JMEfKKwgNSROQLMAlXLNfkQa4CrsTJbinOfURk';
+    const trackingSheet = SpreadsheetApp.openById(trackingSheetId).getActiveSheet();
+    
+    // Get teacher gradebooks
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const teacherGradebooksFolder = getSubFolder(systemFolder, config.FOLDERS.TEACHER_SHEETS, false);
+    
+    if (!teacherGradebooksFolder) {
+      throw new Error('Teacher gradebooks folder not found | 找不到教師成績簿資料夾');
+    }
+    
+    // Get all gradebook files
+    const gradebookFiles = teacherGradebooksFolder.getFiles();
+    const gradebookMap = new Map();
+    
+    while (gradebookFiles.hasNext()) {
+      const file = gradebookFiles.next();
+      const fileName = file.getName();
+      
+      // Extract teacher name from filename
+      // Format: Fall_term2_[Teacher Name]_[LT/IT]_Gradebook
+      const match = fileName.match(/Fall_term2_(.+?)_(LT|IT)_Gradebook/);
+      if (match) {
+        const teacherName = match[1];
+        const url = file.getUrl();
+        
+        // Store both LT and IT links for each teacher
+        if (!gradebookMap.has(teacherName)) {
+          gradebookMap.set(teacherName, { LT: null, IT: null });
+        }
+        gradebookMap.get(teacherName)[match[2]] = url;
+      }
+    }
+    
+    console.log(`📊 Found ${gradebookMap.size} teachers with gradebooks`);
+    
+    // Read tracking sheet data
+    const data = trackingSheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find column indices
+    const nameCol = 0; // Column A
+    const term2Col = 4; // Column E
+    
+    let updateCount = 0;
+    
+    // Process each row (skip header)
+    for (let i = 1; i < data.length; i++) {
+      const teacherName = data[i][nameCol];
+      
+      if (!teacherName) continue;
+      
+      // Check if we have a gradebook for this teacher
+      if (gradebookMap.has(teacherName)) {
+        const links = gradebookMap.get(teacherName);
+        
+        // Create link text (prefer LT, fallback to IT)
+        let linkUrl = links.LT || links.IT;
+        
+        if (linkUrl) {
+          // Set hyperlink formula
+          const cell = trackingSheet.getRange(i + 1, term2Col + 1);
+          cell.setFormula(`=HYPERLINK("${linkUrl}", "📚 Gradebook")`);
+          updateCount++;
+          console.log(`✅ Updated link for ${teacherName}`);
+        }
+      } else {
+        console.log(`⚠️ No gradebook found for ${teacherName}`);
+      }
+    }
+    
+    console.log(`\n🎉 Complete! Updated ${updateCount} links.`);
+    return {
+      success: true,
+      updated: updateCount,
+      total: gradebookMap.size,
+      message: `Successfully updated ${updateCount} Term2 links | 成功更新 ${updateCount} 個 Term2 連結`
+    };
+    
+  } catch (error) {
+    console.error('❌ Error populating Term2 links:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
  * Debug function to check teacher permission matching | 偵錯函數：檢查教師權限對應
  */
 function debugTeacherPermissions() {
