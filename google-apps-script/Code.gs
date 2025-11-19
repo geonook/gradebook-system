@@ -5573,18 +5573,14 @@ function updateSingleClassAssessment(className, subjectType, assessmentCode, new
       try {
         // Find teacher's gradebook
         const gradebook = findTeacherGradebookByName(teacher, subjectType);
-        // Create gradebooks
-    for (const teacher of teacherData) {
-      try {
-        // Add email to teacher object if available
-        if (teacherEmails.has(teacher.name)) {
-          teacher.email = teacherEmails.get(teacher.name);
-          console.log(`📧 Matched email for ${teacher.name}: ${teacher.email}`);
-        } else {
-          console.log(`⚠️ No email found for teacher: ${teacher.name}`);
+        if (!gradebook) {
+          const error = `${teacher}: Gradebook not found | 找不到成績簿`;
+          errors.push(error);
+          console.warn(error);
+          return;
         }
         
-        console.log(`Creating gradebook for ${teacher.name} (${teacher.type})...`);getName()}`);
+        console.log(`✅ Found gradebook for ${teacher}: ${gradebook.getName()}`);
         
         // Update assessment titles in all relevant class sheets for this teacher
         targetClassNames.forEach(actualClassName => {
