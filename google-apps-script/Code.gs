@@ -850,6 +850,30 @@ function createMasterDataSheet(systemFolder) {
   // Setup Classes sheet | 設定班級資料工作表
   const classesSheet = masterSheet.insertSheet('Classes | 班級資料');
   
+  // Setup Teachers sheet | 設定教師資料工作表
+  const teachersSheet = masterSheet.insertSheet('Teachers | 教師資料');
+  
+  // Title | 標題
+  teachersSheet.getRange('A1:C1').merge().setValue('👨‍🏫 Teacher Directory | 教師名錄');
+  teachersSheet.getRange('A1').setFontSize(16).setFontWeight('bold').setHorizontalAlignment('center');
+  teachersSheet.getRange('A1:C1').setBackground('#9C27B0').setFontColor('white');
+  
+  // Instructions | 說明
+  teachersSheet.getRange('A2:C2').merge().setValue('Enter teacher email addresses for automatic permission granting | 輸入教師電子郵件以自動授權');
+  teachersSheet.getRange('A2').setFontStyle('italic').setHorizontalAlignment('center');
+  teachersSheet.getRange('A2:C2').setBackground('#F3E5F5');
+  
+  // Headers | 標題
+  const teacherHeaders = ['Teacher Name | 教師姓名', 'Email | 電子郵件', 'Type | 類型 (LT/IT)'];
+  teachersSheet.getRange(4, 1, 1, 3).setValues([teacherHeaders]);
+  teachersSheet.getRange(4, 1, 1, 3).setFontWeight('bold').setBackground('#E1BEE7');
+  
+  // Format | 格式化
+  teachersSheet.setColumnWidth(1, 150);
+  teachersSheet.setColumnWidth(2, 250);
+  teachersSheet.setColumnWidth(3, 100);
+  teachersSheet.setFrozenRows(4);
+  
   // Title | 標題
   classesSheet.getRange('A1:E1').merge().setValue('📚 Class Configuration | 班級配置');
   classesSheet.getRange('A1').setFontSize(16).setFontWeight('bold').setHorizontalAlignment('center');
@@ -1992,6 +2016,50 @@ ${errors.length > 0 ? `\n❌ Errors encountered | 遇到的錯誤:\n${errors.joi
 }
 
 /**
+ * Get teacher emails from Master Data | 從主控資料表取得教師電子郵件
+ */
+function getTeacherEmails() {
+  try {
+    const config = getSystemConfig();
+    const systemFolder = DriveApp.getFolderById(config.MAIN_FOLDER_ID);
+    const masterDataFolder = getSubFolder(systemFolder, config.FOLDERS.MASTER_DATA, false);
+    
+    const masterFiles = masterDataFolder.getFilesByName('Gradebook Master Data | 成績簿主控資料表');
+    if (!masterFiles.hasNext()) {
+      return new Map();
+    }
+    
+    const masterSheet = SpreadsheetApp.openById(masterFiles.next().getId());
+    const teachersSheet = masterSheet.getSheetByName('Teachers | 教師資料');
+    
+    if (!teachersSheet) {
+      return new Map();
+    }
+    
+    const lastRow = teachersSheet.getLastRow();
+    if (lastRow < 5) {
+      return new Map();
+    }
+    
+    const data = teachersSheet.getRange(5, 1, lastRow - 4, 2).getValues();
+    const emailMap = new Map();
+    
+    data.forEach(row => {
+      const [name, email] = row;
+      if (name && email && email.includes('@')) {
+        emailMap.set(name.trim(), email.trim());
+      }
+    });
+    
+    return emailMap;
+    
+  } catch (error) {
+    console.error('Error getting teacher emails:', error);
+    return new Map();
+  }
+}
+
+/**
  * Extract teacher data from master data sheet | 從主控資料表提取老師資料
  */
 function extractTeacherData(masterDataSheet) {
@@ -2159,6 +2227,16 @@ function createTeacherGradebook(teacher, parentFolder) {
   
   // Set teacher info as active sheet
   gradebook.setActiveSheet(teacherInfoSheet);
+  
+  // Add teacher as editor if email is available | 如果有Email，將老師加入為編輯者
+  if (teacher.email) {
+    try {
+      file.addEditor(teacher.email);
+      console.log(`✅ Added editor permission for ${teacher.name} (${teacher.email})`);
+    } catch (permError) {
+      console.error(`⚠️ Failed to add editor ${teacher.email}: ${permError.message}`);
+    }
+  }
   
   return gradebook;
 }
