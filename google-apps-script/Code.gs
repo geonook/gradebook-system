@@ -1678,6 +1678,7 @@ function syncHTAssessmentTitles() {
  * Create system configuration sheet | 建立系統配置工作表
  */
 function createConfigSheet(systemFolder) {
+  const config = getSystemConfig();
   const configSheet = SpreadsheetApp.create('System Settings | 系統設定表');
   DriveApp.getFileById(configSheet.getId()).moveTo(systemFolder);
   
@@ -2845,6 +2846,7 @@ function updateAssessmentTitlesByClassCode(classCode, formativeTitles, summative
  */
 function getAllAssessmentTitlesForDashboard() {
   try {
+    const config = getSystemConfig();
     const allClasses = getAllClassConfigurations();
     const result = [];
     
@@ -3008,6 +3010,7 @@ function syncAssessmentTitlesToExistingGradebooks(classCode) {
  */
 function updateExistingSheetHeaders(sheet, classCode) {
   try {
+    const config = getSystemConfig();
     // Get the new assessment titles for this class code
     const assessmentTitles = config.ASSESSMENT_TITLES[classCode] || config.ASSESSMENT_TITLES.DEFAULT;
     
@@ -4221,6 +4224,7 @@ function openMasterDataSheet() {
  */
 function openSystemSettings() {
   try {
+    const config = getSystemConfig();
     const settings = `
 ⚙️ SYSTEM SETTINGS | 系統設定
 
