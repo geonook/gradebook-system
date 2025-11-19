@@ -1872,7 +1872,8 @@ function batchCreateGradebooks() {
     const teacherEmails = getTeacherEmails();
     console.log(`📧 Found ${teacherEmails.size} teacher emails`);
     
-    // Get HT data
+    // Get HT data for checking during creation - group by grade pairs
+    const htData = getHTData();
     const htTeachers = [];
     if (htData && Object.keys(htData).length > 0) {
       // Define grade groups and find unique HTs
