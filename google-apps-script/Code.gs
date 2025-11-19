@@ -2295,7 +2295,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     row2Headers.push(`S.A.${i}`);
   }
   
-  row2Headers.push('Midterm');
+  row2Headers.push('Final');
   
   // Set headers
   sheet.getRange(1, 1, 1, row1Headers.length).setValues([row1Headers]);
