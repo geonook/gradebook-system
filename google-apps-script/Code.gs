@@ -2280,10 +2280,10 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     row1Headers.push('');
   }
   
-  row1Headers.push(''); // T column - Midterm only
+  row1Headers.push(''); // T column - Final only
   
   // Row 2: Individual column headers
-  const row2Headers = ['', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment'];
+  const row2Headers = ['', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Final Assessment'];
   
   // Add F.A. columns
   for (let i = 1; i <= 8; i++) {
@@ -2322,7 +2322,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
       '', // Term Grade - will be calculated
       '', // FA Average - will be calculated  
       '', // SA Average - will be calculated
-      '', // Midterm Assessment - to be filled
+      '', // Final Assessment - to be filled
     ];
     
     // Add empty cells for F.A.1-8
@@ -2335,8 +2335,8 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
       studentRow.push('');
     }
     
-    // Add empty cell for Midterm
-    studentRow.push(''); // Midterm
+    // Add empty cell for Final
+    studentRow.push(''); // Final
     
     sheet.getRange(currentRow, 1, 1, studentRow.length).setValues([studentRow]);
     currentRow++;
@@ -2359,7 +2359,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
   // SA Average (column F)
   sheet.getRange(averageRow, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(F3:F${lastStudentRow},">0"),1))`);
   
-  // Midterm Assessment average (column G)
+  // Final Assessment average (column G)
   sheet.getRange(averageRow, 7).setFormula(`=IFERROR(ROUND(AVERAGEIF(G3:G${lastStudentRow},">0"),1))`);
   
   // Add average formulas for each F.A. column (H-O)
@@ -2374,7 +2374,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     sheet.getRange(averageRow, col).setFormula(`=IFERROR(ROUND(AVERAGEIF(${colLetter}3:${colLetter}${lastStudentRow},">0"),1))`);
   }
   
-  // Midterm column average (T)
+  // Final column average (T)
   sheet.getRange(averageRow, 20).setFormula(`=IFERROR(ROUND(AVERAGEIF(T3:T${lastStudentRow},">0"),1))`);
   
   // Set individual student formulas
@@ -2388,7 +2388,7 @@ function setupClassSheetWithRealData(sheet, className, teacherName = null, teach
     // SA Average formula
     sheet.getRange(row, 6).setFormula(`=IFERROR(ROUND(AVERAGEIF(P${row}:S${row},">0"),1))`);
     
-    // Midterm Assessment formula - G3=T3 (T is now Midterm)
+    // Final Assessment formula - G3=T3 (T is now Final)
     sheet.getRange(row, 7).setFormula(`=T${row}`);
   }
   
@@ -2436,7 +2436,7 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
   
   // Basic info columns (A-G) | 基本資訊欄位 (A-G)
   row1Headers.push('', '', '', '', '', '', ''); // A-G empty for row 1
-  row2Headers.push('', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Midterm Assessment');
+  row2Headers.push('', 'English Name | 英文姓名', 'Student ID', 'Term Grade', 'Formative Assessment Average', 'Summative Assessment Average', 'Final Assessment');
   
   // Formative Assessment columns (H-O) | 平時評量欄位 (H-O)
   let formativeStartCol = 8; // Column H
@@ -2467,7 +2467,7 @@ function setupClassSheetHeaders(sheet, className, teacherType = null) {
   // Final column (if enabled) | 期末考欄位（如果啟用）
   if (config.ASSESSMENTS.INCLUDE_FINAL) {
     row1Headers.push('');
-    row2Headers.push('Midterm');
+    row2Headers.push('Final');
   }
   
   // Set class title in A1 | 在A1設定班級標題
@@ -5181,7 +5181,7 @@ function simpleHTAssessmentManager() {
     // Step 3: Select assessment
     const assessmentResult = ui.prompt(
       'Step 3: Select Assessment | 步驟3：選擇評量',
-      `Class: ${selectedClass}, Subject: ${subjectType}\nEnter assessment code | 輸入評量代碼:\nF.A.1~8, S.A.1~4, or Midterm`,
+      `Class: ${selectedClass}, Subject: ${subjectType}\\nEnter assessment code | 輸入評量代碼:\\nF.A.1~8, S.A.1~4, or Final`,
       ui.ButtonSet.OK_CANCEL
     );
     
@@ -5689,7 +5689,7 @@ function getAssessmentColumnIndex(assessmentCode) {
     'F.A.1': 8,  'F.A.2': 9,   'F.A.3': 10,  'F.A.4': 11,
     'F.A.5': 12, 'F.A.6': 13,  'F.A.7': 14,  'F.A.8': 15,
     'S.A.1': 16, 'S.A.2': 17,  'S.A.3': 18,  'S.A.4': 19,
-    'Midterm': 20
+    'Final': 20
   };
   
   return mapping[assessmentCode] || null;
