@@ -2200,7 +2200,17 @@ function createTeacherGradebook(teacher, parentFolder) {
   // Check if gradebook already exists
   const existingFiles = parentFolder.getFilesByName(gradebookName);
   if (existingFiles.hasNext()) {
-    return existingFiles.next();
+    const existingFile = existingFiles.next();
+    // Update permission even for existing file | 即使檔案已存在也更新權限
+    if (teacher.email) {
+      try {
+        existingFile.addEditor(teacher.email);
+        console.log(`✅ Added editor permission for existing gradebook: ${teacher.name} (${teacher.email})`);
+      } catch (permError) {
+        console.error(`⚠️ Failed to add editor to existing file ${teacher.email}: ${permError.message}`);
+      }
+    }
+    return existingFile;
   }
   
   // Create new gradebook
